@@ -1,0 +1,1 @@
+ALTER TABLE "hrms_post" RENAME TO "post";
