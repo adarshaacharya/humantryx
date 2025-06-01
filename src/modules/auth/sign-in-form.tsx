@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,6 +15,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Eye,
   EyeOff,
@@ -28,27 +38,33 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { signInSchema, type SignInSchemaType } from "./schemas";
 
 export function SignInForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const form = useForm<SignInSchemaType>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: true,
+    },
+  });
+
+  const { isSubmitting } = form.formState;
+
+  const onSubmit = async (values: SignInSchemaType) => {
     setError(null);
 
     try {
       const { data, error } = await authClient.signIn.email({
-        email,
-        password,
-        rememberMe,
+        email: values.email,
+        password: values.password,
+        rememberMe: values.rememberMe,
         callbackURL: "/dashboard",
       });
 
@@ -71,209 +87,182 @@ export function SignInForm() {
       console.error("Sign in error:", err);
       setError("An unexpected error occurred. Please try again.");
       toast.error("Something went wrong");
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <div className="w-full max-w-md">
-      {/* Background Effects */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <motion.div
-          className="absolute h-96 w-96 rounded-full bg-gradient-to-r from-blue-500/5 to-cyan-500/5 blur-3xl dark:from-blue-500/10 dark:to-cyan-500/10"
-          animate={{
-            x: [0, 100, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{ top: "10%", left: "10%" }}
-        />
-        <motion.div
-          className="absolute h-80 w-80 rounded-full bg-gradient-to-r from-purple-500/5 to-pink-500/5 blur-3xl dark:from-purple-500/10 dark:to-pink-500/10"
-          animate={{
-            x: [0, -80, 0],
-            y: [0, 80, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{ bottom: "10%", right: "10%" }}
-        />
+    <div className="relative w-full max-w-md">
+      {/* Background Gradient Effects */}
+      <div className="absolute inset-0 -z-10">
+        <div className="bg-primary/5 absolute top-0 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full blur-3xl" />
+        <div className="bg-primary/3 absolute right-0 bottom-0 h-64 w-64 rounded-full blur-2xl" />
       </div>
 
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="relative z-10 mb-8 text-center"
+        transition={{ duration: 0.4 }}
+        className="mb-8 text-center"
       >
         <Link href="/" className="mb-8 inline-flex items-center">
           <div className="relative">
-            <Brain className="h-8 w-8 text-blue-600 dark:text-cyan-400" />
-            <motion.div
-              className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400"
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
+            <Brain className="text-primary h-8 w-8" />
+            <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400" />
           </div>
-          <span className="ml-2 text-xl font-bold text-slate-900 dark:text-white">
+          <span className="text-foreground ml-2 text-xl font-bold">
             Human Loop
           </span>
         </Link>
       </motion.div>
 
       {/* Sign In Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="relative z-10"
-      >
-        <Card className="border-slate-200 bg-white/80 shadow-xl backdrop-blur-sm dark:border-white/20 dark:bg-white/10 dark:shadow-2xl dark:backdrop-blur-lg">
+      <div className="relative">
+        <div className="from-primary/20 via-primary/10 to-primary/20 absolute inset-0 rounded-xl bg-gradient-to-r p-[1px]">
+          <div className="bg-card/95 h-full w-full rounded-xl backdrop-blur-xl" />
+        </div>
+
+        <Card className="bg-card/95 relative border-0 shadow-2xl backdrop-blur-xl">
           <CardHeader className="pb-6">
-            <CardTitle className="text-center text-2xl text-slate-900 dark:text-white">
+            <CardTitle className="text-card-foreground text-center text-2xl">
               Welcome Back
             </CardTitle>
-            <CardDescription className="text-center text-slate-600 dark:text-blue-200">
+            <CardDescription className="text-muted-foreground text-center">
               Sign in to continue to your dashboard
             </CardDescription>
           </CardHeader>
 
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Error Message */}
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-red-700 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-300"
-                >
-                  <AlertCircle className="h-4 w-4 flex-shrink-0" />
-                  <span className="text-sm">{error}</span>
-                </motion.div>
-              )}
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
+                {/* Error Message */}
+                {error && (
+                  <div className="border-destructive/20 bg-destructive/5 text-destructive flex items-center gap-2 rounded-lg border p-3 backdrop-blur-sm">
+                    <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                    <span className="text-sm">{error}</span>
+                  </div>
+                )}
 
-              {/* Email Field */}
-              <div className="space-y-2">
-                <Label
-                  htmlFor="email"
-                  className="text-slate-900 dark:text-white"
-                >
-                  Email Address
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-slate-500 dark:text-blue-300" />
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setEmail(e.target.value)
-                    }
-                    placeholder="Enter your email"
-                    className="border-slate-200 bg-white pl-10 text-slate-900 placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 dark:border-white/20 dark:bg-white/5 dark:text-white dark:placeholder:text-blue-300 dark:focus:border-cyan-400 dark:focus:ring-cyan-400"
-                    required
-                  />
-                </div>
-              </div>
+                {/* Email Field */}
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground">
+                        Email Address
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Mail className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
+                          <Input
+                            type="email"
+                            placeholder="Enter your email"
+                            className="bg-background focus:border-primary border pl-10 transition-all duration-200"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              {/* Password Field */}
-              <div className="space-y-2">
-                <Label
-                  htmlFor="password"
-                  className="text-slate-900 dark:text-white"
-                >
-                  Password
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-slate-500 dark:text-blue-300" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setPassword(e.target.value)
-                    }
-                    placeholder="Enter your password"
-                    className="border-slate-200 bg-white pr-10 pl-10 text-slate-900 placeholder:text-slate-500 focus:border-blue-500 focus:ring-blue-500 dark:border-white/20 dark:bg-white/5 dark:text-white dark:placeholder:text-blue-300 dark:focus:border-cyan-400 dark:focus:ring-cyan-400"
-                    required
+                {/* Password Field */}
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground">
+                        Password
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Lock className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter your password"
+                            className="bg-background focus:border-primary border pr-10 pl-10 transition-all duration-200"
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transform transition-colors"
+                          >
+                            {showPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Remember Me & Forgot Password */}
+                <div className="flex items-center justify-between">
+                  <FormField
+                    control={form.control}
+                    name="rememberMe"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center space-y-0 space-x-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormLabel className="text-muted-foreground cursor-pointer text-sm">
+                          Remember me
+                        </FormLabel>
+                      </FormItem>
+                    )}
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute top-1/2 right-3 -translate-y-1/2 transform text-slate-500 transition-colors hover:text-slate-700 dark:text-blue-300 dark:hover:text-white"
+                    onClick={() => router.push("/forgot-password")}
+                    className="text-primary hover:text-primary/80 text-sm transition-colors"
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    Forgot password?
                   </button>
                 </div>
-              </div>
 
-              {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="rememberMe"
-                    checked={rememberMe}
-                    onCheckedChange={(checked) =>
-                      setRememberMe(checked as boolean)
-                    }
-                    className="border-slate-300 data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 dark:border-white/20 dark:data-[state=checked]:border-cyan-500 dark:data-[state=checked]:bg-cyan-500"
-                  />
-                  <Label
-                    htmlFor="rememberMe"
-                    className="cursor-pointer text-sm text-slate-600 dark:text-blue-200"
-                  >
-                    Remember me
-                  </Label>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => router.push("/forgot-password")}
-                  className="text-sm text-blue-600 transition-colors hover:text-blue-500 dark:text-cyan-300 dark:hover:text-cyan-200"
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 h-12 w-full border-0 bg-gradient-to-r shadow-lg transition-all duration-200 hover:shadow-xl"
                 >
-                  Forgot password?
-                </button>
-              </div>
-
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="h-12 w-full border-0 bg-gradient-to-r from-blue-600 to-blue-500 text-white hover:from-blue-700 hover:to-blue-600 dark:from-cyan-500 dark:to-blue-500 dark:hover:from-cyan-600 dark:hover:to-blue-600"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
-                  </>
-                ) : (
-                  <>
-                    Sign In
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </>
-                )}
-              </Button>
-            </form>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    <>
+                      Sign In
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </Form>
 
             {/* Sign Up Link */}
             <div className="mt-6 text-center">
-              <p className="text-sm text-slate-600 dark:text-blue-200">
+              <p className="text-muted-foreground text-sm">
                 Don&apos;t have an account?{" "}
                 <Link
                   href="/sign-up"
-                  className="font-medium text-blue-600 transition-colors hover:text-blue-500 dark:text-cyan-300 dark:hover:text-cyan-200"
+                  className="text-primary hover:text-primary/80 font-medium transition-colors"
                 >
                   Create one here
                 </Link>
@@ -281,7 +270,7 @@ export function SignInForm() {
             </div>
 
             {/* Trust Indicators */}
-            <div className="mt-6 flex items-center justify-center space-x-4 text-xs text-slate-500 dark:text-blue-300">
+            <div className="text-muted-foreground mt-6 flex items-center justify-center space-x-4 text-xs">
               <div className="flex items-center space-x-1">
                 <CheckCircle className="h-3 w-3" />
                 <span>Secure Login</span>
@@ -293,22 +282,17 @@ export function SignInForm() {
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
       {/* Back to Home */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="mt-6 text-center"
-      >
+      <div className="mt-6 text-center">
         <Link
           href="/"
-          className="text-sm text-slate-500 transition-colors hover:text-slate-700 dark:text-blue-300 dark:hover:text-blue-200"
+          className="text-muted-foreground hover:text-foreground text-sm transition-colors"
         >
           ← Back to Home
         </Link>
-      </motion.div>
+      </div>
     </div>
   );
 }

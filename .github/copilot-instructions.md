@@ -42,19 +42,20 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 
 ## KEY ARCHITECTURAL PRINCIPLES
 
-1. Component Architecture:
+1. Frontend:
 
 - Use React Server Components (RSC) by default
 - Add 'use client' directive only for interactive components and using react query hooks from trpc
-- Follow component composition over inheritance
 - Implement proper TypeScript types for all props and functions
 - Reserve function declarations for utilities and helpers
 - If the component is large, break it down into smaller components by creating a new file for each component
-- Group similar components together in a folder inside `src/app/components`
-- Don't use extra colors unless necessary use the tailwind classname like primary, secondary defined in `src/styles/globals.css` for design and color consistency
+- Group similar modules together in a folder inside `src/modules/`
+- Don't use extra colors unless necessary use the tailwind classname like primary, secondary defined in `src/styles/globals.css` for design and color consistency instead of using tailwind random color classes
 - try to make components responsive but dont overdo it, use Tailwind's responsive utilities
 - Use shadcn/ui components for consistent UI design
 - Always use named exports except for page.tsx file but dont use barrel exports
+- please don't over animate components animate only when necessary, use `motion/react` for animations and try to animate consistently
+- for forms use react hook form, use `useForm` hook from `react-hook-form` and use `zodResolver` for validation
 
 2. Data Layer:
 

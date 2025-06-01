@@ -64,14 +64,17 @@ export function ForgotPasswordForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Reset Password</CardTitle>
-          <CardDescription>
+      <Card className="bg-card/80 border-0 shadow-2xl backdrop-blur-sm">
+        <div className="from-primary/5 to-secondary/5 absolute inset-0 rounded-lg bg-gradient-to-br via-transparent" />
+        <CardHeader className="relative">
+          <CardTitle className="text-foreground text-2xl">
+            Reset Password
+          </CardTitle>
+          <CardDescription className="text-muted-foreground">
             Enter your email below to reset your password.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleForgotPassword)}
@@ -84,13 +87,14 @@ export function ForgotPasswordForm({
                   name={field as keyof ForgotPasswordSchemaType}
                   render={({ field: fieldProps }) => (
                     <FormItem>
-                      <FormLabel>
+                      <FormLabel className="text-foreground">
                         {field.charAt(0).toUpperCase() + field.slice(1)}
                       </FormLabel>
                       <FormControl>
                         <Input
                           type={field === "password" ? "password" : "email"}
                           placeholder={`Enter your ${field}`}
+                          className="bg-background focus:border-primary border transition-all duration-200"
                           {...fieldProps}
                           autoComplete={
                             field === "password" ? "current-password" : "email"
@@ -102,7 +106,7 @@ export function ForgotPasswordForm({
                   )}
                 />
               ))}
-              <LoadingButton type="submit" pending={pending}>
+              <LoadingButton type="submit" pending={pending} className="w-full">
                 Send Reset Link
               </LoadingButton>
             </form>
