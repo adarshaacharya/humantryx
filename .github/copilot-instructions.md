@@ -51,6 +51,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - Reserve function declarations for utilities and helpers
 - If the component is large, break it down into smaller components by creating a new file for each component
 - Group similar components together in a folder inside `src/app/components`
+- Don't use extra colors unless necessary use the tailwind classname like primary, secondary defined in `src/styles/globals.css` for design and color consistency
 - try to make components responsive but dont overdo it, use Tailwind's responsive utilities
 - Use shadcn/ui components for consistent UI design
 - Always use named exports except for page.tsx file but dont use barrel exports
@@ -101,3 +102,6 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - Implement rate limiting and throttling
 - Use proper caching strategies using upstash 
 
+## Some basic rules
+
+- If you are installing package make sure to check if its already inside `package.json`

@@ -15,6 +15,13 @@
       "when": 1748690100135,
       "tag": "0001_closed_nomad",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1748748801699,
+      "tag": "0002_bright_tana_nile",
+      "breakpoints": true
     }
   ]
 }

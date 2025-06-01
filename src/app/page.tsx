@@ -1,9 +1,9 @@
-import { HeroSection } from "@/components/landing/hero-section";
-import { FeaturesSection } from "@/components/landing/features-section";
-import { AISection } from "@/components/landing/ai-section";
-import { StatsSection } from "@/components/landing/stats-section";
-import { CTASection } from "@/components/landing/cta-section";
-import { Navigation } from "@/components/landing/navigation";
+import { HeroSection } from "@/modules/landing/hero-section";
+import { FeaturesSection } from "@/modules/landing/features-section";
+import { AISection } from "@/modules/landing/ai-section";
+import { StatsSection } from "@/modules/landing/stats-section";
+import { CTASection } from "@/modules/landing/cta-section";
+import { Navigation } from "@/modules/landing/navigation";
 
 export default function Home() {
   return (
