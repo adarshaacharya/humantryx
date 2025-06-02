@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/server/auth/auth-client";
 import { LoadingButton } from "@/components/ui/loading-button";
 
 export default function SignoutButton() {
@@ -15,7 +15,7 @@ export default function SignoutButton() {
       await authClient.signOut({
         fetchOptions: {
           onSuccess: () => {
-            router.push("/signin");
+            router.push("/sign-in");
             // router.refresh();
           },
         },

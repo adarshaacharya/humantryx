@@ -1,0 +1,158 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Brain, ChevronDown, Sparkles } from "lucide-react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
+} from "@/components/ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { MENU_ITEMS } from "./constants/sidebar-itemts";
+
+export function DashboardSideBar() {
+  const pathname = usePathname();
+  const [openItems, setOpenItems] = useState<string[]>([]);
+
+  const toggleItem = (title: string) => {
+    setOpenItems((prev) =>
+      prev.includes(title)
+        ? prev.filter((item) => item !== title)
+        : [...prev, title],
+    );
+  };
+
+  const isActive = (href: string) => {
+    if (href === "/dashboard") {
+      return pathname === href;
+    }
+    return pathname.startsWith(href);
+  };
+
+  return (
+    <Sidebar>
+      <SidebarHeader>
+        <div className="flex h-16 items-center justify-center border-b px-6">
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="relative">
+              <Brain className="text-primary h-8 w-8" />
+              <div className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-400" />
+            </div>
+            <span className="text-foreground text-xl font-bold">
+              Human Loop
+            </span>
+          </Link>
+        </div>
+      </SidebarHeader>
+
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenu>
+            {MENU_ITEMS.map((item) => {
+              const Icon = item.icon;
+              const hasSubmenu = item.submenu && item.submenu.length > 0;
+              const isItemOpen = openItems.includes(item.title);
+
+              if (hasSubmenu) {
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <Collapsible
+                      open={isItemOpen}
+                      onOpenChange={() => toggleItem(item.title)}
+                    >
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          className={cn(
+                            "w-full justify-between",
+                            isActive(item.href) && "bg-primary/10 text-primary",
+                          )}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <Icon className="h-5 w-5" />
+                            <span>{item.title}</span>
+                          </div>
+                          <ChevronDown
+                            className={cn(
+                              "h-4 w-4 transition-transform",
+                              isItemOpen && "rotate-180",
+                            )}
+                          />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {item.submenu?.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.href}>
+                              <SidebarMenuSubButton
+                                asChild
+                                className={cn(
+                                  isActive(subItem.href) &&
+                                    "bg-primary/10 text-primary font-medium",
+                                )}
+                              >
+                                <Link href={subItem.href}>{subItem.title}</Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  </SidebarMenuItem>
+                );
+              }
+
+              return (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    className={cn(
+                      isActive(item.href) && "bg-primary/10 text-primary",
+                    )}
+                  >
+                    <Link href={item.href}>
+                      <Icon className="h-5 w-5" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
+          </SidebarMenu>
+        </SidebarGroup>
+      </SidebarContent>
+
+      <SidebarFooter>
+        <div className="p-4">
+          <div className="from-primary/10 to-secondary/10 rounded-lg bg-gradient-to-r p-3">
+            <div className="flex items-center space-x-2">
+              <Sparkles className="text-primary h-5 w-5" />
+              <div>
+                <p className="text-foreground text-sm font-medium">
+                  AI Powered
+                </p>
+                <p className="text-muted-foreground text-xs">
+                  Enhanced HR management
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </SidebarFooter>
+    </Sidebar>
+  );
+}

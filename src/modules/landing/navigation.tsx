@@ -5,9 +5,14 @@ import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Brain, Users, BarChart3, Shield } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "@/server/auth/auth-client";
+import { UserMenu } from "../../components/user-menu";
+import { useRouter } from "next/navigation";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const navItems = [
     { name: "Features", href: "#features", icon: Users },
@@ -25,6 +30,7 @@ export function Navigation() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center space-x-2"
+            onClick={() => router.push("/")}
           >
             <div className="relative">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
@@ -55,25 +61,31 @@ export function Navigation() {
           </div>
 
           {/* Desktop CTA */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="hidden items-center space-x-4 md:flex"
-          >
-            <Link href="/sign-in">
-              <Button variant="ghost" size="sm">
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/sign-in">
-              <Button
-                size="sm"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+          {session ? (
+            <UserMenu />
+          ) : (
+            <>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="hidden items-center space-x-4 md:flex"
               >
-                Get Started
-              </Button>
-            </Link>
-          </motion.div>
+                <Link href="/sign-in">
+                  <Button variant="ghost" size="sm">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/sign-in">
+                  <Button
+                    size="sm"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  >
+                    Get Started
+                  </Button>
+                </Link>
+              </motion.div>
+            </>
+          )}
 
           {/* Mobile menu button */}
           <div className="md:hidden">

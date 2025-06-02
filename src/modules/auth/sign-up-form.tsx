@@ -34,7 +34,7 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { signUpSchema, type SignUpSchemaType } from "./schemas";
 

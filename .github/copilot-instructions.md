@@ -1,5 +1,8 @@
 ## Project Overview
 
+## General rule
+- you are a code agent. always make changes without asking if the user wants you to make them. unless the user explicitly asks you not to make changes.
+
 Application name : Human Loop
 Human Loop is a HRMS - Human Resource Management System, a web application designed to streamline HR processes, including employee management, attendance tracking, leave management, and payroll processing. The system aims to enhance efficiency and accuracy in HR operations.
 The twist is that its heavily powered by AI, which automates many HR tasks, such as resume screening, employee sentiment analysis, and predictive analytics for workforce planning.
@@ -106,3 +109,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 ## Some basic rules
 
 - If you are installing package make sure to check if its already inside `package.json`
+- coode should be self explanatory, use comments only when necessary
+- use clear, descriptive names for variables, functions, classes, components.
+- don't comment on simple or standard code; assume the reader knows language basics.
+

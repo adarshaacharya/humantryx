@@ -4,7 +4,10 @@ import {
   timestamp,
   boolean,
   integer,
+  pgEnum,
 } from "drizzle-orm/pg-core";
+
+export const userRole = pgEnum("user_role", ["superadmin", "hr", "employee"]);
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -20,7 +23,7 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
-  role: text("role"),
+  role: userRole("role").notNull(), // can be superadmin, hr, employee
   banned: boolean("banned"),
   banReason: text("ban_reason"),
   banExpires: timestamp("ban_expires"),

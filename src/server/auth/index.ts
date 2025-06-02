@@ -1,15 +1,16 @@
+// the auth file should be here !!!
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { cache } from "react";
 import { headers } from "next/headers";
-import { db } from "./db";
-import * as schema from "./db/schema";
+import { db } from "../db";
+import * as schema from "../db/schema";
 import { organization, admin } from "better-auth/plugins";
 import {
   sendChangeEmailVerification,
   sendVerificationEmail,
-} from "@/lib/email";
+} from "@/server/auth/email";
 import { env } from "@/env";
 
 export const auth = betterAuth({
