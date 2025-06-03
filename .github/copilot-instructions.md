@@ -62,8 +62,11 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - try to make components responsive but dont overdo it, use Tailwind's responsive utilities
 - Use shadcn/ui components for consistent UI design
 - Always use named exports except for page.tsx file but dont use barrel exports
-- please don't over animate components animate only when necessary, use `motion/react` for animations and try to animate consistently
+- please don't over animate components animate only when necessary, use `motion/react` for animations , but don't animate unless necessary
 - for forms use react hook form, use `useForm` hook from `react-hook-form` and use `zodResolver` for validation
+- Don't create custom types unless its necessary, try to infer types for backend data types we are using trpc so its already typed response 
+- avoid useEffect as much as you can , for data fetching directly use trpc with react query hooks, try to `use suspense` for better UX, use skeleton components for loading states
+- avoid using too much try catch blocks, use proper error handling in mutations and queries
 
 2. Data Layer:
 
@@ -117,3 +120,9 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - coode should be self explanatory, use comments only when necessary
 - use clear, descriptive names for variables, functions, classes, components.
 - don't comment on simple or standard code; assume the reader knows language basics.
+
+
+## Important Links
+
+TRPC Revalidate query : https://trpc.io/docs/client/react/useUtils
+Better auth organization : https://www.better-auth.com/docs/plugins/organization

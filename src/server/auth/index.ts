@@ -12,6 +12,7 @@ import {
   sendVerificationEmail,
 } from "@/server/auth/email";
 import { env } from "@/env";
+import { organization } from "better-auth/plugins";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -29,8 +30,9 @@ export const auth = betterAuth({
     nextCookies(),
     admin({
       adminRoles: ["superadmin"],
-      defaultRole: "hr",
+      defaultRole: "user",
     }),
+    organization(),
   ],
   user: {
     changeEmail: {
