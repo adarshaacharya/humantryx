@@ -71,6 +71,7 @@ export function SignInForm() {
         if (error.status === 403) {
           setError("Please verify your email address before signing in.");
           toast.error("Email verification required");
+          // router.push("/verify-email");
         } else {
           setError(error.message ?? "Invalid email or password");
           toast.error("Sign in failed");

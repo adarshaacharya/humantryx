@@ -1,6 +1,7 @@
 ## Project Overview
 
 ## General rule
+
 - you are a code agent. always make changes without asking if the user wants you to make them. unless the user explicitly asks you not to make changes.
 
 Application name : Human Loop
@@ -10,7 +11,10 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 ## Key Features
 
 - **User Authentication**: Secure login for employees and HR managers.
-- **Role-Based Access Control**: Different access levels for employees and HR managers.
+- **Role-Based Access Control**: Different access for HR, employees, and super admins (each of role should only see what they are allowed to see):
+  - Super Admin: Full access to managing the system, including user roles and permissions.
+  - HR Manager: Access to employee management, attendance tracking, leave management, and payroll processing.
+  - Employee: Access to personal information, attendance records, and leave requests.
 - **Employee Management**: Add, update, and manage employee records.
 - **Attendance Tracking**: Monitor employee attendance and generate reports.
 - **Leave Management**: Handle leave requests and approvals.
@@ -25,7 +29,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - **Package Manager**: pnpm
 - **TypeScript**: For type safety and better developer experience
 - **Frontend**: Next.js, Tailwind CSS, Shadcn UI, react query from TRPC for data fetching, and motion/react for animations, server components by default
-- **Backend**: Next.js with TRPC
+- **Backend**: Next.js with TRPC, upstash for caching
 - **Validateion**: Zod for input validation
 - **Database**: PostgreSQL with Drizzle ORM
 - **AI Integration**: OpenAI API for AI-powered features
@@ -42,6 +46,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - `src/lib` contains utility functions, types, and configurations
 - `src/styles` contains global styles and Tailwind CSS configurations
 - `src/modules` contain all frontend modules and its corresponding components
+- `memorybank` contains all the docs for the project, including architecture, design decisions, and other relevant information
 
 ## KEY ARCHITECTURAL PRINCIPLES
 
@@ -70,11 +75,10 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 3. Authentication & Security:
 
 - Use better-auth for authentication
-- RBAC (Role-Based Access Control) for different user roles
+- RBAC (Role-Based Access Control) for different user roles : HR, Employee, Super Admin
 - Implement protected routes with middleware
 - Use environment variables for sensitive data
 - Verify user identity in all mutations
-- Follow proper CORS policies
 
 4. Performance:
 
@@ -82,7 +86,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - Implement streaming where appropriate
 - Use proper image optimization
 - Follow proper caching strategies
-- Implement proper loading states
+- Implement proper loading states preferably usin Suspense rather than doing `isLoading` checks
 
 5. Styling:
 
@@ -99,12 +103,13 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - Handle streaming responses properly
 
 6. Backend:
+
 - Use TRPC for API routes
 - Implement proper error handling
 - Use Zod for input validation
 - Use proper logging and monitoring
 - Implement rate limiting and throttling
-- Use proper caching strategies using upstash 
+- Use proper data caching strategies using upstash
 
 ## Some basic rules
 
@@ -112,4 +117,3 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - coode should be self explanatory, use comments only when necessary
 - use clear, descriptive names for variables, functions, classes, components.
 - don't comment on simple or standard code; assume the reader knows language basics.
-

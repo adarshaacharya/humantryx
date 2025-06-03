@@ -6,7 +6,7 @@ import { cache } from "react";
 import { headers } from "next/headers";
 import { db } from "../db";
 import * as schema from "../db/schema";
-import { organization, admin } from "better-auth/plugins";
+import { admin } from "better-auth/plugins";
 import {
   sendChangeEmailVerification,
   sendVerificationEmail,
@@ -25,7 +25,13 @@ export const auth = betterAuth({
       console.log("Reset password URL:", url);
     },
   },
-  plugins: [nextCookies(), admin()],
+  plugins: [
+    nextCookies(),
+    admin({
+      adminRoles: ["superadmin"],
+      defaultRole: "hr",
+    }),
+  ],
   user: {
     changeEmail: {
       enabled: true,
@@ -43,7 +49,7 @@ export const auth = betterAuth({
   emailVerification: {
     sendOnSignUp: true,
     expiresIn: 60 * 60 * 1, // 1 HOUR
-    autoSignInAfterVerification: true,
+    autoSignInAfterVerification: false, // Don't auto sign in after verification
     sendVerificationEmail: async ({ user, token }) => {
       const verificationUrl = `${env.BETTER_AUTH_URL}/api/auth/verify-email?token=${token}&callbackURL=${env.EMAIL_VERIFICATION_CALLBACK_URL}`;
       const { error } = await sendVerificationEmail({

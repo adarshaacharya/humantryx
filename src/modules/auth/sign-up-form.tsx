@@ -85,7 +85,7 @@ export function SignUpForm() {
         email: values.email,
         password: values.password,
         name: values.name,
-        callbackURL: "/dashboard",
+        callbackURL: "/verify-email",
       });
 
       if (error) {
@@ -101,7 +101,7 @@ export function SignUpForm() {
         toast.success(
           "Account created successfully! Please check your email to verify your account.",
         );
-        router.push("/sign-in?message=verify-email");
+        router.push("/verify-email");
       }
     } catch (err) {
       console.error("Sign up error:", err);

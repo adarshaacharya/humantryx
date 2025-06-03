@@ -28,17 +28,28 @@ export default async function authMiddleware(request: NextRequest) {
     },
   );
 
-  if (isAuthRoute && session) {
+  // If user is authenticated but email is not verified
+  if (
+    session?.user &&
+    !session.user.emailVerified &&
+    pathName !== "/verify-email" // avoid redirect loop
+  ) {
+    return NextResponse.redirect(new URL("/verify-email", request.url));
+  }
+
+  // If authenticated with verified email and trying to access auth routes
+  if (isAuthRoute && session?.user?.emailVerified) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+  // If trying to access protected routes without authentication
   if (isProtectedRoute && !session) {
     let callbackUrl = request.nextUrl.pathname;
 
     if (nextUrl.search) {
       callbackUrl += nextUrl.search;
     }
-    
+
     const encodeedCallbackUrl = encodeURIComponent(callbackUrl);
 
     return NextResponse.redirect(
