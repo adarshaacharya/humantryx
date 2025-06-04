@@ -7,7 +7,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, Settings, LogOut, MessageSquare, Rocket } from "lucide-react";
+import {
+  User,
+  Settings,
+  LogOut,
+  MessageSquare,
+  Rocket,
+  UserCog2,
+} from "lucide-react";
 import { authClient, useSession } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -40,7 +47,11 @@ export function UserMenu() {
           className="border-border hover:bg-accent hover:text-accent-foreground relative h-8 w-8 rounded-full border shadow-sm"
         >
           <div className="flex h-full w-full items-center justify-center">
-            <User className="h-4 w-4" />
+            {session?.user.role === "super_admin" ? (
+              <UserCog2 className="h-4 w-4" />
+            ) : (
+              <User className="h-4 w-4" />
+            )}
           </div>
           <span className="border-background absolute right-0 bottom-0 h-2 w-2 rounded-full border bg-green-500" />
         </Button>

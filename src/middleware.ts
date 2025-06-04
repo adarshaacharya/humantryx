@@ -34,7 +34,7 @@ export default async function authMiddleware(request: NextRequest) {
     },
   );
 
-  // if he is superadmin and tryuing to access dashboard, redirect to admin
+  // if user is superadmin and trying to access dashboard, redirect to admin
   if (session?.user?.role === "super_admin" && pathName === "/dashboard") {
     return NextResponse.redirect(new URL("/admin", request.url));
   }
@@ -48,36 +48,47 @@ export default async function authMiddleware(request: NextRequest) {
   if (
     session?.user &&
     !session.user.emailVerified &&
-    pathName !== "/verify-email" // avoid redirect loop
+    pathName !== "/verify-email"
   ) {
     return NextResponse.redirect(new URL("/verify-email", request.url));
   }
 
-  // If authenticated with verified email and trying to access auth routes, redirect to dashboard or organization setup
+  // If authenticated with verified email and trying to access auth routes
   if (isAuthRoute && session?.user?.emailVerified) {
-    // Check if user has organization membership
+    if (session.user.role === "super_admin") {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+
     if (!session.session.activeOrganizationId) {
       return NextResponse.redirect(new URL("/organization-setup", request.url));
     }
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // If verified user without organization tries to access protected routes
+  // If verified user without organization tries to access protected routes (except super admins)
   if (
     isProtectedRoute &&
     session?.user?.emailVerified &&
-    !session.session.activeOrganizationId
+    !session.session.activeOrganizationId &&
+    session.user.role !== "super_admin"
   ) {
     return NextResponse.redirect(new URL("/organization-setup", request.url));
   }
 
   // If user with organization tries to access organization setup, redirect to dashboard
+  // (skip for super admins as they don't need organizations)
   if (
     isOrganizationRoute &&
     session?.user?.emailVerified &&
-    session.session.activeOrganizationId
+    (session.session.activeOrganizationId ||
+      session.user.role === "super_admin")
   ) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(
+      new URL(
+        session.user.role === "super_admin" ? "/admin" : "/dashboard",
+        request.url,
+      ),
+    );
   }
 
   // If trying to access protected routes without authentication
