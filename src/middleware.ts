@@ -10,6 +10,7 @@ const authRoutes = [
   "/reset-password",
   "/forgot-password",
 ];
+const organizationRoutes = ["/organization-setup"];
 
 export default async function authMiddleware(request: NextRequest) {
   const nextUrl = request.nextUrl;
@@ -17,6 +18,7 @@ export default async function authMiddleware(request: NextRequest) {
 
   const isAuthRoute = authRoutes.includes(pathName);
   const isProtectedRoute = protectedRoutes.includes(pathName);
+  const isOrganizationRoute = organizationRoutes.includes(pathName);
 
   const { data: session } = await betterFetch<Session>(
     "/api/auth/get-session",
@@ -37,8 +39,30 @@ export default async function authMiddleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/verify-email", request.url));
   }
 
-  // If authenticated with verified email and trying to access auth routes
+  // If authenticated with verified email and trying to access auth routes, redirect to dashboard or organization setup
   if (isAuthRoute && session?.user?.emailVerified) {
+    // Check if user has organization membership
+    if (!session.session.activeOrganizationId) {
+      return NextResponse.redirect(new URL("/organization-setup", request.url));
+    }
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  // If verified user without organization tries to access protected routes
+  if (
+    isProtectedRoute &&
+    session?.user?.emailVerified &&
+    !session.session.activeOrganizationId
+  ) {
+    return NextResponse.redirect(new URL("/organization-setup", request.url));
+  }
+
+  // If user with organization tries to access organization setup, redirect to dashboard
+  if (
+    isOrganizationRoute &&
+    session?.user?.emailVerified &&
+    session.session.activeOrganizationId
+  ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

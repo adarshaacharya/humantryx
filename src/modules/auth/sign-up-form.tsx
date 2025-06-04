@@ -36,7 +36,7 @@ import {
 import Link from "next/link";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
-import { signUpSchema, type SignUpSchemaType } from "./schemas";
+import { signUpSchema, type SignUpSchemaType } from "./schemas/auth";
 
 const passwordStrength = (password: string) => {
   let strength = 0;

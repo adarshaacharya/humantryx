@@ -19,7 +19,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { resetPasswordSchema, type ResetPasswordSchemaType } from "./schemas";
+import {
+  resetPasswordSchema,
+  type ResetPasswordSchemaType,
+} from "./schemas/auth";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { LoadingButton } from "@/components/ui/loading-button";

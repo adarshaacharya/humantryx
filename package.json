@@ -57,6 +57,7 @@
     "react-hook-form": "^7.56.4",
     "resend": "^4.5.1",
     "server-only": "^0.0.1",
+    "slugify": "^1.6.6",
     "sonner": "^2.0.4",
     "superjson": "^2.2.1",
     "tailwind-merge": "^3.3.0",

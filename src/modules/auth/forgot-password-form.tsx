@@ -20,7 +20,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { forgotPasswordSchema, type ForgotPasswordSchemaType } from "./schemas";
+import {
+  forgotPasswordSchema,
+  type ForgotPasswordSchemaType,
+} from "./schemas/auth";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { LoadingButton } from "@/components/ui/loading-button";

@@ -15,17 +15,12 @@ import {
   UserCheck,
   UserX,
 } from "lucide-react";
+import { OrganizationOverview } from "@/modules/dashboard/organization-overview";
 
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-foreground text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Welcome to Human Loop HRMS - Your AI-powered HR management system
-        </p>
-      </div>
+      <OrganizationOverview />
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

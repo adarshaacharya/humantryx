@@ -37,7 +37,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
-import { signInSchema, type SignInSchemaType } from "./schemas";
+import { signInSchema, type SignInSchemaType } from "./schemas/auth";
 
 export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);

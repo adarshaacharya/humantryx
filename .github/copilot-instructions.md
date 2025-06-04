@@ -57,7 +57,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - Implement proper TypeScript types for all props and functions
 - Reserve function declarations for utilities and helpers
 - If the component is large, break it down into smaller components by creating a new file for each component
-- Group similar modules together in a folder inside `src/modules/`
+- Group similar modules together in a folder inside `src/modules/`, for example, all employee related components should be inside `src/modules/employee/`, and related schemas, constants, and types should be inside `src/modules/employee/` as well
 - Don't use extra colors unless necessary use the tailwind classname like primary, secondary defined in `src/styles/globals.css` for design and color consistency instead of using tailwind random color classes
 - try to make components responsive but dont overdo it, use Tailwind's responsive utilities
 - Use shadcn/ui components for consistent UI design
