@@ -135,3 +135,19 @@ const isAuthed = t.middleware(({ ctx, next }) => {
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
   .use(isAuthed);
+
+const isSuperAdminAuthed = t.middleware(({ ctx, next }) => {
+  if (!ctx.session?.user || ctx.session.user.role !== "super_admin") {
+    throw new TRPCError({ code: "FORBIDDEN" });
+  }
+
+  return next({
+    ctx: {
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
+export const superAdminProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(isSuperAdminAuthed);

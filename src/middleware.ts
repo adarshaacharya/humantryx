@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { env } from "@/env";
 import type { Session } from "@/server/auth";
 
-const protectedRoutes = ["/dashboard"];
+const protectedRoutes = ["/dashboard", "/admin"];
 const authRoutes = [
   "/sign-in",
   "/sign-up",
@@ -17,8 +17,12 @@ export default async function authMiddleware(request: NextRequest) {
   const pathName = request.nextUrl.pathname;
 
   const isAuthRoute = authRoutes.includes(pathName);
-  const isProtectedRoute = protectedRoutes.includes(pathName);
+  const isProtectedRoute =
+    protectedRoutes.includes(pathName) ||
+    pathName.startsWith("/dashboard") ||
+    pathName.startsWith("/admin");
   const isOrganizationRoute = organizationRoutes.includes(pathName);
+  const isAdminRoute = pathName.startsWith("/admin");
 
   const { data: session } = await betterFetch<Session>(
     "/api/auth/get-session",
@@ -29,6 +33,16 @@ export default async function authMiddleware(request: NextRequest) {
       },
     },
   );
+
+  // if he is superadmin and tryuing to access dashboard, redirect to admin
+  if (session?.user?.role === "super_admin" && pathName === "/dashboard") {
+    return NextResponse.redirect(new URL("/admin", request.url));
+  }
+
+  // If trying to access admin routes without super_admin role
+  if (isAdminRoute && (!session || session.user.role !== "super_admin")) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
 
   // If user is authenticated but email is not verified
   if (

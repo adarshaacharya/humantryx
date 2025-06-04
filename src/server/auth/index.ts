@@ -29,10 +29,12 @@ export const auth = betterAuth({
   plugins: [
     nextCookies(),
     admin({
-      adminRoles: ["superadmin"],
+      adminRoles: ["super_admin"],
       defaultRole: "user",
     }),
-    organization(),
+    organization({
+      
+    }),
   ],
   user: {
     changeEmail: {
@@ -48,6 +50,7 @@ export const auth = betterAuth({
       },
     },
   },
+
   emailVerification: {
     sendOnSignUp: true,
     expiresIn: 60 * 60 * 1, // 1 HOUR

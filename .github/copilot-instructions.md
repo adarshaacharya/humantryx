@@ -71,6 +71,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 2. Data Layer:
 
 - use drizzle ORM for database interactions
+- Please check : https://orm.drizzle.team/llms-full.txt for cursor rules
 - Implement optimistic updates for better UX
 - Use proper error handling in mutations
 - Validate all inputs with Zod
