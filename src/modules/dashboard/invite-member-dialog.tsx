@@ -33,12 +33,15 @@ import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { z } from "zod";
 import { api } from "@/trpc/react";
+import { env } from "@/env";
 
 const inviteMemberSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   role: z.enum(["member", "admin"], {
     required_error: "Please select a role",
   }),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  designation: z.string().min(2, "Designation must be at least 2 characters"),
 });
 
 type InviteMemberSchemaType = z.infer<typeof inviteMemberSchema>;
@@ -55,11 +58,24 @@ export function InviteMemberDialog({ onInviteSent }: InviteMemberDialogProps) {
   // Use TRPC utils for cache invalidation
   const utils = api.useUtils();
 
+  const createEmployee = api.employee.create.useMutation({
+    onError: (error) => {
+      console.error("Failed to create employee:", error);
+      toast.error("Failed to create employee record");
+    },
+    onSuccess: async () => {
+      toast.success("Employee record created successfully!");
+      await utils.organization.getOverview.invalidate();
+    },
+  });
+
   const form = useForm<InviteMemberSchemaType>({
     resolver: zodResolver(inviteMemberSchema),
     defaultValues: {
       email: "",
-      role: "member", // Set default role
+      role: "member",
+      name: "",
+      designation: "",
     },
   });
 
@@ -79,11 +95,25 @@ export function InviteMemberDialog({ onInviteSent }: InviteMemberDialogProps) {
 
       if (data) {
         setInvitationId(data.id);
-        toast.success("Invitation sent successfully!");
+
+        // Create employee record using TRPC with just the basic info
+        // The userId and memberId will be updated when the invitation is accepted
+        await createEmployee.mutateAsync({
+          organizationId: data.organizationId,
+          name: values.name,
+          designation: values.designation,
+          invitationId: data.id, // Link to the invitation
+        });
+
+        // if (emailError) {
+        //   console.error("Failed to send invitation email:", emailError);
+        //   toast.error("Failed to send invitation email");
+        // } else {
+        //   toast.success("Invitation sent successfully!");
+        // }
 
         // Invalidate organization queries to refresh member lists
         await utils.organization.getOverview.invalidate();
-        // await utils.organization.getCurrent.invalidate();
 
         onInviteSent?.();
         form.reset();
@@ -172,8 +202,25 @@ export function InviteMemberDialog({ onInviteSent }: InviteMemberDialogProps) {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
-              className="space-y-4"
+              className="w-full space-y-4"
             >
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter member's full name"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="email"
@@ -184,6 +231,23 @@ export function InviteMemberDialog({ onInviteSent }: InviteMemberDialogProps) {
                       <Input
                         type="email"
                         placeholder="Enter member's email"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="designation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Designation</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter member's job title"
                         {...field}
                       />
                     </FormControl>
@@ -217,26 +281,9 @@ export function InviteMemberDialog({ onInviteSent }: InviteMemberDialogProps) {
                 )}
               />
 
-              <div className="flex space-x-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleClose}
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isLoading} className="flex-1">
-                  {isLoading ? (
-                    <div className="flex items-center space-x-2">
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                      <span>Sending...</span>
-                    </div>
-                  ) : (
-                    "Send Invitation"
-                  )}
-                </Button>
-              </div>
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Sending..." : "Send Invitation"}
+              </Button>
             </form>
           </Form>
         )}

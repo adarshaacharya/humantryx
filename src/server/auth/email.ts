@@ -4,6 +4,7 @@ import { Resend } from "resend";
 import { VerificationEmailTemplate } from "@/modules/email-templates/email-verification";
 import { ResetPasswordEmailTemplate } from "@/modules/email-templates/reset-password-email";
 import { ChangeEmailVerificationTemplate } from "@/modules/email-templates/change-email-verification";
+import { EmployeeInvitationEmail } from "@/modules/email-templates";
 
 export const resend = new Resend(env.RESEND_API_KEY);
 
@@ -51,5 +52,31 @@ export const sendChangeEmailVerification = async ({
     to: [email],
     subject: "Reset Password Link",
     react: ChangeEmailVerificationTemplate({ inviteLink: verificationUrl }),
+  });
+};
+
+export const sendOrganizationInvitationEmail = async ({
+  email,
+  inviteLink,
+  orgName,
+  name,
+  inviteId,
+}: {
+  email: string;
+  inviteLink: string;
+  orgName: string;
+  name: string;
+  inviteId?: string;
+}) => {
+  return await resend.emails.send({
+    from: env.EMAIL_FROM,
+    to: [email],
+    subject: "Organization Invitation",
+    react: EmployeeInvitationEmail({
+      invitationLink: inviteLink,
+      organizationName: orgName,
+      name,
+      invitationId: inviteId ?? "N/A",
+    }),
   });
 };

@@ -18,7 +18,7 @@
     "preview": "next build && next start",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "better-auth:generate": "npx @better-auth/cli@latest generate --output src/server/db/users.ts"
+    "better-auth:generate": "npx @better-auth/cli@latest generate --config src/server/auth/index.ts"
   },
   "dependencies": {
     "@better-fetch/fetch": "^1.1.18",

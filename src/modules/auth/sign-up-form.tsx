@@ -54,6 +54,12 @@ const getStrengthColor = (strength: number) => {
   return "bg-green-500";
 };
 
+const getStrengthText = (strength: number) => {
+  if (strength < 2) return "Weak";
+  if (strength < 4) return "Medium";
+  return "Strong";
+};
+
 export function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -109,12 +115,6 @@ export function SignUpForm() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const getStrengthText = (strength: number) => {
-    if (strength < 2) return "Weak";
-    if (strength < 4) return "Medium";
-    return "Strong";
   };
 
   return (

@@ -1,7 +1,8 @@
 import { superAdminProcedure, createTRPCRouter } from "../trpc";
 import { z } from "zod";
 import { and, desc, asc, eq, ilike, sql, gt } from "drizzle-orm";
-import { organizations, members, users } from "@/server/db/users";
+import { users } from "@/server/db/users";
+import { members, organizations } from "@/server/db/organizations";
 
 export const adminRouter = createTRPCRouter({
   listOrganizations: superAdminProcedure

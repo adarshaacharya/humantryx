@@ -9,6 +9,7 @@ import * as schema from "../db/schema";
 import { admin } from "better-auth/plugins";
 import {
   sendChangeEmailVerification,
+  sendOrganizationInvitationEmail,
   sendVerificationEmail,
 } from "@/server/auth/email";
 import { env } from "@/env";
@@ -33,7 +34,22 @@ export const auth = betterAuth({
       defaultRole: "user",
     }),
     organization({
-      
+      async sendInvitationEmail(data, request) {
+        console.log("Sending organization invitation email:", data);
+        const inviteLink = `${env.BETTER_AUTH_URL}/accept-invitation/${data.id}`;
+
+        const { error } = await sendOrganizationInvitationEmail({
+          email: data.email,
+          inviteLink: inviteLink,
+          name: data.email,
+          orgName: data.organization.name,
+          inviteId: data.id,
+        });
+
+        if (error) {
+          console.log("sendOrganizationInvitationEmail Error: ", error);
+        }
+      },
     }),
   ],
   user: {

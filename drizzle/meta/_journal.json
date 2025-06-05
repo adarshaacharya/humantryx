@@ -50,6 +50,20 @@
       "when": 1748947126267,
       "tag": "0006_strange_night_thrasher",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1749051107317,
+      "tag": "0007_employees",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1749054112000,
+      "tag": "0008_employees-opt-fields",
+      "breakpoints": true
     }
   ]
 }

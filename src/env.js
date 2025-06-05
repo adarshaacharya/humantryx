@@ -22,6 +22,7 @@ export const env = createEnv({
       .string()
       .url()
       .default("http://localhost:3000/api/auth/callback/email-verification"),
+    ORGANIZATION_INVITATION_CALLBACK_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -51,6 +52,8 @@ export const env = createEnv({
     EMAIL_FROM: process.env.EMAIL_FROM,
     EMAIL_VERIFICATION_CALLBACK_URL:
       process.env.EMAIL_VERIFICATION_CALLBACK_URL,
+    ORGANIZATION_INVITATION_CALLBACK_URL:
+      process.env.ORGANIZATION_INVITATION_CALLBACK_URL,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
