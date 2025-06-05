@@ -99,6 +99,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - Implement dark mode using next-themes
 - Use shadcn/ui components consistently
 - Use `motion/react` for animations and try to animate consistently
+- `lucide-react` for icons
 
 6. AI Integration:
 

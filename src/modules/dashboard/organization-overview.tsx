@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Users, Settings, User } from "lucide-react";
-import { InviteMemberDialogWrapper } from "./invite-member-dialog-wrapper";
 import { authClient } from "@/server/auth/auth-client";
 import { getRoleBadgeVariant, getRoleIcon } from "./utils";
+import { InviteMemberDialog } from "./invite-member-dialog";
 
 export function OrganizationOverview() {
   const currentOrg = authClient.useActiveOrganization();
@@ -116,7 +116,6 @@ export function OrganizationOverview() {
           </CardContent>
         </Card>
 
-        {/* Members Overview */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
@@ -124,7 +123,7 @@ export function OrganizationOverview() {
                 <Users className="h-5 w-5" />
                 <span>Members</span>
               </div>
-              <InviteMemberDialogWrapper />
+              <InviteMemberDialog />
             </CardTitle>
           </CardHeader>
           <CardContent>

@@ -10,6 +10,7 @@ import {
   Building2,
   Users,
   Settings,
+  MessageCircleCode,
 } from "lucide-react";
 import {
   Sidebar,
@@ -36,6 +37,11 @@ const MENU_ITEMS = [
     title: "Users",
     icon: Users,
     href: "/admin/users",
+  },
+  {
+    title: "Invitations",
+    icon: MessageCircleCode,
+    href: "/admin/invitations",
   },
   {
     title: "Settings",

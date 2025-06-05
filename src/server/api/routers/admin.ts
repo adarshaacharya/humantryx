@@ -2,7 +2,7 @@ import { superAdminProcedure, createTRPCRouter } from "../trpc";
 import { z } from "zod";
 import { and, desc, asc, eq, ilike, sql, gt } from "drizzle-orm";
 import { users } from "@/server/db/users";
-import { members, organizations } from "@/server/db/organizations";
+import { members, organizations, invitations } from "@/server/db/organizations";
 
 export const adminRouter = createTRPCRouter({
   listOrganizations: superAdminProcedure
@@ -284,4 +284,117 @@ export const adminRouter = createTRPCRouter({
       },
     };
   }),
+
+  listInvitations: superAdminProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).default(10),
+        offset: z.number().min(0).default(0),
+        searchQuery: z.string().optional(),
+        sortBy: z.enum(["createdAt", "email", "status"]).default("createdAt"),
+        sortDirection: z.enum(["asc", "desc"]).default("desc"),
+        status: z
+          .enum(["pending", "accepted", "expired", "all"])
+          .default("all"),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { limit, offset, searchQuery, sortBy, sortDirection, status } =
+        input;
+
+      let filters = [];
+
+      // Apply search filter
+      if (searchQuery) {
+        filters.push(ilike(invitations.email, `%${searchQuery}%`));
+      }
+
+      // Apply status filter
+      if (status !== "all") {
+        filters.push(eq(invitations.status, status));
+      }
+
+      // Get total count with filters
+      const totalCountResult = await ctx.db
+        .select({ count: sql<number>`count(*)` })
+        .from(invitations)
+        .where(and(...filters))
+        .$dynamic();
+
+      const totalCount = Number(totalCountResult[0]?.count) || 0;
+      const totalPages = Math.ceil(totalCount / limit);
+
+      // Get invitations with related data
+      const results = await ctx.db
+        .select({
+          id: invitations.id,
+          email: invitations.email,
+          status: invitations.status,
+          role: invitations.role,
+          expiresAt: invitations.expiresAt,
+          organizationId: invitations.organizationId,
+          inviterId: invitations.inviterId,
+          organization: organizations.name,
+          inviterName: users.name,
+          inviterEmail: users.email,
+        })
+        .from(invitations)
+        .leftJoin(
+          organizations,
+          eq(invitations.organizationId, organizations.id),
+        )
+        .leftJoin(users, eq(invitations.inviterId, users.id))
+        .where(and(...filters))
+        .orderBy(
+          sortBy === "email"
+            ? sortDirection === "desc"
+              ? desc(invitations.email)
+              : asc(invitations.email)
+            : sortBy === "status"
+              ? sortDirection === "desc"
+                ? desc(invitations.status)
+                : asc(invitations.status)
+              : sortDirection === "desc"
+                ? desc(invitations.expiresAt)
+                : asc(invitations.expiresAt),
+        )
+        .limit(limit)
+        .offset(offset);
+
+      return {
+        invitations: results.map((invitation) => ({
+          id: invitation.id,
+          email: invitation.email,
+          status: invitation.status,
+          role: invitation.role,
+          expiresAt: invitation.expiresAt,
+          organizationId: invitation.organizationId,
+          organizationName: invitation.organization,
+          inviterId: invitation.inviterId,
+          inviterName: invitation.inviterName,
+          inviterEmail: invitation.inviterEmail,
+        })),
+        totalPages,
+        totalCount,
+      };
+    }),
+
+  cancelInvitation: superAdminProcedure
+    .input(
+      z.object({
+        invitationId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { invitationId } = input;
+
+      await ctx.db
+        .update(invitations)
+        .set({
+          status: "expired",
+        })
+        .where(eq(invitations.id, invitationId));
+
+      return { success: true };
+    }),
 });
