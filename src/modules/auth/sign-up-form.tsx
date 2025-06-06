@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -67,6 +67,9 @@ export function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const invitationId = searchParams.get("invitation");
+  const prefilledEmail = searchParams.get("email");
 
   const form = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
@@ -77,6 +80,13 @@ export function SignUpForm() {
       confirmPassword: "",
     },
   });
+
+  // Pre-fill email if provided from invitation
+  useEffect(() => {
+    if (prefilledEmail) {
+      form.setValue("email", prefilledEmail);
+    }
+  }, [prefilledEmail, form]);
 
   const handleSubmit = async (values: SignUpSchemaType) => {
     if (!acceptTerms) {
@@ -91,7 +101,7 @@ export function SignUpForm() {
         email: values.email,
         password: values.password,
         name: values.name,
-        callbackURL: "/verify-email",
+        // callbackURL: "/verify-email",
       });
 
       if (error) {
@@ -104,6 +114,11 @@ export function SignUpForm() {
       }
 
       if (data) {
+        // If there's a pending invitation, store it for after email verification
+        if (invitationId) {
+          sessionStorage.setItem("pendingInvitation", invitationId);
+        }
+
         toast.success(
           "Account created successfully! Please check your email to verify your account.",
         );

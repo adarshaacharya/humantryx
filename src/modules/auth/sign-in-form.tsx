@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,7 +34,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { signInSchema, type SignInSchemaType } from "./schemas/auth";
@@ -44,6 +44,9 @@ export function SignInForm() {
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const invitationId = searchParams.get("invitation");
+  const prefilledEmail = searchParams.get("email");
 
   const form = useForm<SignInSchemaType>({
     resolver: zodResolver(signInSchema),
@@ -53,6 +56,13 @@ export function SignInForm() {
       rememberMe: true,
     },
   });
+
+  // Pre-fill email if provided from invitation
+  useEffect(() => {
+    if (prefilledEmail) {
+      form.setValue("email", prefilledEmail);
+    }
+  }, [prefilledEmail, form]);
 
   const { isSubmitting } = form.formState;
 
@@ -64,14 +74,19 @@ export function SignInForm() {
         email: values.email,
         password: values.password,
         rememberMe: values.rememberMe,
-        callbackURL: "/dashboard",
+        callbackURL: invitationId
+          ? `/accept-invitation/${invitationId}`
+          : "/dashboard",
       });
 
       if (error) {
         if (error.status === 403) {
           setError("Please verify your email address before signing in.");
           toast.error("Email verification required");
-          // router.push("/verify-email");
+          // If there's a pending invitation, store it for after email verification
+          if (invitationId) {
+            sessionStorage.setItem("pendingInvitation", invitationId);
+          }
         } else {
           setError(error.message ?? "Invalid email or password");
           toast.error("Sign in failed");
@@ -81,7 +96,11 @@ export function SignInForm() {
 
       if (data) {
         toast.success("Welcome back!");
-        router.push("/dashboard");
+        if (invitationId) {
+          router.push(`/accept-invitation/${invitationId}`);
+        } else {
+          router.push("/dashboard");
+        }
       }
     } catch (err) {
       console.error("Sign in error:", err);

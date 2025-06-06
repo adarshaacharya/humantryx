@@ -46,6 +46,22 @@ export const EmployeeInvitationEmail = ({
               We&apos;re excited to have you join {organizationName}
             </Text>
 
+            <Section className="text-center">
+              <Button
+                href={invitationLink}
+                className="rounded-lg bg-[#4f46e5] px-6 py-3 text-base font-semibold text-white no-underline"
+              >
+                Complete Registration
+              </Button>
+            </Section>
+
+            <Section className="my-[32px] text-center">
+              <Text className="text-sm text-[#6b7280]">
+                Please click the button above to complete your registration and
+                become a part of our team.
+              </Text>
+            </Section>
+
             <Section className="my-[32px] rounded-lg bg-[#f3f4f6] p-[20px] text-center">
               <Text className="m-0 font-semibold text-[#111827]">
                 Your Invitation ID
@@ -74,15 +90,6 @@ export const EmployeeInvitationEmail = ({
               <Text className="ml-4 text-[#374151]">
                 • Organization updates and announcements
               </Text>
-            </Section>
-
-            <Section className="text-center">
-              <Button
-                href={invitationLink}
-                className="rounded-lg bg-[#4f46e5] px-6 py-3 text-base font-semibold text-white no-underline"
-              >
-                Complete Registration
-              </Button>
             </Section>
 
             <Text className="text-base text-[#374151]">

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { invitations } from "@/server/db/schema";
+import { invitations, organizations } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
@@ -13,6 +13,14 @@ export const invitationRouter = createTRPCRouter({
 
       const invitation = await db.query.invitations.findFirst({
         where: eq(invitations.id, id),
+        with: {
+          organization: {
+            columns: {
+              name: true,
+              id: true,
+            },
+          },
+        },
       });
 
       if (!invitation) {
@@ -33,8 +41,13 @@ export const invitationRouter = createTRPCRouter({
       }
 
       return {
+        id: invitation.id,
         email: invitation.email,
         role: invitation.role,
+        organizationName:
+          invitation.organization?.name || "Unknown Organization",
+        organizationId: invitation.organization?.id,
+        expiresAt: invitation.expiresAt,
       };
     }),
 });

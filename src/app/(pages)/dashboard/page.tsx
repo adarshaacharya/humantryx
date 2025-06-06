@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { OrganizationOverview } from "@/modules/dashboard/organization-overview";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       <OrganizationOverview />

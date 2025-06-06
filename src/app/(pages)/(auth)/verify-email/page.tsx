@@ -13,7 +13,7 @@ export default async function VerifyEmailPage() {
   }
 
   if (session?.user?.emailVerified) {
-    return redirect("/dashboard");
+    return redirect("/auth-callback");
   }
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -39,6 +39,22 @@ export function OrganizationSetupForm() {
     "create" | "join" | null
   >("create");
   const router = useRouter();
+
+  // Check if user already has an organization
+  const {
+    data: orgStatus,
+    isLoading: isCheckingOrg,
+    error,
+  } = api.organization.hasOrganization.useQuery(undefined, {
+    retry: false,
+    retryOnMount: false,
+  });
+
+  useEffect(() => {
+    if (orgStatus?.hasOrganization) {
+      router.push("/dashboard");
+    }
+  }, [orgStatus, router]);
 
   const form = useForm<OrganizationSelectionSchemaType>({
     resolver: zodResolver(organizationSelectionSchema),
@@ -93,6 +109,25 @@ export function OrganizationSetupForm() {
     }
   };
 
+  // Show loading while checking organization status (only if authenticated)
+  if (isCheckingOrg && !error) {
+    return (
+      <div className="w-full max-w-2xl">
+        <div className="mb-8 text-center">
+          <LogoHeader />
+          <h1 className="text-foreground mt-4 text-3xl font-bold">
+            Checking your organization status...
+          </h1>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center py-8">
+            <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent" />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-2xl">
       {/* Header */}
@@ -114,7 +149,7 @@ export function OrganizationSetupForm() {
             Choose Your Setup
           </CardTitle>
           <CardDescription className="text-muted-foreground text-center">
-            Select how you'd like to proceed
+            Select how you&apos;d like to proceed
           </CardDescription>
         </CardHeader>
 
@@ -255,7 +290,7 @@ export function OrganizationSetupForm() {
                           </div>
                         </FormControl>
                         <p className="text-muted-foreground text-xs">
-                          This will be used in your organization's URL
+                          This will be used in your organization&apos;s URL
                         </p>
                         <FormMessage />
                       </FormItem>

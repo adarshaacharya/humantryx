@@ -14,6 +14,20 @@ import {
 } from "@/modules/auth/schemas/org";
 
 export const organizationRouter = createTRPCRouter({
+  // Check if user has any organization memberships
+  hasOrganization: protectedProcedure.query(async ({ ctx }) => {
+    const { db, session } = ctx;
+
+    const existingMember = await db.query.members.findFirst({
+      where: eq(membersTable.userId, session.user.id),
+    });
+
+    return {
+      hasOrganization: !!existingMember,
+      member: existingMember,
+    };
+  }),
+
   //   getCurrent: protectedProcedure.query(async ({ ctx }) => {
   //     try {
   //       const { db, session } = ctx;

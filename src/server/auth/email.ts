@@ -4,7 +4,7 @@ import { Resend } from "resend";
 import { VerificationEmailTemplate } from "@/modules/email-templates/email-verification";
 import { ResetPasswordEmailTemplate } from "@/modules/email-templates/reset-password-email";
 import { ChangeEmailVerificationTemplate } from "@/modules/email-templates/change-email-verification";
-import { EmployeeInvitationEmail } from "@/modules/email-templates";
+import { EmployeeInvitationEmail } from "@/modules/email-templates/employee-invitation";
 
 export const resend = new Resend(env.RESEND_API_KEY);
 

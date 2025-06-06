@@ -14,6 +14,7 @@ import {
 } from "@/server/auth/email";
 import { env } from "@/env";
 import { organization } from "better-auth/plugins";
+import { eq } from "drizzle-orm";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -35,7 +36,6 @@ export const auth = betterAuth({
     }),
     organization({
       async sendInvitationEmail(data, request) {
-        console.log("Sending organization invitation email:", data);
         const inviteLink = `${env.BETTER_AUTH_URL}/accept-invitation/${data.id}`;
 
         const { error } = await sendOrganizationInvitationEmail({
@@ -70,7 +70,7 @@ export const auth = betterAuth({
   emailVerification: {
     sendOnSignUp: true,
     expiresIn: 60 * 60 * 1, // 1 HOUR
-    autoSignInAfterVerification: false, // Don't auto sign in after verification
+    autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, token }) => {
       const verificationUrl = `${env.BETTER_AUTH_URL}/api/auth/verify-email?token=${token}&callbackURL=${env.EMAIL_VERIFICATION_CALLBACK_URL}`;
       const { error } = await sendVerificationEmail({
@@ -83,6 +83,30 @@ export const auth = betterAuth({
   },
 
   socialProviders: {},
+  advanced: {},
+  databaseHooks: {
+    session: {
+      create: {
+        before: async (session) => {
+          const [member] = await db
+            .select({
+              organizationId: schema.members.organizationId,
+            })
+            .from(schema.members)
+            .where(eq(schema.members.userId, session.userId))
+            .limit(1)
+            .execute();
+
+          return {
+            data: {
+              ...session,
+              activeOrganizationId: member?.organizationId,
+            },
+          };
+        },
+      },
+    },
+  },
 });
 
 export const getSession = cache(async () => {

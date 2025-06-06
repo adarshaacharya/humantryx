@@ -1,7 +1,7 @@
 import { betterFetch } from "@better-fetch/fetch";
 import { NextResponse, type NextRequest } from "next/server";
 import { env } from "@/env";
-import type { Session } from "@/server/auth";
+import { type Session } from "@/server/auth";
 
 const protectedRoutes = ["/dashboard", "/admin"];
 const authRoutes = [
@@ -9,6 +9,7 @@ const authRoutes = [
   "/sign-up",
   "/reset-password",
   "/forgot-password",
+  "/auth-callback",
 ];
 const organizationRoutes = ["/organization-setup"];
 
@@ -48,7 +49,8 @@ export default async function authMiddleware(request: NextRequest) {
   if (
     session?.user &&
     !session.user.emailVerified &&
-    pathName !== "/verify-email"
+    pathName !== "/verify-email" &&
+    pathName !== "/auth-callback"
   ) {
     return NextResponse.redirect(new URL("/verify-email", request.url));
   }
@@ -57,6 +59,11 @@ export default async function authMiddleware(request: NextRequest) {
   if (isAuthRoute && session?.user?.emailVerified) {
     if (session.user.role === "super_admin") {
       return NextResponse.redirect(new URL("/admin", request.url));
+    }
+
+    // Skip organization check for auth-callback as it handles pending invitations
+    if (pathName === "/auth-callback") {
+      return NextResponse.next();
     }
 
     if (!session.session.activeOrganizationId) {
@@ -70,7 +77,9 @@ export default async function authMiddleware(request: NextRequest) {
     isProtectedRoute &&
     session?.user?.emailVerified &&
     !session.session.activeOrganizationId &&
-    session.user.role !== "super_admin"
+    session.user.role !== "super_admin" &&
+    !pathName.startsWith("/accept-invitation") &&
+    pathName !== "/auth-callback"
   ) {
     return NextResponse.redirect(new URL("/organization-setup", request.url));
   }
