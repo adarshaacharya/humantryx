@@ -1,6 +1,34 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { users } from "./users";
+
+export const invitationStatus = pgEnum("invitation_status", [
+  "pending",
+  "accepted",
+  "rejected",
+  "canceled",
+]);
+
+/**
+ * owner: The user who created the organization by default. The owner has full control over the organization and can perform any action.
+
+admin: Users with the admin role have full control over the organization except for deleting the organization or changing the owner.
+
+member: Users with the member role have limited control over the organization. They can create projects, invite users, and manage projects they have created.
+
+ */
+export const orgMemberRole = pgEnum("org_member_role", [
+  "owner", // highest rank, who create org
+  "admin",
+  "member",
+]);
+
+
+export const invitationRole = pgEnum("invitation_role", [
+  "admin",
+  "member",
+  "guest",
+]); // since owner is the one who invites, we don't need to include it here
 
 export const organizations = pgTable("organizations", {
   id: text("id").primaryKey(),
@@ -19,7 +47,7 @@ export const members = pgTable("members", {
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  role: text("role").default("member").notNull(),
+  role: orgMemberRole("role").default("member").notNull(),
 
   createdAt: timestamp("created_at").notNull(),
 });
@@ -30,8 +58,8 @@ export const invitations = pgTable("invitations", {
     .notNull()
     .references(() => organizations.id, { onDelete: "cascade" }),
   email: text("email").notNull(),
-  role: text("role"),
-  status: text("status").default("pending").notNull(),
+  role: invitationRole("role"),
+  status: invitationStatus("status").default("pending").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   inviterId: text("inviter_id")
     .notNull()

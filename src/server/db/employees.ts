@@ -1,6 +1,7 @@
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { organizations, members, invitations } from "./organizations";
+import { timestamps } from "./timestamps";
 
 export const employees = pgTable("employees", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -16,6 +17,5 @@ export const employees = pgTable("employees", {
   }),
   name: text("name").notNull(),
   designation: text("designation").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at"),
+  ...timestamps,
 });

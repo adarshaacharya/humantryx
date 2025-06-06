@@ -26,14 +26,6 @@ export const MENU_ITEMS = [
         title: "All Employees",
         href: "/dashboard/employees",
       },
-      {
-        title: "Add Employee",
-        href: "/dashboard/employees/add",
-      },
-      {
-        title: "Employee Reports",
-        href: "/dashboard/employees/reports",
-      },
     ],
   },
   {

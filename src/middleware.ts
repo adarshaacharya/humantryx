@@ -11,6 +11,7 @@ const authRoutes = [
   "/forgot-password",
   "/auth-callback",
 ];
+
 const organizationRoutes = ["/organization-setup"];
 
 export default async function authMiddleware(request: NextRequest) {

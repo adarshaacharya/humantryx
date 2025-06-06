@@ -54,8 +54,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 
 - Use React Server Components (RSC) by default
 - Add 'use client' directive only for interactive components and using react query hooks from trpc
-- Implement proper TypeScript types for all props and functions
-- Reserve function declarations for utilities and helpers
+- Implement proper TypeScript types for all props and functions and aoid `any`
 - If the component is large, break it down into smaller components by creating a new file for each component
 - Group similar modules together in a folder inside `src/modules/`, for example, all employee related components should be inside `src/modules/employee/`, and related schemas, constants, and types should be inside `src/modules/employee/` as well
 - Don't use extra colors unless necessary use the tailwind classname like primary, secondary defined in `src/styles/globals.css` for design and color consistency instead of using tailwind random color classes
@@ -67,6 +66,8 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - Don't create custom types unless its necessary, try to infer types for backend data types we are using trpc so its already typed response 
 - avoid useEffect as much as you can , for data fetching directly use trpc with react query hooks, try to `use suspense` for better UX, use skeleton components for loading states
 - avoid using too much try catch blocks, use proper error handling in mutations and queries
+- while fetching trpc data don't destructure useQuery results eg : { data, isLoading } = useQuery() instead use `const employeeManagementQuery = useQuery()` and then access employeeManagementQuery.data and employeeManagementQuery.isLoading
+- if there is any constants or non-stateful data move it out of component
 
 2. Data Layer:
 
@@ -114,7 +115,8 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - Use Zod for input validation
 - Use proper logging and monitoring
 - Implement rate limiting and throttling
-- Use proper data caching strategies using upstash
+- Use proper data caching strategies using @upstash/redis
+- If certain code are resuaable create service files inside `src/server/services/` and use them in your routers
 
 ## Some basic rules
 
@@ -128,3 +130,18 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 
 TRPC Revalidate query : https://trpc.io/docs/client/react/useUtils
 Better auth organization : https://www.better-auth.com/docs/plugins/organization
+
+
+## Features
+
+1. Role based authorization
+2. Permission based access control
+3. Employee management
+  - Add (invite same logic as in home page make sure to reuse that component), update, delete employee
+  - View employee details
+  - cancel invite of employee
+  - filter / search / paginate
+
+
+
+
