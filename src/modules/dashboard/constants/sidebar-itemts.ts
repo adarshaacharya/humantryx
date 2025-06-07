@@ -26,6 +26,10 @@ export const MENU_ITEMS = [
         title: "All Employees",
         href: "/dashboard/employees",
       },
+      {
+        title: "Invitations",
+        href: "/dashboard/employees/invitations",
+      },
     ],
   },
   {

@@ -7,10 +7,10 @@ import {
   ArrowUpDown,
   MoreHorizontal,
   Eye,
-  Edit,
-  Trash2,
-  UserX,
   RefreshCw,
+  UserX,
+  Calendar,
+  Mail,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -26,23 +26,22 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { format } from "date-fns";
-import type { EmployeeWithUser } from "../types/employee.types";
+import type { InvitationWithDetails } from "../../types/invitation.types";
+import { getInvitationStatusBadge } from "../../constants/invitation.constants";
 import type { InvitationStatus } from "better-auth/plugins";
-import { getInvitationStatusBadge } from "../constants";
+import type { InvitationRole } from "@/server/db/consts";
 
-interface EmployeeTableMeta {
-  onViewEmployee: (employee: EmployeeWithUser) => void;
-  onEditEmployee: (employee: EmployeeWithUser) => void;
-  onDeleteEmployee: (employee: EmployeeWithUser) => void;
-  oncancelInvitation: (employee: EmployeeWithUser) => void;
-  onResendInvitation: (employee: EmployeeWithUser) => void;
+interface InvitationTableMeta {
+  onViewInvitation: (invitation: InvitationWithDetails) => void;
+  onResendInvitation: (invitation: InvitationWithDetails) => void;
+  onCancelInvitation: (invitation: InvitationWithDetails) => void;
   isLoading?: boolean;
   pendingActionId?: string;
 }
 
-export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
+export const invitationColumns: ColumnDef<InvitationWithDetails>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "email",
     header: ({ column }) => {
       return (
         <Button
@@ -50,21 +49,21 @@ export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="h-8 px-2"
         >
-          Name
+          Email
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
-      const name = row.getValue("name") as string;
-      const employee = row.original;
+      const email = row.getValue("email") as string;
+      const invitation = row.original;
 
       return (
         <div className="flex flex-col">
-          <span className="font-medium">{name}</span>
-          {employee.user?.email && (
+          <span className="font-medium">{email}</span>
+          {invitation.employeeName && (
             <span className="text-muted-foreground text-sm">
-              {employee.user.email}
+              {invitation.employeeName}
             </span>
           )}
         </div>
@@ -72,7 +71,19 @@ export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
     },
   },
   {
-    accessorKey: "designation",
+    accessorKey: "role",
+    header: "Org Role",
+    cell: ({ row }) => {
+      const role = row.getValue("role") as InvitationRole;
+      return (
+        <Badge variant="outline" className="capitalize">
+          {role ?? "Member"}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
     header: ({ column }) => {
       return (
         <Button
@@ -80,24 +91,18 @@ export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="h-8 px-2"
         >
-          Designation
+          Status
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-  },
-  {
-    accessorKey: "invitationStatus",
-    header: "Invitation Status",
     cell: ({ row }) => {
-      const status = row.getValue(
-        "invitationStatus",
-      ) as InvitationStatus | null;
+      const status = row.getValue("status") as InvitationStatus | null;
       return getInvitationStatusBadge(status);
     },
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "expiresAt",
     header: ({ column }) => {
       return (
         <Button
@@ -105,23 +110,57 @@ export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="h-8 px-2"
         >
-          Joined
+          Expires
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
-      const date = row.getValue("createdAt") as Date;
-      return format(new Date(date), "MMM dd, yyyy");
+      const expiresAt = row.getValue("expiresAt") as Date;
+      const now = new Date();
+      const isExpired = expiresAt < now;
+
+      return (
+        <div className="flex flex-col">
+          <span className={isExpired ? "text-red-600" : ""}>
+            {format(expiresAt, "MMM dd, yyyy")}
+          </span>
+          <span className="text-muted-foreground text-xs">
+            {format(expiresAt, "h:mm a")}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "inviterName",
+    header: "Invited By",
+    cell: ({ row }) => {
+      const inviterName = row.getValue("inviterName") as string | null;
+      const invitation = row.original;
+
+      return (
+        <div className="flex flex-col">
+          <span className="font-medium">{inviterName ?? "Unknown"}</span>
+          {invitation.inviterEmail && (
+            <span className="text-muted-foreground text-sm">
+              {invitation.inviterEmail}
+            </span>
+          )}
+        </div>
+      );
     },
   },
   {
     id: "actions",
     cell: function ActionsCell({ row, table }) {
-      const employee = row.original;
-      const meta = table.options.meta as EmployeeTableMeta;
+      const invitation = row.original;
+      const meta = table.options.meta as InvitationTableMeta;
 
-      const isLoading = meta.isLoading && meta.pendingActionId === employee.id;
+      const isLoading =
+        meta.isLoading && meta.pendingActionId === invitation.id;
+      const isPending = invitation.status === "pending";
+      const isExpired = new Date(invitation.expiresAt) < new Date();
 
       return (
         <DropdownMenu>
@@ -140,37 +179,24 @@ export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
                 <TooltipTrigger asChild>
                   <DropdownMenuItem
                     className="flex items-center"
-                    onClick={() => meta.onViewEmployee(employee)}
+                    onClick={() => meta.onViewInvitation(invitation)}
                   >
                     <Eye className="mr-2 h-4 w-4" />
                     <span>View Details</span>
                   </DropdownMenuItem>
                 </TooltipTrigger>
-                <TooltipContent>View employee profile</TooltipContent>
+                <TooltipContent>View invitation details</TooltipContent>
               </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuItem
-                    className="flex items-center"
-                    onClick={() => meta.onEditEmployee(employee)}
-                  >
-                    <Edit className="mr-2 h-4 w-4" />
-                    <span>Edit</span>
-                  </DropdownMenuItem>
-                </TooltipTrigger>
-                <TooltipContent>Edit employee details</TooltipContent>
-              </Tooltip>
-
-              <DropdownMenuSeparator />
-
-              {employee.invitationStatus === "pending" && (
+              {isPending && !isExpired && (
                 <>
+                  <DropdownMenuSeparator />
+
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <DropdownMenuItem
                         className="flex items-center"
-                        onClick={() => meta.onResendInvitation(employee)}
+                        onClick={() => meta.onResendInvitation(invitation)}
                         disabled={isLoading}
                       >
                         <RefreshCw className="mr-2 h-4 w-4" />
@@ -184,7 +210,7 @@ export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
                     <TooltipTrigger asChild>
                       <DropdownMenuItem
                         className="text-destructive flex items-center"
-                        onClick={() => meta.oncancelInvitation(employee)}
+                        onClick={() => meta.onCancelInvitation(invitation)}
                         disabled={isLoading}
                       >
                         <UserX className="mr-2 h-4 w-4" />
@@ -193,24 +219,8 @@ export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
                     </TooltipTrigger>
                     <TooltipContent>Cancel this invitation</TooltipContent>
                   </Tooltip>
-
-                  <DropdownMenuSeparator />
                 </>
               )}
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuItem
-                    className="text-destructive flex items-center"
-                    onClick={() => meta.onDeleteEmployee(employee)}
-                    disabled={isLoading}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    <span>{isLoading ? "Deleting..." : "Delete"}</span>
-                  </DropdownMenuItem>
-                </TooltipTrigger>
-                <TooltipContent>Remove employee</TooltipContent>
-              </Tooltip>
             </TooltipProvider>
           </DropdownMenuContent>
         </DropdownMenu>

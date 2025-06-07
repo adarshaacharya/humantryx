@@ -8,23 +8,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  User,
-  Mail,
-  Briefcase,
-  Calendar,
-  UserCheck,
-  Clock,
-  Edit,
-} from "lucide-react";
+import { User, Mail, Briefcase, Calendar, Edit } from "lucide-react";
 import { format } from "date-fns";
-import type { EmployeeWithUser } from "../types/employee.types";
 import {
   getInvitationStatusBadge,
   getInvitationStatusIcon,
-} from "../constants";
+} from "../../constants/invitation.constants";
+import type { EmployeeWithUser } from "../../types/employee.types";
 
 interface EmployeeDetailsDialogProps {
   employee: EmployeeWithUser | null;

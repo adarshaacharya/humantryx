@@ -26,8 +26,8 @@ import { api } from "@/trpc/react";
 import {
   updateEmployeeSchema,
   type UpdateEmployeeSchemaType,
-} from "../schemas/employee.schema";
-import type { EmployeeWithUser } from "../types/employee.types";
+} from "../../schemas/employee.schema";
+import type { EmployeeWithUser } from "../../types/employee.types";
 
 interface EmployeeEditDialogProps {
   employee: EmployeeWithUser | null;

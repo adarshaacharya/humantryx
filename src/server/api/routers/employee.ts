@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { EmployeeService } from "@/server/services/employee.service";
-import { EmployeeInvitationService } from "@/server/services/employee-invitation.service";
+import { EmployeeService } from "@/server/api/services/employee.service";
+import { InvitationService } from "@/server/api/services/invitation.service";
 import {
   createEmployeeSchema,
   updateEmployeeSchema,
@@ -149,7 +149,7 @@ export const employeeRouter = createTRPCRouter({
         });
       }
 
-      return await EmployeeInvitationService.createEmployeeInvitation({
+      return await InvitationService.createEmployeeInvitation({
         email: input.email,
         organizationId: input.organizationId,
         inviterId: session.user.id,
@@ -197,7 +197,7 @@ export const employeeRouter = createTRPCRouter({
         });
       }
 
-      return await EmployeeInvitationService.resendEmployeeInvitation(
+      return await InvitationService.resendEmployeeInvitation(
         input.employeeId,
         input.organizationId,
       );

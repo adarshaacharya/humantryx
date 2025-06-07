@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
-import type { EmployeeWithUser } from "../types/employee.types";
+import type { EmployeeWithUser } from "../../types/employee.types";
 
 interface EmployeeDeleteDialogProps {
   employee: EmployeeWithUser | null;

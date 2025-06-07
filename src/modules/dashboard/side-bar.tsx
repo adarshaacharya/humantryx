@@ -37,11 +37,27 @@ export function DashboardSideBar() {
     );
   };
 
-  const isActive = (href: string) => {
+  const isActive = (href: string, isSubmenuItem = false) => {
     if (href === "/dashboard") {
       return pathname === href;
     }
-    return pathname.startsWith(href);
+
+    if (isSubmenuItem) {
+      return pathname === href;
+    }
+
+    if (pathname.startsWith(href)) {
+      const parentMenuItem = MENU_ITEMS.find((item) => item.href === href);
+      if (parentMenuItem?.submenu) {
+        const exactSubmenuMatch = parentMenuItem.submenu.some(
+          (subItem) => pathname === subItem.href,
+        );
+        return !exactSubmenuMatch;
+      }
+      return true;
+    }
+
+    return false;
   };
 
   return (
@@ -101,7 +117,7 @@ export function DashboardSideBar() {
                               <SidebarMenuSubButton
                                 asChild
                                 className={cn(
-                                  isActive(subItem.href) &&
+                                  isActive(subItem.href, true) &&
                                     "bg-primary/10 text-primary font-medium",
                                 )}
                               >

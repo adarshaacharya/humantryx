@@ -3,15 +3,9 @@ import { employees, invitations, members, users } from "@/server/db/schema";
 import { and, eq, ilike, desc, asc, sql, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { auth } from "@/server/auth";
-import { Console } from "console";
-import { authClient } from "../auth/auth-client";
 import type { InvitationStatus } from "better-auth/plugins";
 import { headers } from "next/headers";
-
-export interface PaginationOptions {
-  limit: number;
-  offset: number;
-}
+import type { PaginationOptions } from "@/types/table";
 
 export interface SortOptions {
   sortBy: "name" | "designation" | "createdAt" | "email";
@@ -273,7 +267,7 @@ export class EmployeeService {
       switch (sortBy) {
         // case "name":
         //   orderBy = direction(employees.name);
-          // break;
+        // break;
         case "designation":
           orderBy = direction(employees.designation);
           break;

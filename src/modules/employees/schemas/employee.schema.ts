@@ -33,7 +33,6 @@ export const updateEmployeeSchema = z.object({
 // Employee invitation schema
 export const inviteEmployeeSchema = z.object({
   email: z.string().email("Invalid email address"),
-  name: z.string().min(1, "Name is required").max(100, "Name is too long"),
   designation: z
     .string()
     .min(1, "Designation is required")

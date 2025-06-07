@@ -54,7 +54,6 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 
 - Use React Server Components (RSC) by default
 - Add 'use client' directive only for interactive components and using react query hooks from trpc
-- Implement proper TypeScript types for all props and functions and aoid `any`
 - If the component is large, break it down into smaller components by creating a new file for each component
 - Group similar modules together in a folder inside `src/modules/`, for example, all employee related components should be inside `src/modules/employee/`, and related schemas, constants, and types should be inside `src/modules/employee/` as well
 - Don't use extra colors unless necessary use the tailwind classname like primary, secondary defined in `src/styles/globals.css` for design and color consistency instead of using tailwind random color classes
@@ -124,6 +123,11 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - coode should be self explanatory, use comments only when necessary
 - use clear, descriptive names for variables, functions, classes, components.
 - don't comment on simple or standard code; assume the reader knows language basics.
+
+1. Typescript :
+- Implement proper TypeScript types for all props and functions and avoid `any`, but please dont try to create custom types unless necessary, try to infer types from backend data types or infer zod schema
+- Use type unless interface is necessary, prefer type over interface unless you need to extend it or use it in a class
+- try to extend or pick type instead of creating new one
 
 
 ## Important Links
