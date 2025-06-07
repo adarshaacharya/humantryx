@@ -15,7 +15,6 @@ export const employees = pgTable("employees", {
   invitationId: text("invitation_id").references(() => invitations.id, {
     onDelete: "set null",
   }),
-  name: text("name").notNull(),
   designation: text("designation").notNull(),
   ...timestamps,
 });

@@ -9,7 +9,6 @@ export class EmployeeInvitationService {
     email: string;
     organizationId: string;
     inviterId: string;
-    employeeName: string;
     designation: string;
   }) {
     try {
@@ -32,27 +31,26 @@ export class EmployeeInvitationService {
       }
 
       // Create employee record linked to the invitation
-      const employee = await db
-        .insert(employees)
-        .values({
-          name: data.employeeName,
-          designation: data.designation,
-          organizationId: data.organizationId,
-          invitationId: invitationResult.id,
-          userId: null, // Will be set when invitation is accepted
-          memberId: null, // Will be set when invitation is accepted
-        })
-        .returning();
+      // const employee = await db
+      //   .insert(employees)
+      //   .values({
+      //     designation: data.designation,
+      //     organizationId: data.organizationId,
+      //     invitationId: invitationResult.id,
+      //     userId: null, // Will be set when invitation is accepted
+      //     memberId: null, // Will be set when invitation is accepted
+      //   })
+      //   .returning();
 
       return {
         success: true,
-        invitation: {
-          id: invitationResult.id,
-          email: data.email,
-          organizationId: data.organizationId,
-          expiresAt: invitationResult.expiresAt,
-        },
-        employee: employee[0],
+        // invitation: {
+        id: invitationResult.id,
+        email: data.email,
+        organizationId: data.organizationId,
+        expiresAt: invitationResult.expiresAt,
+        // },
+        // employee: employee[0],
       };
     } catch (error) {
       if (error instanceof TRPCError) throw error;

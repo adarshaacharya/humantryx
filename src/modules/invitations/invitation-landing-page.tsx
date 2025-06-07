@@ -9,6 +9,7 @@ import { Building2, Mail, UserPlus, ArrowRight, Loader2 } from "lucide-react";
 import { api } from "@/trpc/react";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
+import { INVITATION_SESSION_KEY } from "@/consts/session";
 
 interface InvitationLandingPageProps {
   invitationId: string;
@@ -23,11 +24,10 @@ export function InvitationLandingPage({
   const invitationQuery = api.invitation.verify.useQuery({ id: invitationId });
 
   const { data: session } = authClient.useSession();
-  console.log({ session });
 
   const handleAcceptInvitation = useCallback(async () => {
     if (!session?.user) {
-      sessionStorage.setItem("pendingInvitation", invitationId);
+      sessionStorage.setItem(INVITATION_SESSION_KEY, invitationId);
       router.push(`/sign-up?invitation=${invitationId}`);
       return;
     }
@@ -66,9 +66,9 @@ export function InvitationLandingPage({
     ) {
       // Check if this is a fresh sign-up by looking for the pending invitation
       const wasPendingInvitation =
-        sessionStorage.getItem("pendingInvitation") === invitationId;
+        sessionStorage.getItem(INVITATION_SESSION_KEY) === invitationId;
       if (wasPendingInvitation) {
-        sessionStorage.removeItem("pendingInvitation");
+        sessionStorage.removeItem(INVITATION_SESSION_KEY);
         void handleAcceptInvitation();
       }
     }
@@ -200,7 +200,7 @@ export function InvitationLandingPage({
             <div className="space-y-4">
               <Button
                 onClick={() => {
-                  sessionStorage.setItem("pendingInvitation", invitationId);
+                  sessionStorage.setItem(INVITATION_SESSION_KEY, invitationId);
                   router.push(
                     `/sign-up?email=${encodeURIComponent(invitation?.email ?? "")}&invitation=${invitationId}`,
                   );
@@ -223,7 +223,7 @@ export function InvitationLandingPage({
               <Button
                 variant="outline"
                 onClick={() => {
-                  sessionStorage.setItem("pendingInvitation", invitationId);
+                  sessionStorage.setItem(INVITATION_SESSION_KEY, invitationId);
                   router.push(
                     `/sign-in?email=${encodeURIComponent(invitation?.email ?? "")}&invitation=${invitationId}`,
                   );

@@ -391,7 +391,7 @@ export const adminRouter = createTRPCRouter({
       await ctx.db
         .update(invitations)
         .set({
-          status: "expired",
+          status: "canceled",
         })
         .where(eq(invitations.id, invitationId));
 

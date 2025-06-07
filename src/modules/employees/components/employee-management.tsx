@@ -47,17 +47,15 @@ export function EmployeeManagement() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
 
-  // const [actionLoading, setActionLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
   const [pendingActionId, setPendingActionId] = useState<string | undefined>();
 
   const debouncedSearch = useDebounce(filters.search, 300);
   const utils = api.useUtils();
 
-  // Get current organization from session
   const { data: session } = authClient.useSession();
   const organizationId = session?.session?.activeOrganizationId;
 
-  // Fetch employees
   const employeesQuery = api.employee.list.useQuery(
     {
       organizationId: organizationId ?? "",
@@ -76,11 +74,11 @@ export function EmployeeManagement() {
   // Mutations
   const cancelInvitation = api.employee.cancelInvitation.useMutation({
     onMutate: (variables) => {
-      // setActionLoading(true);
+      setActionLoading(true);
       setPendingActionId(variables.employeeId);
     },
     onSettled: () => {
-      // setActionLoading(false);
+      setActionLoading(false);
       setPendingActionId(undefined);
     },
     onSuccess: () => {
@@ -94,11 +92,11 @@ export function EmployeeManagement() {
 
   const resendInvitation = api.employee.resendInvitation.useMutation({
     onMutate: (variables) => {
-      // setActionLoading(true);
+      setActionLoading(true);
       setPendingActionId(variables.employeeId);
     },
     onSettled: () => {
-      // setActionLoading(false);
+      setActionLoading(false);
       setPendingActionId(undefined);
     },
     onSuccess: () => {

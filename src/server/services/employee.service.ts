@@ -33,7 +33,7 @@ export interface EmployeeListParams
 
 export interface EmployeeWithUser {
   id: string;
-  name: string;
+  // name: string;
   designation: string;
   createdAt: Date;
   updatedAt: Date | null;
@@ -63,7 +63,7 @@ export class EmployeeService {
       const employee = await db
         .insert(employees)
         .values({
-          name: data.name,
+          // name: data.name,
           designation: data.designation,
           organizationId: data.organizationId,
           invitationId: data.invitationId ?? null,
@@ -156,7 +156,7 @@ export class EmployeeService {
       const result = await db
         .select({
           id: employees.id,
-          name: employees.name,
+          // name: employees.name,
           designation: employees.designation,
           createdAt: employees.createdAt,
           updatedAt: employees.updatedAt,
@@ -190,7 +190,7 @@ export class EmployeeService {
 
       return {
         id: employee.id,
-        name: employee.name,
+        // name: employee.name,
         designation: employee.designation,
         createdAt: employee.createdAt,
         updatedAt: employee.updatedAt,
@@ -239,7 +239,7 @@ export class EmployeeService {
       if (searchQuery) {
         filters.push(
           or(
-            ilike(employees.name, `%${searchQuery}%`),
+            // ilike(employees.name, `%${searchQuery}%`),
             ilike(employees.designation, `%${searchQuery}%`),
             ilike(users.email, `%${searchQuery}%`),
           )!,
@@ -271,9 +271,9 @@ export class EmployeeService {
       const direction = sortDirection === "desc" ? desc : asc;
 
       switch (sortBy) {
-        case "name":
-          orderBy = direction(employees.name);
-          break;
+        // case "name":
+        //   orderBy = direction(employees.name);
+          // break;
         case "designation":
           orderBy = direction(employees.designation);
           break;
@@ -288,7 +288,7 @@ export class EmployeeService {
       const results = await db
         .select({
           id: employees.id,
-          name: employees.name,
+          // name: employees.name,
           designation: employees.designation,
           createdAt: employees.createdAt,
           updatedAt: employees.updatedAt,
@@ -312,7 +312,7 @@ export class EmployeeService {
 
       const employeesWithUser: EmployeeWithUser[] = results.map((employee) => ({
         id: employee.id,
-        name: employee.name,
+        // name: employee.name,
         designation: employee.designation,
         createdAt: employee.createdAt,
         updatedAt: employee.updatedAt,

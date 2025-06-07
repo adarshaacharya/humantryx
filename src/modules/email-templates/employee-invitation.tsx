@@ -13,14 +13,16 @@ import {
 } from "@react-email/components";
 
 interface EmployeeInvitationEmailProps {
-  name: string;
+  email: string;
+  designation: string;
   organizationName: string;
   invitationId: string;
   invitationLink: string;
 }
 
 export const EmployeeInvitationEmail = ({
-  name,
+  email,
+  designation,
   organizationName,
   invitationLink,
   invitationId,
@@ -40,10 +42,11 @@ export const EmployeeInvitationEmail = ({
               </Heading>
             </Section>
 
-            <Text className="text-base text-[#374151]">Dear {name},</Text>
+            <Text className="text-base text-[#374151]">Dear {email},</Text>
 
             <Text className="text-base text-[#374151]">
-              We&apos;re excited to have you join {organizationName}
+              We&apos;re excited to have you join {organizationName}, as a{" "}
+              {designation}.
             </Text>
 
             <Section className="text-center">

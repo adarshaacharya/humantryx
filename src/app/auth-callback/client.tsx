@@ -4,6 +4,7 @@ import { Loader2, CheckCircle } from "lucide-react";
 import { type Session } from "@/server/auth";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { INVITATION_SESSION_KEY } from "@/consts/session";
 
 export function AuthCallbackClient({ session }: { session: Session | null }) {
   const router = useRouter();
@@ -11,11 +12,10 @@ export function AuthCallbackClient({ session }: { session: Session | null }) {
 
   useEffect(() => {
     if (session?.user?.emailVerified) {
-      const pendingInvitation = sessionStorage.getItem("pendingInvitation");
-      console.log({ pendingInvitation });
+      const pendingInvitation = sessionStorage.getItem(INVITATION_SESSION_KEY);
 
       if (pendingInvitation) {
-        sessionStorage.removeItem("pendingInvitation");
+        sessionStorage.removeItem(INVITATION_SESSION_KEY);
         void router.push(`/accept-invitation/${pendingInvitation}`);
       } else {
         void router.push("/dashboard");

@@ -23,7 +23,6 @@ export const orgMemberRole = pgEnum("org_member_role", [
   "member",
 ]);
 
-
 export const invitationRole = pgEnum("invitation_role", [
   "admin",
   "member",

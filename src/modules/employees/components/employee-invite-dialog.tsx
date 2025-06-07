@@ -61,7 +61,6 @@ export function EmployeeInviteDialog({
       name: "",
       designation: "",
       organizationId: organizationId ?? "",
-      
     },
   });
 
@@ -73,15 +72,14 @@ export function EmployeeInviteDialog({
 
     inviteEmployeeMutation.mutate({
       ...values,
+      
       organizationId,
     });
   };
 
   const copyInvitationId = async () => {
-    if (inviteEmployeeMutation.data?.invitation?.id) {
-      await navigator.clipboard.writeText(
-        inviteEmployeeMutation.data.invitation.id,
-      );
+    if (inviteEmployeeMutation.data?.id) {
+      await navigator.clipboard.writeText(inviteEmployeeMutation.data.id);
       toast.success("Invitation ID copied to clipboard!");
     }
   };
@@ -130,7 +128,7 @@ export function EmployeeInviteDialog({
               <label className="text-sm font-medium">Invitation ID</label>
               <div className="flex space-x-2">
                 <Input
-                  value={inviteEmployeeMutation.data?.invitation?.id ?? ""}
+                  value={inviteEmployeeMutation.data?.id ?? ""}
                   readOnly
                   className="bg-gray-50 dark:bg-gray-900"
                 />

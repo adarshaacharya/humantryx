@@ -38,6 +38,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { signInSchema, type SignInSchemaType } from "./schemas/auth";
+import { INVITATION_SESSION_KEY } from "@/consts/session";
 
 export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -85,7 +86,7 @@ export function SignInForm() {
           toast.error("Email verification required");
           // If there's a pending invitation, store it for after email verification
           if (invitationId) {
-            sessionStorage.setItem("pendingInvitation", invitationId);
+            sessionStorage.setItem(INVITATION_SESSION_KEY, invitationId);
           }
         } else {
           setError(error.message ?? "Invalid email or password");

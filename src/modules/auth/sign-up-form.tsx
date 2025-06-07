@@ -37,6 +37,7 @@ import Link from "next/link";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { signUpSchema, type SignUpSchemaType } from "./schemas/auth";
+import { INVITATION_SESSION_KEY } from "@/consts/session";
 
 const passwordStrength = (password: string) => {
   let strength = 0;
@@ -116,7 +117,7 @@ export function SignUpForm() {
       if (data) {
         // If there's a pending invitation, store it for after email verification
         if (invitationId) {
-          sessionStorage.setItem("pendingInvitation", invitationId);
+          sessionStorage.setItem(INVITATION_SESSION_KEY, invitationId);
         }
 
         toast.success(

@@ -153,7 +153,7 @@ export const employeeRouter = createTRPCRouter({
         email: input.email,
         organizationId: input.organizationId,
         inviterId: session.user.id,
-        employeeName: input.name,
+        // employeeName: input.name,
         designation: input.designation,
       });
     }),

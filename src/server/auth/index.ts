@@ -35,13 +35,12 @@ export const auth = betterAuth({
       defaultRole: "user",
     }),
     organization({
-      async sendInvitationEmail(data, request) {
+      async sendInvitationEmail(data, _request) {
         const inviteLink = `${env.BETTER_AUTH_URL}/accept-invitation/${data.id}`;
-
         const { error } = await sendOrganizationInvitationEmail({
           email: data.email,
           inviteLink: inviteLink,
-          name: data.email,
+          designation: data.email,
           orgName: data.organization.name,
           inviteId: data.id,
         });
@@ -66,7 +65,7 @@ export const auth = betterAuth({
       },
     },
   },
-
+  
   emailVerification: {
     sendOnSignUp: true,
     expiresIn: 60 * 60 * 1, // 1 HOUR
