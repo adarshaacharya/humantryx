@@ -10,9 +10,9 @@ export default async function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full overflow-hidden">
+      <div className="flex h-screen w-full">
         <DashboardSideBar />
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1">
           <DashboardTopNav>{children}</DashboardTopNav>
         </main>
       </div>
