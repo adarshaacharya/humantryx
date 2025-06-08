@@ -1,7 +1,15 @@
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { organizations, members, invitations } from "./organizations";
 import { timestamps } from "./timestamps";
+
+export const employeeStatusEnum = pgEnum("employee_status", [
+  "active",
+  "invited",
+  "terminated",
+  "resigned",
+  "on_leave",
+]);
 
 export const employees = pgTable("employees", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -16,5 +24,6 @@ export const employees = pgTable("employees", {
     onDelete: "set null",
   }),
   designation: text("designation").notNull(),
+  status: employeeStatusEnum("status").notNull(),
   ...timestamps,
 });

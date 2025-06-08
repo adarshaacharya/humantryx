@@ -65,13 +65,13 @@ export const auth = betterAuth({
       },
     },
   },
-  
+
   emailVerification: {
     sendOnSignUp: true,
     expiresIn: 60 * 60 * 1, // 1 HOUR
     autoSignInAfterVerification: true,
-    sendVerificationEmail: async ({ user, token }) => {
-      const verificationUrl = `${env.BETTER_AUTH_URL}/api/auth/verify-email?token=${token}&callbackURL=${env.EMAIL_VERIFICATION_CALLBACK_URL}`;
+    sendVerificationEmail: async ({ user, token, url }, request) => {
+      const verificationUrl = `${env.BETTER_AUTH_URL}/api/auth/verify-email?token=${token}&callbackURL=${encodeURIComponent(url)}`;
       const { error } = await sendVerificationEmail({
         email: user.email,
         verificationUrl: verificationUrl,

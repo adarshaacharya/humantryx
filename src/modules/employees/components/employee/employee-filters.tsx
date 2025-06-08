@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Search, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { EmployeeFilters } from "../types/employee.types";
+import type { EmployeeFilters } from "../../types/employee.types";
 
 const STATUS_OPTIONS = [
   { value: "all", label: "All Status" },

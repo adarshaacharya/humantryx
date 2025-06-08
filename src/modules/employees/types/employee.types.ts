@@ -7,7 +7,6 @@ import type {
   employeePaginationSchema,
 } from "../schemas/employee.schema";
 import type { z } from "zod";
-import type { InvitationStatus } from "better-auth/plugins";
 
 type RouterOutputs = inferRouterOutputs<AppRouter>;
 
@@ -27,13 +26,13 @@ export type EmployeeWithUser = {
   userId: string | null;
   memberId: string | null;
   invitationId: string | null;
+  status: EmployeeStatus;
   user?: {
     id: string;
     name: string;
     email: string;
     image: string | null;
   } | null;
-  invitationStatus: InvitationStatus | null
 };
 
 // Frontend-specific types

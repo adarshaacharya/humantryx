@@ -38,7 +38,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { signInSchema, type SignInSchemaType } from "./schemas/auth";
-import { INVITATION_SESSION_KEY } from "@/consts/session";
 
 export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -71,23 +70,28 @@ export function SignInForm() {
     setError(null);
 
     try {
+      // Build custom callback URL with invitation parameter if present
+      let customCallbackURL = "/auth-callback";
+      if (invitationId) {
+        customCallbackURL = `/auth-callback?invitation=${invitationId}`;
+      }
+
       const { data, error } = await authClient.signIn.email({
         email: values.email,
         password: values.password,
         rememberMe: values.rememberMe,
-        callbackURL: invitationId
-          ? `/accept-invitation/${invitationId}`
-          : "/dashboard",
+        callbackURL: customCallbackURL,
       });
 
       if (error) {
         if (error.status === 403) {
           setError("Please verify your email address before signing in.");
           toast.error("Email verification required");
-          // If there's a pending invitation, store it for after email verification
-          if (invitationId) {
-            sessionStorage.setItem(INVITATION_SESSION_KEY, invitationId);
-          }
+          // Redirect to verify-email page with invitation parameter if present
+          const verifyEmailUrl = invitationId
+            ? `/verify-email?invitation=${invitationId}`
+            : "/verify-email";
+          router.push(verifyEmailUrl);
         } else {
           setError(error.message ?? "Invalid email or password");
           toast.error("Sign in failed");
@@ -97,11 +101,8 @@ export function SignInForm() {
 
       if (data) {
         toast.success("Welcome back!");
-        if (invitationId) {
-          router.push(`/accept-invitation/${invitationId}`);
-        } else {
-          router.push("/dashboard");
-        }
+        // The callbackURL will handle the redirection automatically
+        // No need for manual redirection here
       }
     } catch (err) {
       console.error("Sign in error:", err);

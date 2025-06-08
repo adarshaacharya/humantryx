@@ -83,6 +83,14 @@ export const invitationColumns: ColumnDef<InvitationWithDetails>[] = [
     },
   },
   {
+    accessorKey: "employeeDesignation",
+    header: "Employee Designation",
+    cell: ({ row }) => {
+      const designation = row.getValue("employeeDesignation") as string | null;
+      return designation ?? "N/A";
+    },
+  },
+  {
     accessorKey: "status",
     header: ({ column }) => {
       return (

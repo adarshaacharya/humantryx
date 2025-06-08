@@ -24,7 +24,7 @@ import type {
   InvitationFilters as IInvitationFilters,
 } from "../../types/invitation.types";
 import { useDebounce } from "@/hooks/use-debounce";
-import { EmployeeInviteDialog } from "../employee/employee-invite-dialog";
+import { EmployeeInviteDialog } from "./invite-employee-dialog";
 
 const DEFAULT_FILTERS = {
   organizationId: "",

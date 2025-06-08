@@ -16,6 +16,7 @@ import {
   getInvitationStatusIcon,
 } from "../../constants/invitation.constants";
 import type { EmployeeWithUser } from "../../types/employee.types";
+import { getEmployeeStatusBadge, getEmployeeStatusIcon } from "../../constants/employee.constants";
 
 interface EmployeeDetailsDialogProps {
   employee: EmployeeWithUser | null;
@@ -55,10 +56,8 @@ export function EmployeeDetailsDialog({
               <p className="text-muted-foreground">{employee.designation}</p>
             </div>
             <div className="flex items-center gap-2">
-              {employee.invitationStatus &&
-                getInvitationStatusIcon(employee.invitationStatus)}
-              {employee.invitationStatus &&
-                getInvitationStatusBadge(employee.invitationStatus)}
+              {employee.status && getEmployeeStatusIcon(employee.status)}
+              {employee.status && getEmployeeStatusBadge(employee.status)}
             </div>
           </div>
 

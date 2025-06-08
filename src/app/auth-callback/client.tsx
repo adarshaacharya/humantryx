@@ -3,25 +3,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, CheckCircle } from "lucide-react";
 import { type Session } from "@/server/auth";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { INVITATION_SESSION_KEY } from "@/consts/session";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function AuthCallbackClient({ session }: { session: Session | null }) {
   const router = useRouter();
-  console.log({ session });
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (session?.user?.emailVerified) {
-      const pendingInvitation = sessionStorage.getItem(INVITATION_SESSION_KEY);
+      // Check for invitation ID in URL parameters instead of sessionStorage
+      const invitationId = searchParams.get("invitation");
 
-      if (pendingInvitation) {
-        sessionStorage.removeItem(INVITATION_SESSION_KEY);
-        void router.push(`/accept-invitation/${pendingInvitation}`);
+      if (invitationId) {
+        void router.push(`/accept-invitation/${invitationId}`);
       } else {
         void router.push("/dashboard");
       }
     }
-  }, [session, router]);
+  }, [session, router, searchParams]);
 
   return (
     <div className="flex min-h-screen items-center justify-center">

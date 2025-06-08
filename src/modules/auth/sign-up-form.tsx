@@ -37,7 +37,6 @@ import Link from "next/link";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { signUpSchema, type SignUpSchemaType } from "./schemas/auth";
-import { INVITATION_SESSION_KEY } from "@/consts/session";
 
 const passwordStrength = (password: string) => {
   let strength = 0;
@@ -98,11 +97,17 @@ export function SignUpForm() {
     setIsLoading(true);
 
     try {
+      // Build custom callback URL with invitation parameter if present
+      let customCallbackURL = "http://localhost:3000/auth-callback";
+      if (invitationId) {
+        customCallbackURL = `http://localhost:3000/auth-callback?invitation=${invitationId}`;
+      }
+
       const { data, error } = await authClient.signUp.email({
         email: values.email,
         password: values.password,
         name: values.name,
-        // callbackURL: "/verify-email",
+        callbackURL: customCallbackURL,
       });
 
       if (error) {
@@ -115,15 +120,14 @@ export function SignUpForm() {
       }
 
       if (data) {
-        // If there's a pending invitation, store it for after email verification
-        if (invitationId) {
-          sessionStorage.setItem(INVITATION_SESSION_KEY, invitationId);
-        }
-
         toast.success(
           "Account created successfully! Please check your email to verify your account.",
         );
-        router.push("/verify-email");
+        // Navigate to verify-email page, with invitation parameter if present
+        const verifyEmailUrl = invitationId
+          ? `/verify-email?invitation=${invitationId}`
+          : "/verify-email";
+        router.push(verifyEmailUrl);
       }
     } catch (err) {
       console.error("Sign up error:", err);

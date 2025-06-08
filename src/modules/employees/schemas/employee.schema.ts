@@ -11,6 +11,9 @@ export const createEmployeeSchema = z.object({
   invitationId: z.string().optional(),
   userId: z.string().optional(),
   memberId: z.string().optional(),
+  status: z
+    .enum(["active", "invited", "terminated", "resigned", "on_leave"])
+    .describe("Status of the employee, either 'active' or 'invited'"),
 });
 
 // Employee update schema

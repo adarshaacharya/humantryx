@@ -67,9 +67,9 @@ export default async function authMiddleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-    if (!session.session.activeOrganizationId) {
-      return NextResponse.redirect(new URL("/organization-setup", request.url));
-    }
+    // if (!session.session.activeOrganizationId) {
+    //   return NextResponse.redirect(new URL("/organization-setup", request.url));
+    // }
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

@@ -9,7 +9,6 @@ import { Building2, Mail, UserPlus, ArrowRight, Loader2 } from "lucide-react";
 import { api } from "@/trpc/react";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
-import { INVITATION_SESSION_KEY } from "@/consts/session";
 
 interface InvitationLandingPageProps {
   invitationId: string;
@@ -20,6 +19,8 @@ export function InvitationLandingPage({
 }: InvitationLandingPageProps) {
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
+  const completeOnboardMutation =
+    api.invitation.completeOnboarding.useMutation();
 
   const invitationQuery = api.invitation.verify.useQuery({ id: invitationId });
 
@@ -27,7 +28,6 @@ export function InvitationLandingPage({
 
   const handleAcceptInvitation = useCallback(async () => {
     if (!session?.user) {
-      sessionStorage.setItem(INVITATION_SESSION_KEY, invitationId);
       router.push(`/sign-up?invitation=${invitationId}`);
       return;
     }
@@ -40,13 +40,22 @@ export function InvitationLandingPage({
     setIsProcessing(true);
 
     try {
-      const result = await authClient.organization.acceptInvitation({
+      const invitation = await authClient.organization.acceptInvitation({
         invitationId,
       });
 
-      if (result.data) {
+      if (invitation.data) {
         toast.success("Successfully joined the organization!");
-        router.push(`/accept-invitation/${invitationId}/complete`);
+
+        const onboarded = await completeOnboardMutation.mutateAsync({
+          organizationId: invitation.data?.invitation.organizationId,
+          invitationId: invitation.data?.invitation.id,
+        });
+
+        if (onboarded) {
+          router.push(`/accept-invitation/${invitationId}/complete`);
+          toast.success("Onboarding completed successfully!");
+        }
       }
     } catch (error) {
       toast.error("Failed to accept invitation");
@@ -54,7 +63,7 @@ export function InvitationLandingPage({
     } finally {
       setIsProcessing(false);
     }
-  }, [session?.user, invitationQuery.data, invitationId, router]);
+  }, [session?.user, invitationQuery.data?.email, invitationId]);
 
   // Auto-accept invitation if user just signed up and email matches
   useEffect(() => {
@@ -64,21 +73,10 @@ export function InvitationLandingPage({
       session.user.email === invitationQuery.data.email &&
       !isProcessing
     ) {
-      // Check if this is a fresh sign-up by looking for the pending invitation
-      const wasPendingInvitation =
-        sessionStorage.getItem(INVITATION_SESSION_KEY) === invitationId;
-      if (wasPendingInvitation) {
-        sessionStorage.removeItem(INVITATION_SESSION_KEY);
-        void handleAcceptInvitation();
-      }
+      // Auto-accept the invitation for authenticated users with matching email
+      void handleAcceptInvitation();
     }
-  }, [
-    session?.user,
-    invitationQuery.data,
-    invitationId,
-    isProcessing,
-    handleAcceptInvitation,
-  ]);
+  }, [session?.user, invitationQuery.data, invitationId]);
 
   if (invitationQuery.isLoading) {
     return (
@@ -130,7 +128,7 @@ export function InvitationLandingPage({
           <div className="text-center">
             <p className="text-gray-600">
               You&apos;ve been invited to join{" "}
-              <strong>{invitation?.organizationName}</strong>
+              <strong>{invitation?.organization?.name}</strong>
             </p>
             {invitation?.role && (
               <div className="mt-2">
@@ -200,7 +198,6 @@ export function InvitationLandingPage({
             <div className="space-y-4">
               <Button
                 onClick={() => {
-                  sessionStorage.setItem(INVITATION_SESSION_KEY, invitationId);
                   router.push(
                     `/sign-up?email=${encodeURIComponent(invitation?.email ?? "")}&invitation=${invitationId}`,
                   );
@@ -223,7 +220,6 @@ export function InvitationLandingPage({
               <Button
                 variant="outline"
                 onClick={() => {
-                  sessionStorage.setItem(INVITATION_SESSION_KEY, invitationId);
                   router.push(
                     `/sign-in?email=${encodeURIComponent(invitation?.email ?? "")}&invitation=${invitationId}`,
                   );

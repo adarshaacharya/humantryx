@@ -50,7 +50,7 @@ function ResetPasswordFormNoSuspense() {
 
   const handleForgotPassword = async (values: ResetPasswordSchemaType) => {
     if (!token) {
-      console.log("No token found!!!");
+      toast.error("No reset token provided. Please try again.");
       return;
     }
 

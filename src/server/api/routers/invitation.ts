@@ -1,4 +1,8 @@
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { InvitationService } from "@/server/api/services/invitation.service";
 import {
@@ -7,6 +11,7 @@ import {
   resendInvitationByIdSchema,
   invitationByIdSchema,
 } from "@/modules/employees/schemas/invitation.schema";
+import { z } from "zod";
 
 export const invitationRouter = createTRPCRouter({
   // List invitations for an organization
@@ -101,5 +106,29 @@ export const invitationRouter = createTRPCRouter({
         input.invitationId,
         input.organizationId,
       );
+    }),
+
+  // Update employee after invitation is accepted
+  completeOnboarding: protectedProcedure
+    .input(invitationByIdSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { session } = ctx;
+      return await InvitationService.completeEmployeeOnboarding({
+        invitationId: input.invitationId,
+        organizationId: input.organizationId,
+        userId: session.session.userId,
+      });
+    }),
+
+  // Verify invitation
+  verify: publicProcedure
+    .input(
+      z.object({
+        id: z.string().min(1, "Invitation ID is required"),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { id } = input;
+      return await InvitationService.verifyInvitation(id);
     }),
 });

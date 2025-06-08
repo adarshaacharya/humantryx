@@ -3,9 +3,9 @@ import { employees, invitations, members, users } from "@/server/db/schema";
 import { and, eq, ilike, desc, asc, sql, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { auth } from "@/server/auth";
-import type { InvitationStatus } from "better-auth/plugins";
 import { headers } from "next/headers";
 import type { PaginationOptions } from "@/types/table";
+import type { EmployeeStatus } from "@/server/db/consts";
 
 export interface SortOptions {
   sortBy: "name" | "designation" | "createdAt" | "email";
@@ -27,7 +27,6 @@ export interface EmployeeListParams
 
 export interface EmployeeWithUser {
   id: string;
-  // name: string;
   designation: string;
   createdAt: Date;
   updatedAt: Date | null;
@@ -41,7 +40,7 @@ export interface EmployeeWithUser {
     email: string;
     image: string | null;
   } | null;
-  invitationStatus: InvitationStatus | null;
+  status : EmployeeStatus
 }
 
 export class EmployeeService {
@@ -52,6 +51,7 @@ export class EmployeeService {
     invitationId?: string;
     userId?: string;
     memberId?: string;
+    status: EmployeeStatus;
   }) {
     try {
       const employee = await db
@@ -63,6 +63,7 @@ export class EmployeeService {
           invitationId: data.invitationId ?? null,
           userId: data.userId ?? null,
           memberId: data.memberId ?? null,
+          status: data.status,
         })
         .returning();
 
@@ -184,7 +185,6 @@ export class EmployeeService {
 
       return {
         id: employee.id,
-        // name: employee.name,
         designation: employee.designation,
         createdAt: employee.createdAt,
         updatedAt: employee.updatedAt,
@@ -200,7 +200,6 @@ export class EmployeeService {
               image: employee.userImage,
             }
           : null,
-        invitationStatus: employee.invitationStatus,
       };
     } catch (error) {
       if (error instanceof TRPCError) throw error;
@@ -227,6 +226,7 @@ export class EmployeeService {
       // Build filters
       const filters = [
         eq(employees.organizationId, organizationId),
+        eq(employees.status, "active"),
         sql`${employees.deletedAt} IS NULL`,
       ];
 
@@ -282,7 +282,6 @@ export class EmployeeService {
       const results = await db
         .select({
           id: employees.id,
-          // name: employees.name,
           designation: employees.designation,
           createdAt: employees.createdAt,
           updatedAt: employees.updatedAt,
@@ -294,11 +293,10 @@ export class EmployeeService {
           userEmail: users.email,
           userImage: users.image,
           userUserId: users.id,
-          invitationStatus: invitations.status,
+          status: employees.status,
         })
         .from(employees)
         .leftJoin(users, eq(employees.userId, users.id))
-        .leftJoin(invitations, eq(employees.invitationId, invitations.id))
         .where(and(...filters))
         .orderBy(orderBy)
         .limit(limit)
@@ -306,7 +304,6 @@ export class EmployeeService {
 
       const employeesWithUser: EmployeeWithUser[] = results.map((employee) => ({
         id: employee.id,
-        // name: employee.name,
         designation: employee.designation,
         createdAt: employee.createdAt,
         updatedAt: employee.updatedAt,
@@ -314,6 +311,7 @@ export class EmployeeService {
         userId: employee.userId,
         memberId: employee.memberId,
         invitationId: employee.invitationId,
+        status : employee.status,
         user: employee.userUserId
           ? {
               id: employee.userUserId,
@@ -322,7 +320,6 @@ export class EmployeeService {
               image: employee.userImage,
             }
           : null,
-        invitationStatus: employee.invitationStatus,
       }));
 
       return {

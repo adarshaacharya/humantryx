@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { eq, and } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/server/db";
-import { employees, users } from "@/server/db/schema";
+import { employees, invitations, members, users } from "@/server/db/schema";
 import type { InvitationWithDetails } from "@/modules/employees/types/invitation.types";
 import type { PaginationOptions } from "@/types/table";
 
@@ -49,6 +49,24 @@ export class InvitationService {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to create organization invitation",
+        });
+      }
+
+      const [employee] = await db
+        .insert(employees)
+        .values({
+          organizationId: data.organizationId,
+          invitationId: invitationResult.id,
+          designation: data.designation,
+          status: "invited", // Default status for new invitations
+        })
+        .returning()
+        .execute();
+
+      if (!employee) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create employee record",
         });
       }
 
@@ -294,7 +312,6 @@ export class InvitationService {
       }
 
       const filteredInvitations = allInvitations.filter((invitation) => {
-        // Status filter
         if (status !== "all" && invitation.status !== status) {
           return false;
         }
@@ -310,7 +327,6 @@ export class InvitationService {
         return true;
       });
 
-      // Sort invitations (following the employee service pattern)
       filteredInvitations.sort((a, b) => {
         let comparison = 0;
 
@@ -336,18 +352,15 @@ export class InvitationService {
         return sortDirection === "desc" ? -comparison : comparison;
       });
 
-      // Calculate pagination (following employee service pattern)
       const totalCount = filteredInvitations.length;
       const totalPages = Math.ceil(totalCount / limit);
       const currentPage = Math.floor(offset / limit) + 1;
 
-      // Apply pagination
       const paginatedInvitations = filteredInvitations.slice(
         offset,
         offset + limit,
       );
 
-      // Enrich invitations with additional data from database
       const enrichedInvitations: InvitationWithDetails[] = [];
 
       for (const invitation of paginatedInvitations) {
@@ -431,8 +444,6 @@ export class InvitationService {
         },
       });
 
-      console.log({ XOXO: result });
-
       return {
         success: true,
         cancelledInvitation: result,
@@ -476,6 +487,136 @@ export class InvitationService {
           error instanceof Error
             ? error.message
             : "Failed to accept invitation",
+      });
+    }
+  }
+
+  static async completeEmployeeOnboarding(data: {
+    invitationId: string;
+    userId: string;
+    organizationId: string;
+  }) {
+    try {
+      const { auth } = await import("@/server/auth");
+
+      const invitation = await db.query.invitations.findFirst({
+        where: eq(invitations.id, data.invitationId),
+        with: {
+          organization: {
+            columns: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      if (!invitation) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Invitation not found",
+        });
+      }
+
+      if (invitation.status !== "accepted") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invitation must be accepted to complete onboarding",
+        });
+      }
+      const member = await db.query.members
+        .findFirst({
+          where: and(
+            eq(members.userId, data.userId),
+            eq(members.organizationId, data.organizationId),
+          ),
+        })
+        .execute();
+
+      if (!member) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Member not found in the organization",
+        });
+      }
+
+      // update employee record with userId and memberId
+      const [updatedEmployee] = await db
+        .update(employees)
+        .set({
+          userId: data.userId,
+          memberId: member.id,
+        })
+        .where(eq(employees.invitationId, data.invitationId))
+        .returning()
+        .execute();
+
+      if (!updatedEmployee) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update employee after onboarding",
+        });
+      }
+
+      await auth.api.setActiveOrganization({
+        headers: await headers(),
+        body: {
+          organizationId: updatedEmployee?.organizationId,
+        },
+      });
+
+      return updatedEmployee;
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to complete onboarding",
+      });
+    }
+  }
+
+  static async verifyInvitation(invitationId: string) {
+    try {
+      const invitation = await db.query.invitations.findFirst({
+        where: eq(invitations.id, invitationId),
+        with: {
+          organization: {
+            columns: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      if (!invitation) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Invitation not found or has expired",
+        });
+      }
+
+      if (
+        invitation.status !== "pending" ||
+        (invitation.expiresAt && new Date(invitation.expiresAt) < new Date())
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invitation has expired or is no longer valid",
+        });
+      }
+
+      return invitation;
+    } catch (error) {
+      if (error instanceof TRPCError) throw error;
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to verify invitation",
       });
     }
   }

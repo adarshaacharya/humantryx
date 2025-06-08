@@ -88,7 +88,7 @@ export function EmployeeDeleteDialog({
                 </div>
               </div>
 
-              {employee.invitationStatus === "accepted" && (
+              {employee.status === "active" && (
                 <p className="text-sm font-medium text-amber-600">
                   ⚠️ Warning: This employee is currently active in the system.
                 </p>

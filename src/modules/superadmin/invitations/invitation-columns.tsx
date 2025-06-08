@@ -44,6 +44,7 @@ export type Invitation = {
   inviterId: string;
   inviterName: string | null;
   inviterEmail: string | null;
+  employeeDesignation?: string;
 };
 
 export const columns: ColumnDef<Invitation>[] = [
@@ -89,6 +90,12 @@ export const columns: ColumnDef<Invitation>[] = [
     accessorKey: "role",
     header: "Role",
   },
+
+  {
+    accessorKey: "employeeDesignation",
+    header: "Employee Designation",
+  },
+
   {
     accessorKey: "status",
     header: ({ column }) => {
