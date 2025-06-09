@@ -23,7 +23,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { MENU_ITEMS } from "./constants/sidebar-itemts";
+import { MENU_ITEMS } from "./consts/sidebar-itemts";
 
 export function DashboardSideBar() {
   const pathname = usePathname();

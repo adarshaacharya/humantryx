@@ -1,6 +1,6 @@
 import { superAdminProcedure, createTRPCRouter } from "../trpc";
 import { z } from "zod";
-import { and, desc, asc, eq, ilike, sql, gt } from "drizzle-orm";
+import { and, desc, asc, eq, ilike, sql } from "drizzle-orm";
 import { users } from "@/server/db/users";
 import { members, organizations, invitations } from "@/server/db/organizations";
 

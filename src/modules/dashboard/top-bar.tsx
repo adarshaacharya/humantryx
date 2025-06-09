@@ -24,13 +24,10 @@ interface DashboardTopNavProps {
 export function DashboardTopNav({ children }: DashboardTopNavProps) {
   return (
     <div className="flex h-full flex-col">
-      {/* Top Navigation Bar */}
       <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
         <div className="flex h-16 items-center px-4">
-          {/* Mobile Sidebar Trigger */}
           <SidebarTrigger className="mr-4 lg:hidden" />
 
-          {/* Mobile Logo */}
           <div className="mr-4 lg:hidden">
             <Link href="/" className="flex items-center space-x-2">
               <div className="relative">
@@ -54,7 +51,6 @@ export function DashboardTopNav({ children }: DashboardTopNavProps) {
             </div>
           </div>
 
-          {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
             {/* Notifications */}
             <DropdownMenu>

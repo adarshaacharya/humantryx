@@ -26,6 +26,13 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+
+    R2_ACCESS_KEY_ID: z.string().min(1, {
+      message: "R2_ACCESS_KEY_ID must be set",
+    }),
+    R2_SECRET_ACCESS_KEY: z.string().min(1, {
+      message: "R2_SECRET_ACCESS_KEY must be set",
+    }),
   },
 
   /**
@@ -36,6 +43,11 @@ export const env = createEnv({
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
     NEXT_PUBLIC_BETTER_AUTH_URL: z.string().url(),
+    NEXT_PUBLIC_R2_ENDPOINT_URL: z.string().url(),
+    NEXT_PUBLIC_R2_BUCKET_NAME: z.string().min(1, {
+      message: "R2_BUCKET_NAME must be set",
+    }),
+    NEXT_PUBLIC_R2_PUBLIC_URL: z.string().url(),
   },
 
   /**
@@ -54,7 +66,11 @@ export const env = createEnv({
       process.env.EMAIL_VERIFICATION_CALLBACK_URL,
     ORGANIZATION_INVITATION_CALLBACK_URL:
       process.env.ORGANIZATION_INVITATION_CALLBACK_URL,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    NEXT_PUBLIC_R2_ENDPOINT_URL: process.env.NEXT_PUBLIC_R2_ENDPOINT_URL,
+    R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,
+    R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY,
+    NEXT_PUBLIC_R2_BUCKET_NAME: process.env.NEXT_PUBLIC_R2_BUCKET_NAME,
+    NEXT_PUBLIC_R2_PUBLIC_URL: process.env.NEXT_PUBLIC_R2_PUBLIC_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

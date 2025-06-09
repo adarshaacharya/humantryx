@@ -7,21 +7,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  User,
-  Settings,
-  LogOut,
-  MessageSquare,
-  Rocket,
-  UserCog2,
-} from "lucide-react";
+import { User, Settings, LogOut, MessageSquare, Rocket } from "lucide-react";
 import { authClient, useSession } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UpsertUserForm } from "@/modules/users/upsert-user-form";
+import * as React from "react";
 
 export function UserMenu() {
   const router = useRouter();
   const { data: session } = useSession();
+  const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -47,8 +44,13 @@ export function UserMenu() {
           className="border-border hover:bg-accent hover:text-accent-foreground relative h-8 w-8 rounded-full border shadow-sm"
         >
           <div className="flex h-full w-full items-center justify-center">
-            {session?.user.role === "super_admin" ? (
-              <UserCog2 className="h-4 w-4" />
+            {session?.user.image ? (
+              <Avatar>
+                <AvatarImage src={session.user.image} />
+                <AvatarFallback>
+                  {session.user.name?.charAt(0) ?? "-"}
+                </AvatarFallback>
+              </Avatar>
             ) : (
               <User className="h-4 w-4" />
             )}
@@ -72,7 +74,7 @@ export function UserMenu() {
           <Rocket className="mr-2 h-4 w-4" />
           <span>Go to Dashboard</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setProfileDialogOpen(true)}>
           <User className="mr-2 h-4 w-4" />
           <span>Profile</span>
         </DropdownMenuItem>
@@ -90,6 +92,12 @@ export function UserMenu() {
           <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
+
+      {/* Profile Update Dialog */}
+      <UpsertUserForm
+        isOpen={profileDialogOpen}
+        onOpenChange={setProfileDialogOpen}
+      />
     </DropdownMenu>
   );
 }

@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Building2, Users, Settings, User } from "lucide-react";
 import { authClient } from "@/server/auth/auth-client";
 import { getRoleBadgeVariant, getRoleIcon } from "./utils";
-import { InviteMemberDialog } from "./invite-member-dialog";
 
 export function OrganizationOverview() {
   const currentOrg = authClient.useActiveOrganization();
@@ -123,7 +122,6 @@ export function OrganizationOverview() {
                 <Users className="h-5 w-5" />
                 <span>Members</span>
               </div>
-              <InviteMemberDialog />
             </CardTitle>
           </CardHeader>
           <CardContent>
