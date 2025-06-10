@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Column } from "@tanstack/react-table";
+import type { Column } from "@tanstack/react-table";
 import { Check, PlusCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -99,22 +99,22 @@ export function DataTableFacetedFilter<TData, TValue>({
                       }
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(
-                        filterValues.length ? filterValues : undefined
+                        filterValues.length ? filterValues : undefined,
                       );
                     }}
                   >
                     <div
                       className={cn(
-                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                        "border-primary mr-2 flex h-4 w-4 items-center justify-center rounded-sm border",
                         isSelected
                           ? "bg-primary text-primary-foreground"
-                          : "opacity-50 [&_svg]:invisible"
+                          : "opacity-50 [&_svg]:invisible",
                       )}
                     >
                       <Check />
                     </div>
                     {option.icon && (
-                      <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                      <option.icon className="text-muted-foreground mr-2 h-4 w-4" />
                     )}
                     <span>{option.label}</span>
                     {facets?.get(option.value) && (

@@ -61,8 +61,8 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - Use shadcn/ui components for consistent UI design
 - Always use named exports except for page.tsx file but dont use barrel exports
 - please don't over animate components animate only when necessary, use `motion/react` for animations , but don't animate unless necessary
-- for forms use react hook form, use `useForm` hook from `react-hook-form` and use `zodResolver` for validation
-- Don't create custom types unless its necessary, try to infer types for backend data types we are using trpc so its already typed response 
+- for forms use react hook form, use `useForm` hook from `react-hook-form` and use `zodResolver` for validation with shadcn forms : https://ui.shadcn.com/docs/components/form
+- Don't create custom types unless its necessary, try to infer types for backend data types we are using trpc so its already typed response
 - avoid useEffect as much as you can , for data fetching directly use trpc with react query hooks, try to `use suspense` for better UX, use skeleton components for loading states
 - avoid using too much try catch blocks, use proper error handling in mutations and queries
 - while fetching trpc data don't destructure useQuery results eg : { data, isLoading } = useQuery() instead use `const employeeManagementQuery = useQuery()` and then access employeeManagementQuery.data and employeeManagementQuery.isLoading
@@ -120,32 +120,29 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 ## Some basic rules
 
 - If you are installing package make sure to check if its already inside `package.json`
-- coode should be self explanatory, use comments only when necessary
+- coode should be self explanatory, use comments only when necessary, dont use comments all over unless its complex logic
 - use clear, descriptive names for variables, functions, classes, components.
 - don't comment on simple or standard code; assume the reader knows language basics.
+- dont use direct params instead use objects to pass params, for example instead of `function createEmployee(name: string, age: number)` use `function createEmployee({ name, age }: { name: string; age: number })`
 
 1. Typescript :
+
 - Implement proper TypeScript types for all props and functions and avoid `any`, but please dont try to create custom types unless necessary, try to infer types from backend data types or infer zod schema
 - Use type unless interface is necessary, prefer type over interface unless you need to extend it or use it in a class
 - try to extend or pick type instead of creating new one
-
 
 ## Important Links
 
 TRPC Revalidate query : https://trpc.io/docs/client/react/useUtils
 Better auth organization : https://www.better-auth.com/docs/plugins/organization
 
-
 ## Features
 
 1. Role based authorization
 2. Permission based access control
 3. Employee management
-  - Add (invite same logic as in home page make sure to reuse that component), update, delete employee
-  - View employee details
-  - cancel invite of employee
-  - filter / search / paginate
 
-
-
-
+- Add (invite same logic as in home page make sure to reuse that component), update, delete employee
+- View employee details
+- cancel invite of employee
+- filter / search / paginate

@@ -1,0 +1,1 @@
+ALTER TYPE "public"."employee_designation" ADD VALUE 'founder';

@@ -54,19 +54,19 @@ export const MENU_ITEMS = [
   {
     title: "Leave Management",
     icon: Calendar,
-    href: "/dashboard/leave",
+    href: "/dashboard/leaves",
     submenu: [
       {
-        title: "Leave Requests",
-        href: "/dashboard/leave",
+        title: "My Leaves",
+        href: "/dashboard/leaves",
+      },
+      {
+        title: "Manage Leaves",
+        href: "/dashboard/leaves/manage",
       },
       {
         title: "Leave Policies",
-        href: "/dashboard/leave/policies",
-      },
-      {
-        title: "Leave Calendar",
-        href: "/dashboard/leave/calendar",
+        href: "/dashboard/leaves/policies",
       },
     ],
   },

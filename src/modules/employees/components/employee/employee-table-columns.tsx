@@ -27,6 +27,7 @@ import {
 import { format } from "date-fns";
 import type { EmployeeWithUser } from "../../types/employee.types";
 import { getEmployeeStatusBadge } from "../../constants/employee.constants";
+import { IdCell } from "@/components/id-cell";
 
 interface EmployeeTableMeta {
   onViewEmployee: (employee: EmployeeWithUser) => void;
@@ -39,6 +40,24 @@ interface EmployeeTableMeta {
 }
 
 export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
+  {
+    accessorKey: "id",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="h-8 px-2"
+        >
+          ID
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <IdCell id={row.getValue("id")} />;
+    },
+  },
   {
     accessorKey: "name",
     header: ({ column }) => {

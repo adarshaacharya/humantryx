@@ -1,0 +1,457 @@
+import { TRPCError } from "@trpc/server";
+import { and, eq, gte, lte, desc, asc, sql } from "drizzle-orm";
+import { db } from "@/server/db";
+import { employees, members } from "@/server/db/schema";
+import { leaveRequests, leaveBalances, leavePolicies, type leaveTypeEnum } from "@/server/db/leaves";
+import type { 
+  CreateLeaveRequest, 
+  ApproveRejectLeave, 
+  LeaveRequestList,
+  CreateLeavePolicy,
+  UpdateLeavePolicy 
+} from "@/modules/leaves/schemas";
+
+type Session = {
+  user: { id: string };
+  session: { activeOrganizationId?: string | null | undefined };
+};
+
+type LeaveType = typeof leaveTypeEnum.enumValues[number];
+
+export class LeaveService {
+  static async validateEmployee(userId: string) {
+    const employee = await db.query.employees.findFirst({
+      where: eq(employees.userId, userId),
+    });
+
+    if (!employee) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Employee record not found",
+      });
+    }
+
+    return employee;
+  }
+
+  static async validateHRAccess(session: Session) {
+    const activeOrgId = session.session.activeOrganizationId;
+    if (!activeOrgId) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "No active organization found",
+      });
+    }
+
+    const member = await db.query.members.findFirst({
+      where: and(
+        eq(members.userId, session.user.id),
+        eq(members.organizationId, activeOrgId),
+      ),
+    });
+
+    if (!member || (member.role !== "admin" && member.role !== "owner")) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Only HR and Admin can perform this action",
+      });
+    }
+
+    return { member, activeOrgId };
+  }
+
+  static async isHRAdmin(session: Session) {
+    try {
+      await this.validateHRAccess(session);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  static calculateTotalDays(startDate: string, endDate: string) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const totalDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+    if (totalDays <= 0) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "End date must be after start date",
+      });
+    }
+
+    return totalDays;
+  }
+
+  static async checkLeaveBalance(employeeId: string, leaveType: LeaveType, totalDays: number) {
+    if (leaveType === "emergency") return;
+
+    const currentYear = new Date().getFullYear();
+    const balance = await db.query.leaveBalances.findFirst({
+      where: and(
+        eq(leaveBalances.employeeId, employeeId),
+        eq(leaveBalances.leaveType, leaveType),
+        eq(leaveBalances.year, currentYear),
+      ),
+    });
+
+    if (!balance || balance.remaining < totalDays) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Insufficient leave balance",
+      });
+    }
+  }
+
+  static async createLeaveRequest(input: CreateLeaveRequest, session: Session) {
+    const employee = await this.validateEmployee(session.user.id);
+    const totalDays = this.calculateTotalDays(input.startDate, input.endDate);
+    
+    await this.checkLeaveBalance(employee.id, input.leaveType as LeaveType, totalDays);
+
+    const [leaveRequest] = await db
+      .insert(leaveRequests)
+      .values({
+        employeeId: employee.id,
+        leaveType: input.leaveType,
+        startDate: input.startDate,
+        endDate: input.endDate,
+        totalDays,
+        reason: input.reason,
+        status: "pending",
+      })
+      .returning();
+
+    return leaveRequest;
+  }
+
+  static async getLeaveRequests(input: LeaveRequestList, session: Session) {
+    const { page = 1, limit = 10, employeeId, status, leaveType, startDate, endDate } = input;
+    const offset = (page - 1) * limit;
+    const whereConditions = [];
+
+    const currentEmployee = await db.query.employees.findFirst({
+      where: eq(employees.userId, session.user.id),
+    });
+
+    const isHRAdmin = await this.isHRAdmin(session);
+
+    if (!isHRAdmin && currentEmployee) {
+      whereConditions.push(eq(leaveRequests.employeeId, currentEmployee.id));
+    }
+
+    if (employeeId) {
+      if (!isHRAdmin) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Only HR and Admin can filter by employee",
+        });
+      }
+      whereConditions.push(eq(leaveRequests.employeeId, employeeId));
+    }
+
+    if (status) {
+      whereConditions.push(eq(leaveRequests.status, status));
+    }
+
+    if (leaveType) {
+      whereConditions.push(eq(leaveRequests.leaveType, leaveType));
+    }
+
+    if (startDate) {
+      whereConditions.push(gte(leaveRequests.startDate, startDate));
+    }
+
+    if (endDate) {
+      whereConditions.push(lte(leaveRequests.endDate, endDate));
+    }
+
+    const requests = await db.query.leaveRequests.findMany({
+      where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
+      with: {
+        employee: true,
+      },
+      orderBy: [desc(leaveRequests.createdAt)],
+      limit,
+      offset,
+    });
+
+    const countResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(leaveRequests)
+      .where(whereConditions.length > 0 ? and(...whereConditions) : undefined);
+
+    const totalCount = countResult[0]?.count ?? 0;
+
+    return {
+      data: requests,
+      pagination: {
+        page,
+        limit,
+        totalCount,
+        totalPages: Math.ceil(totalCount / limit),
+      },
+    };
+  }
+
+  static async getLeaveRequestById(id: string, session: Session) {
+    const request = await db.query.leaveRequests.findFirst({
+      where: eq(leaveRequests.id, id),
+      with: {
+        employee: true,
+      },
+    });
+
+    if (!request) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Leave request not found",
+      });
+    }
+
+    const currentEmployee = await db.query.employees.findFirst({
+      where: eq(employees.userId, session.user.id),
+    });
+
+    const isHRAdmin = await this.isHRAdmin(session);
+
+    if (!isHRAdmin && currentEmployee && request.employeeId !== currentEmployee.id) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You can only view your own leave requests",
+      });
+    }
+
+    return request;
+  }
+
+  static async updateLeaveStatus(input: ApproveRejectLeave, session: Session) {
+    await this.validateHRAccess(session);
+    const approverEmployee = await this.validateEmployee(session.user.id);
+
+    const request = await db.query.leaveRequests.findFirst({
+      where: eq(leaveRequests.id, input.id),
+    });
+
+    if (!request) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Leave request not found",
+      });
+    }
+
+    if (request.status !== "pending") {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Can only update pending requests",
+      });
+    }
+
+    const [updatedRequest] = await db
+      .update(leaveRequests)
+      .set({
+        status: input.status,
+        approvedBy: approverEmployee.id,
+        approvedAt: input.status === "approved" ? new Date().toISOString().split("T")[0] : null,
+        rejectionReason: input.rejectionReason,
+        updatedAt: new Date(),
+      })
+      .where(eq(leaveRequests.id, input.id))
+      .returning();
+
+    if (input.status === "approved") {
+      await this.deductLeaveBalance(request.employeeId, request.leaveType, request.totalDays);
+    }
+
+    return updatedRequest;
+  }
+
+  private static async deductLeaveBalance(employeeId: string, leaveType: string, totalDays: number) {
+    const currentYear = new Date().getFullYear();
+    await db
+      .update(leaveBalances)
+      .set({
+        used: sql`${leaveBalances.used} + ${totalDays}`,
+        remaining: sql`${leaveBalances.remaining} - ${totalDays}`,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(leaveBalances.employeeId, employeeId),
+          eq(leaveBalances.leaveType, leaveType as LeaveType),
+          eq(leaveBalances.year, currentYear),
+        ),
+      );
+  }
+
+  static async getLeaveBalances(employeeId: string | undefined, session: Session) {
+    const year = new Date().getFullYear();
+    let targetEmployeeId: string;
+
+    if (!employeeId) {
+      const currentEmployee = await this.validateEmployee(session.user.id);
+      targetEmployeeId = currentEmployee.id;
+    } else {
+      targetEmployeeId = employeeId;
+    }
+
+    const currentEmployee = await db.query.employees.findFirst({
+      where: eq(employees.userId, session.user.id),
+    });
+
+    const isHRAdmin = await this.isHRAdmin(session);
+
+    if (!isHRAdmin && currentEmployee && targetEmployeeId !== currentEmployee.id) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You can only view your own leave balances",
+      });
+    }
+
+    return db.query.leaveBalances.findMany({
+      where: and(
+        eq(leaveBalances.employeeId, targetEmployeeId),
+        eq(leaveBalances.year, year),
+      ),
+      orderBy: [asc(leaveBalances.leaveType)],
+    });
+  }
+
+  static async adjustLeaveBalance(
+    employeeId: string,
+    leaveType: string,
+    adjustment: number,
+    reason: string,
+    session: Session
+  ) {
+    await this.validateHRAccess(session);
+    const currentYear = new Date().getFullYear();
+
+    const balance = await db.query.leaveBalances.findFirst({
+      where: and(
+        eq(leaveBalances.employeeId, employeeId),
+        eq(leaveBalances.leaveType, leaveType as LeaveType),
+        eq(leaveBalances.year, currentYear),
+      ),
+    });
+
+    if (!balance) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Leave balance not found",
+      });
+    }
+
+    const newTotalAllowed = balance.totalAllowed + adjustment;
+    const newRemaining = balance.remaining + adjustment;
+
+    if (newTotalAllowed < 0 || newRemaining < 0) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Adjustment would result in negative balance",
+      });
+    }
+
+    const [updatedBalance] = await db
+      .update(leaveBalances)
+      .set({
+        totalAllowed: newTotalAllowed,
+        remaining: newRemaining,
+        updatedAt: new Date(),
+      })
+      .where(eq(leaveBalances.id, balance.id))
+      .returning();
+
+    return updatedBalance;
+  }
+
+  static async getLeavePolicies(session: Session) {
+    const { activeOrgId } = await this.validateHRAccess(session);
+
+    return db.query.leavePolicies.findMany({
+      where: eq(leavePolicies.organizationId, activeOrgId),
+      orderBy: [asc(leavePolicies.leaveType)],
+    });
+  }
+
+  static async createLeavePolicy(input: CreateLeavePolicy, session: Session) {
+    const { activeOrgId } = await this.validateHRAccess(session);
+
+    const existing = await db.query.leavePolicies.findFirst({
+      where: and(
+        eq(leavePolicies.organizationId, activeOrgId),
+        eq(leavePolicies.leaveType, input.leaveType),
+      ),
+    });
+
+    if (existing) {
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "Leave policy already exists for this leave type",
+      });
+    }
+
+    const [newPolicy] = await db
+      .insert(leavePolicies)
+      .values({
+        organizationId: activeOrgId,
+        leaveType: input.leaveType,
+        defaultAllowance: input.defaultAllowance,
+        carryForward: input.carryForward ?? false,
+        maxCarryForward: input.maxCarryForward ?? 0,
+        isActive: true,
+      })
+      .returning();
+
+    return newPolicy;
+  }
+
+  static async updateLeavePolicy(input: UpdateLeavePolicy, session: Session) {
+    const { activeOrgId } = await this.validateHRAccess(session);
+    const { id, ...updateData } = input;
+
+    const [updatedPolicy] = await db
+      .update(leavePolicies)
+      .set(updateData)
+      .where(
+        and(
+          eq(leavePolicies.id, id),
+          eq(leavePolicies.organizationId, activeOrgId),
+        ),
+      )
+      .returning();
+
+    if (!updatedPolicy) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Leave policy not found",
+      });
+    }
+
+    return updatedPolicy;
+  }
+
+  static async deleteLeavePolicy(id: string, session: Session) {
+    const { activeOrgId } = await this.validateHRAccess(session);
+
+    const deletedPolicy = await db
+      .delete(leavePolicies)
+      .where(
+        and(
+          eq(leavePolicies.id, id),
+          eq(leavePolicies.organizationId, activeOrgId),
+        ),
+      )
+      .returning();
+
+    if (deletedPolicy.length === 0) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Leave policy not found",
+      });
+    }
+
+    return deletedPolicy[0];
+  }
+}

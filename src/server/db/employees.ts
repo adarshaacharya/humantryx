@@ -11,6 +11,20 @@ export const employeeStatusEnum = pgEnum("employee_status", [
   "on_leave",
 ]);
 
+export const employeeDesignationEnum = pgEnum("employee_designation", [
+  "software_engineer",
+  "product_manager",
+  "designer",
+  "data_scientist",
+  "quality_assurance",
+  "devops_engineer",
+  "system_administrator",
+  "business_analyst",
+  "project_manager",
+  "hr",
+  "founder",
+]);
+
 export const employees = pgTable("employees", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
@@ -23,7 +37,9 @@ export const employees = pgTable("employees", {
   invitationId: text("invitation_id").references(() => invitations.id, {
     onDelete: "set null",
   }),
-  designation: text("designation").notNull(),
+  designation: employeeDesignationEnum("designation").notNull(),
   status: employeeStatusEnum("status").notNull(),
   ...timestamps,
 });
+
+export type Employee = typeof employees.$inferSelect;
