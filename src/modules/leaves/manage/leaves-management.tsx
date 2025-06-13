@@ -10,14 +10,17 @@ import {
   AlertCircle,
   Settings,
   ExternalLink,
+  UserPlus,
 } from "lucide-react";
 import { LeaveBalanceDataTable } from "./leave-balance/leave-balance-data-table";
 import { AdjustLeaveBalanceDialog } from "./leave-balance/adjust-leave-balance-dialog";
+import { InitializeLeaveBalancesDialog } from "./initialize-leave-balances-dialog";
 import { LEAVE_TYPES } from "../constants";
 import Link from "next/link";
 
 export function LeavesManagement() {
   const [showBalanceAdjustment, setShowBalanceAdjustment] = useState(false);
+  const [showInitializeBalances, setShowInitializeBalances] = useState(false);
 
   return (
     <div className="container mx-auto space-y-6 py-6">
@@ -40,6 +43,13 @@ export function LeavesManagement() {
               <ExternalLink className="ml-2 h-3 w-3" />
             </Button>
           </Link>
+          <Button
+            variant="outline"
+            onClick={() => setShowInitializeBalances(true)}
+          >
+            <UserPlus className="mr-2 h-4 w-4" />
+            Initialize Balances
+          </Button>
           <Button
             variant="outline"
             onClick={() => setShowBalanceAdjustment(true)}
@@ -142,6 +152,12 @@ export function LeavesManagement() {
 
       {/* Leave Balances Table */}
       <LeaveBalanceDataTable userRole="hr" />
+
+      {/* Initialize Leave Balances Dialog */}
+      <InitializeLeaveBalancesDialog
+        open={showInitializeBalances}
+        onOpenChange={setShowInitializeBalances}
+      />
 
       {/* Adjust Leave Balance Dialog */}
       <AdjustLeaveBalanceDialog

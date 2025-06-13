@@ -64,6 +64,8 @@ export function LeaveBalanceCard({ employeeId, year }: LeaveBalanceCardProps) {
   }
 
   const balances = balancesQuery.data ?? [];
+  console.log({ currentYear, employeeId });
+  console.log({ balancesQuery: balancesQuery.data });
 
   return (
     <Card>

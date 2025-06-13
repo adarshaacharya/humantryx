@@ -10,7 +10,7 @@ export type Subjects =
   | "Attendance"
   | "Leave"
   | "Company"
-  | "Recruitment"
-  | "AI";
+  | "AI"
+  | "Organization";
 
 export type AppAbility = MongoAbility<[Actions, Subjects]>;

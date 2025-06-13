@@ -546,6 +546,7 @@ export class InvitationService {
         .set({
           userId: data.userId,
           memberId: member.id,
+          status: "active",
         })
         .where(eq(employees.invitationId, data.invitationId))
         .returning()

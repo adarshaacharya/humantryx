@@ -14,9 +14,11 @@ import { LeaveRequestForm } from "./leave-request-form";
 import { LeaveBalanceCard } from "./leave-balance-card";
 import { LeaveRequestsTable } from "../manage/leave-requests/leave-requests-table";
 import { MyLeaveStatsCard } from "./leave-stats-card";
+import { useCurrentEmployee } from "@/hooks/use-current-employee";
 
 export function LeavesPage() {
   const [showRequestForm, setShowRequestForm] = useState(false);
+  const employee = useCurrentEmployee();
 
   return (
     <div className="container mx-auto space-y-6 py-6">
@@ -53,7 +55,7 @@ export function LeavesPage() {
       {/* Leave Balances */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-1">
-          <LeaveBalanceCard />
+          <LeaveBalanceCard employeeId={employee?.id} />
         </div>
 
         <div className="lg:col-span-2">

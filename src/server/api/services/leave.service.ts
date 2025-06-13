@@ -2,13 +2,18 @@ import { TRPCError } from "@trpc/server";
 import { and, eq, gte, lte, desc, asc, sql } from "drizzle-orm";
 import { db } from "@/server/db";
 import { employees, members } from "@/server/db/schema";
-import { leaveRequests, leaveBalances, leavePolicies, type leaveTypeEnum } from "@/server/db/leaves";
-import type { 
-  CreateLeaveRequest, 
-  ApproveRejectLeave, 
+import {
+  leaveRequests,
+  leaveBalances,
+  leavePolicies,
+  type leaveTypeEnum,
+} from "@/server/db/leaves";
+import type {
+  CreateLeaveRequest,
+  ApproveRejectLeave,
   LeaveRequestList,
   CreateLeavePolicy,
-  UpdateLeavePolicy 
+  UpdateLeavePolicy,
 } from "@/modules/leaves/schemas";
 
 type Session = {
@@ -16,7 +21,7 @@ type Session = {
   session: { activeOrganizationId?: string | null | undefined };
 };
 
-type LeaveType = typeof leaveTypeEnum.enumValues[number];
+type LeaveType = (typeof leaveTypeEnum.enumValues)[number];
 
 export class LeaveService {
   static async validateEmployee(userId: string) {
@@ -72,7 +77,8 @@ export class LeaveService {
   static calculateTotalDays(startDate: string, endDate: string) {
     const start = new Date(startDate);
     const end = new Date(endDate);
-    const totalDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    const totalDays =
+      Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
 
     if (totalDays <= 0) {
       throw new TRPCError({
@@ -84,7 +90,11 @@ export class LeaveService {
     return totalDays;
   }
 
-  static async checkLeaveBalance(employeeId: string, leaveType: LeaveType, totalDays: number) {
+  static async checkLeaveBalance(
+    employeeId: string,
+    leaveType: LeaveType,
+    totalDays: number,
+  ) {
     if (leaveType === "emergency") return;
 
     const currentYear = new Date().getFullYear();
@@ -107,8 +117,12 @@ export class LeaveService {
   static async createLeaveRequest(input: CreateLeaveRequest, session: Session) {
     const employee = await this.validateEmployee(session.user.id);
     const totalDays = this.calculateTotalDays(input.startDate, input.endDate);
-    
-    await this.checkLeaveBalance(employee.id, input.leaveType as LeaveType, totalDays);
+
+    await this.checkLeaveBalance(
+      employee.id,
+      input.leaveType as LeaveType,
+      totalDays,
+    );
 
     const [leaveRequest] = await db
       .insert(leaveRequests)
@@ -127,7 +141,15 @@ export class LeaveService {
   }
 
   static async getLeaveRequests(input: LeaveRequestList, session: Session) {
-    const { page = 1, limit = 10, employeeId, status, leaveType, startDate, endDate } = input;
+    const {
+      page = 1,
+      limit = 10,
+      employeeId,
+      status,
+      leaveType,
+      startDate,
+      endDate,
+    } = input;
     const offset = (page - 1) * limit;
     const whereConditions = [];
 
@@ -137,17 +159,12 @@ export class LeaveService {
 
     const isHRAdmin = await this.isHRAdmin(session);
 
-    if (!isHRAdmin && currentEmployee) {
+    if (currentEmployee) {
       whereConditions.push(eq(leaveRequests.employeeId, currentEmployee.id));
     }
 
     if (employeeId) {
-      if (!isHRAdmin) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Only HR and Admin can filter by employee",
-        });
-      }
+   
       whereConditions.push(eq(leaveRequests.employeeId, employeeId));
     }
 
@@ -170,7 +187,16 @@ export class LeaveService {
     const requests = await db.query.leaveRequests.findMany({
       where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
       with: {
-        employee: true,
+        employee: {
+          with: {
+            user: true,
+          },
+        },
+        approver: {
+          with: {
+            user: true,
+          },
+        },
       },
       orderBy: [desc(leaveRequests.createdAt)],
       limit,
@@ -199,7 +225,16 @@ export class LeaveService {
     const request = await db.query.leaveRequests.findFirst({
       where: eq(leaveRequests.id, id),
       with: {
-        employee: true,
+        employee: {
+          with: {
+            user: true,
+          },
+        },
+        approver: {
+          with: {
+            user: true,
+          },
+        },
       },
     });
 
@@ -216,7 +251,11 @@ export class LeaveService {
 
     const isHRAdmin = await this.isHRAdmin(session);
 
-    if (!isHRAdmin && currentEmployee && request.employeeId !== currentEmployee.id) {
+    if (
+      !isHRAdmin &&
+      currentEmployee &&
+      request.employeeId !== currentEmployee.id
+    ) {
       throw new TRPCError({
         code: "FORBIDDEN",
         message: "You can only view your own leave requests",
@@ -253,7 +292,10 @@ export class LeaveService {
       .set({
         status: input.status,
         approvedBy: approverEmployee.id,
-        approvedAt: input.status === "approved" ? new Date().toISOString().split("T")[0] : null,
+        approvedAt:
+          input.status === "approved"
+            ? new Date().toISOString().split("T")[0]
+            : null,
         rejectionReason: input.rejectionReason,
         updatedAt: new Date(),
       })
@@ -261,13 +303,21 @@ export class LeaveService {
       .returning();
 
     if (input.status === "approved") {
-      await this.deductLeaveBalance(request.employeeId, request.leaveType, request.totalDays);
+      await this.deductLeaveBalance(
+        request.employeeId,
+        request.leaveType,
+        request.totalDays,
+      );
     }
 
     return updatedRequest;
   }
 
-  private static async deductLeaveBalance(employeeId: string, leaveType: string, totalDays: number) {
+  private static async deductLeaveBalance(
+    employeeId: string,
+    leaveType: string,
+    totalDays: number,
+  ) {
     const currentYear = new Date().getFullYear();
     await db
       .update(leaveBalances)
@@ -285,7 +335,10 @@ export class LeaveService {
       );
   }
 
-  static async getLeaveBalances(employeeId: string | undefined, session: Session) {
+  static async getLeaveBalances(
+    employeeId: string | undefined,
+    session: Session,
+  ) {
     const year = new Date().getFullYear();
     let targetEmployeeId: string;
 
@@ -302,7 +355,11 @@ export class LeaveService {
 
     const isHRAdmin = await this.isHRAdmin(session);
 
-    if (!isHRAdmin && currentEmployee && targetEmployeeId !== currentEmployee.id) {
+    if (
+      !isHRAdmin &&
+      currentEmployee &&
+      targetEmployeeId !== currentEmployee.id
+    ) {
       throw new TRPCError({
         code: "FORBIDDEN",
         message: "You can only view your own leave balances",
@@ -323,7 +380,7 @@ export class LeaveService {
     leaveType: string,
     adjustment: number,
     reason: string,
-    session: Session
+    session: Session,
   ) {
     await this.validateHRAccess(session);
     const currentYear = new Date().getFullYear();
@@ -453,5 +510,81 @@ export class LeaveService {
     }
 
     return deletedPolicy[0];
+  }
+
+  static async initializeEmployeeLeaveBalances(
+    employeeId: string,
+    organizationId: string,
+    year?: number,
+  ) {
+    const currentYear = year ?? new Date().getFullYear();
+
+    // Get all active leave policies for the organization
+    const policies = await db.query.leavePolicies.findMany({
+      where: and(
+        eq(leavePolicies.organizationId, organizationId),
+        eq(leavePolicies.isActive, true),
+      ),
+    });
+
+    // Check if balances already exist for this employee and year
+    const existingBalances = await db.query.leaveBalances.findMany({
+      where: and(
+        eq(leaveBalances.employeeId, employeeId),
+        eq(leaveBalances.year, currentYear),
+      ),
+    });
+
+    const existingLeaveTypes = existingBalances.map((b) => b.leaveType);
+
+    // Create balance records for each policy that doesn't already exist
+    const newBalances = [];
+    for (const policy of policies) {
+      if (!existingLeaveTypes.includes(policy.leaveType)) {
+        newBalances.push({
+          employeeId,
+          leaveType: policy.leaveType,
+          totalAllowed: policy.defaultAllowance,
+          used: 0,
+          remaining: policy.defaultAllowance,
+          year: currentYear,
+        });
+      }
+    }
+
+    if (newBalances.length > 0) {
+      await db.insert(leaveBalances).values(newBalances);
+    }
+
+    return newBalances.length;
+  }
+
+  static async initializeAllEmployeesLeaveBalances(
+    organizationId: string,
+    year?: number,
+  ) {
+    const currentYear = year ?? new Date().getFullYear();
+
+    const activeEmployees = await db.query.employees.findMany({
+      where: and(
+        eq(employees.organizationId, organizationId),
+        eq(employees.status, "active"),
+      ),
+    });
+
+    let totalInitialized = 0;
+    for (const employee of activeEmployees) {
+      const initialized = await this.initializeEmployeeLeaveBalances(
+        employee.id,
+        organizationId,
+        currentYear,
+      );
+      totalInitialized += initialized;
+    }
+
+    return {
+      employeesProcessed: activeEmployees.length,
+      balancesInitialized: totalInitialized,
+    };
   }
 }

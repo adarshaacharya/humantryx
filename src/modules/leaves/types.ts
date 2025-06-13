@@ -7,7 +7,6 @@ export type LeaveRequest = RouterOutputs["leave"]["list"]["data"][0];
 export type LeaveBalance = RouterOutputs["leave"]["getBalances"][0];
 export type LeavePolicy = RouterOutputs["leave"]["getLeavePolicies"][0];
 
-// Leave request with full employee data
 export type LeaveRequestWithEmployee = {
   id: string;
   employeeId: string;
@@ -29,6 +28,15 @@ export type LeaveRequestWithEmployee = {
   createdAt: Date;
   updatedAt?: Date | null;
   employee?: {
+    id: string;
+    designation: string;
+    user?: {
+      name: string;
+      email: string;
+      image?: string | null;
+    } | null;
+  } | null;
+  approver?: {
     id: string;
     designation: string;
     user?: {

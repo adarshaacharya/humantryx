@@ -17,6 +17,7 @@ export function defineAbilitiesFor(
 
   const ability = new AbilityBuilder<AppAbility>(createAppAbility);
 
+  // can = allow, cant = forbid
   switch (employee.designation) {
     case "founder":
       ability.can("manage", "all");
@@ -37,17 +38,18 @@ export function defineAbilitiesFor(
 
     // for employees
     default:
-      ability.can("read", "Employee", {
-        // employeeId: {
-        //   $eq: employee.id,
-        // },
+      ability.can("read", "Organization", {
+        id: employee.organizationId,
       });
-      ability.can("create", "Leave");
+      ability.can(["create"], "Leave");
+      ability.can("read", "Leave", {
+        employeeId: employee.id,
+      });
       ability.can("read", "Attendance", {
         employeeId: employee.id,
       });
-      ability.can("read", "Leave", { employeeId: employee.id });
       ability.can("read", "Payroll", { employeeId: employee.id });
+
       break;
   }
 

@@ -19,6 +19,11 @@ import { accessControl } from "../middleware/casl-middleware";
 export const employeeRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createEmployeeSchema)
+    .use(
+      accessControl(async (option, ability) => {
+        return ability.can("manage", "Employee");
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const { session } = ctx;
 
@@ -39,9 +44,19 @@ export const employeeRouter = createTRPCRouter({
   // Update employee
   update: protectedProcedure
     .input(updateEmployeeSchema)
+    .use(
+      accessControl(async (option, ability) => {
+        return ability.can("manage", "Employee");
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const { session } = ctx;
       const { id, ...updateData } = input;
+
+      const employee = await EmployeeService.getEmployeeById(
+        id,
+        session.session.activeOrganizationId ?? "",
+      );
 
       if (
         !session.session.activeOrganizationId ||
@@ -63,6 +78,11 @@ export const employeeRouter = createTRPCRouter({
   // Delete employee
   delete: protectedProcedure
     .input(deleteEmployeeSchema)
+    .use(
+      accessControl(async (option, ability) => {
+        return ability.can("manage", "Employee");
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const { session } = ctx;
 
@@ -141,6 +161,11 @@ export const employeeRouter = createTRPCRouter({
   // Invite employee
   invite: protectedProcedure
     .input(inviteEmployeeSchema)
+    .use(
+      accessControl(async (option, ability) => {
+        return ability.can("manage", "Employee");
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const { session } = ctx;
 

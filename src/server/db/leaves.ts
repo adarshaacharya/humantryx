@@ -78,10 +78,12 @@ export const leaveRequestsRelations = relations(leaveRequests, ({ one }) => ({
   employee: one(employees, {
     fields: [leaveRequests.employeeId],
     references: [employees.id],
+    relationName: "employee",
   }),
   approver: one(employees, {
     fields: [leaveRequests.approvedBy],
     references: [employees.id],
+    relationName: "approver",
   }),
 }));
 
@@ -93,7 +95,9 @@ export const leaveBalancesRelations = relations(leaveBalances, ({ one }) => ({
 }));
 
 export const employeesLeavesRelations = relations(employees, ({ many }) => ({
-  leaveRequests: many(leaveRequests),
+  leaveRequests: many(leaveRequests, {
+    relationName: "employee",
+  }),
   leaveBalances: many(leaveBalances),
   approvedLeaveRequests: many(leaveRequests, {
     relationName: "approver",

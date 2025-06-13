@@ -76,13 +76,15 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - Use proper error handling in mutations
 - Validate all inputs with Zod
 
-3. Authentication & Security:
+3. Authentication & Authorization:
 
 - Use better-auth for authentication
-- RBAC (Role-Based Access Control) for different user roles : HR, Employee, Super Admin
 - Implement protected routes with middleware
 - Use environment variables for sensitive data
-- Verify user identity in all mutations
+- Use role-based access control (RBAC) for authorization using `casl` library which is setup already
+- Rbac is done on basis of the employee desination setup in employee schema
+- For role based access control use `src/lib/ability.ts` file to define abilities and use `useAbility` hook to check if user has permission to perform certain action
+- In backend routes instead of check HR or founder or other employee designation, use casl middleware setup instead of doing if checks
 
 4. Performance:
 

@@ -66,6 +66,7 @@ export function LeaveRequestsTable({
   // Dialog states
   const [selectedRequest, setSelectedRequest] =
     useState<LeaveRequestWithEmployee | null>(null);
+  const [showViewDialog, setShowViewDialog] = useState(false);
   const [showApprovalDialog, setShowApprovalDialog] = useState(false);
   const [approvalAction, setApprovalAction] = useState<"approved" | "rejected">(
     "approved",
@@ -298,7 +299,10 @@ export function LeaveRequestsTable({
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
-                                onClick={() => setSelectedRequest(request)}
+                                onClick={() => {
+                                  setSelectedRequest(request);
+                                  setShowViewDialog(true);
+                                }}
                               >
                                 <Eye className="mr-2 h-4 w-4" />
                                 View Details
@@ -352,6 +356,246 @@ export function LeaveRequestsTable({
           )}
         </CardContent>
       </Card>
+
+      {/* View Details Dialog */}
+      <Dialog open={showViewDialog} onOpenChange={setShowViewDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Leave Request Details</DialogTitle>
+            <DialogDescription>
+              Complete information about this leave request
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedRequest && (
+            <div className="space-y-6">
+              {/* Employee Information */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <div>
+                    <Label className="text-muted-foreground text-sm font-medium">
+                      Employee
+                    </Label>
+                    <div className="font-medium">
+                      {selectedRequest.employee?.user?.name ?? "Unknown"}
+                    </div>
+                    <div className="text-muted-foreground text-sm">
+                      {selectedRequest.employee?.user?.email ?? ""}
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground text-sm font-medium">
+                      Designation
+                    </Label>
+                    <div className="capitalize">
+                      {selectedRequest.employee?.designation?.replace(
+                        "_",
+                        " ",
+                      ) ?? "N/A"}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <Label className="text-muted-foreground text-sm font-medium">
+                      Leave Type
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant="outline"
+                        className={
+                          LEAVE_TYPES.find(
+                            (type) => type.value === selectedRequest.leaveType,
+                          )?.color
+                        }
+                      >
+                        <span className="mr-1">
+                          {
+                            LEAVE_TYPES.find(
+                              (type) =>
+                                type.value === selectedRequest.leaveType,
+                            )?.icon
+                          }
+                        </span>
+                        {
+                          LEAVE_TYPES.find(
+                            (type) => type.value === selectedRequest.leaveType,
+                          )?.label
+                        }
+                      </Badge>
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground text-sm font-medium">
+                      Status
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant="outline"
+                        className={
+                          LEAVE_STATUSES[
+                            selectedRequest.status as keyof typeof LEAVE_STATUSES
+                          ]?.color
+                        }
+                      >
+                        <span className="mr-1">
+                          {
+                            LEAVE_STATUSES[
+                              selectedRequest.status as keyof typeof LEAVE_STATUSES
+                            ]?.icon
+                          }
+                        </span>
+                        {
+                          LEAVE_STATUSES[
+                            selectedRequest.status as keyof typeof LEAVE_STATUSES
+                          ]?.label
+                        }
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Leave Duration */}
+              <div className="grid grid-cols-3 gap-4 rounded-lg border p-4">
+                <div>
+                  <Label className="text-muted-foreground text-sm font-medium">
+                    Start Date
+                  </Label>
+                  <div className="font-medium">
+                    {format(new Date(selectedRequest.startDate), "PPP")}
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-muted-foreground text-sm font-medium">
+                    End Date
+                  </Label>
+                  <div className="font-medium">
+                    {format(new Date(selectedRequest.endDate), "PPP")}
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-muted-foreground text-sm font-medium">
+                    Total Days
+                  </Label>
+                  <div className="text-primary text-2xl font-bold">
+                    {selectedRequest.totalDays}
+                  </div>
+                </div>
+              </div>
+
+              {/* Reason */}
+              <div>
+                <Label className="text-muted-foreground text-sm font-medium">
+                  Reason for Leave
+                </Label>
+                <div className="bg-muted/50 mt-2 rounded-lg border p-3 text-sm">
+                  {selectedRequest.reason}
+                </div>
+              </div>
+
+              {/* Request Information */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-muted-foreground text-sm font-medium">
+                    Applied On
+                  </Label>
+                  <div>
+                    {format(new Date(selectedRequest.createdAt), "PPP")}
+                  </div>
+                </div>
+                {selectedRequest.updatedAt && (
+                  <div>
+                    <Label className="text-muted-foreground text-sm font-medium">
+                      Last Updated
+                    </Label>
+                    <div>
+                      {format(new Date(selectedRequest.updatedAt), "PPP")}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Approval Information */}
+              {(selectedRequest.status === "approved" ||
+                selectedRequest.status === "rejected") && (
+                <div className="bg-muted/20 rounded-lg border p-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-muted-foreground text-sm font-medium">
+                        {selectedRequest.status === "approved"
+                          ? "Approved By"
+                          : "Rejected By"}
+                      </Label>
+                      <div className="font-medium">
+                        {selectedRequest.approver?.user?.name ?? "N/A"}
+                      </div>
+                      <div className="text-muted-foreground text-sm">
+                        {selectedRequest.approver?.user?.email ?? ""}
+                      </div>
+                    </div>
+                    {selectedRequest.approvedAt && (
+                      <div>
+                        <Label className="text-muted-foreground text-sm font-medium">
+                          {selectedRequest.status === "approved"
+                            ? "Approved On"
+                            : "Rejected On"}
+                        </Label>
+                        <div>
+                          {format(new Date(selectedRequest.approvedAt), "PPP")}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  {selectedRequest.rejectionReason && (
+                    <div className="mt-3">
+                      <Label className="text-muted-foreground text-sm font-medium">
+                        Rejection Reason
+                      </Label>
+                      <div className="mt-1 rounded bg-red-50 p-2 text-sm text-red-700">
+                        {selectedRequest.rejectionReason}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowViewDialog(false)}>
+              Close
+            </Button>
+            {canManageRequests && selectedRequest?.status === "pending" && (
+              <>
+                <Button
+                  onClick={() => {
+                    setShowViewDialog(false);
+                    setApprovalAction("approved");
+                    setShowApprovalDialog(true);
+                  }}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  <Check className="mr-2 h-4 w-4" />
+                  Approve
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    setShowViewDialog(false);
+                    setApprovalAction("rejected");
+                    setShowApprovalDialog(true);
+                  }}
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  Reject
+                </Button>
+              </>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Approval/Rejection Dialog */}
       <Dialog open={showApprovalDialog} onOpenChange={setShowApprovalDialog}>

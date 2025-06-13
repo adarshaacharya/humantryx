@@ -19,6 +19,7 @@ export const leaveRouter = createTRPCRouter({
 
   list: protectedProcedure
     .input(leaveRequestListSchema)
+
     .query(async ({ ctx, input }) => {
       return LeaveService.getLeaveRequests(input, ctx.session);
     }),
@@ -87,5 +88,35 @@ export const leaveRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return LeaveService.deleteLeavePolicy(input.id, ctx.session);
+    }),
+
+  initializeEmployeeBalances: protectedProcedure
+    .input(
+      z.object({
+        employeeId: z.string().uuid(),
+        organizationId: z.string(),
+        year: z.number().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return LeaveService.initializeEmployeeLeaveBalances(
+        input.employeeId,
+        input.organizationId,
+        input.year,
+      );
+    }),
+
+  initializeAllEmployeesBalances: protectedProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        year: z.number().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return LeaveService.initializeAllEmployeesLeaveBalances(
+        input.organizationId,
+        input.year,
+      );
     }),
 });
