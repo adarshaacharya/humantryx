@@ -63,7 +63,7 @@ export function LeaveBalanceCard({ employeeId, year }: LeaveBalanceCardProps) {
     );
   }
 
-  const balances = balancesQuery.data || [];
+  const balances = balancesQuery.data ?? [];
 
   return (
     <Card>

@@ -31,10 +31,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { MoreHorizontal, Check, X, Eye, Calendar, Search } from "lucide-react";
-import { LEAVE_TYPES, LEAVE_STATUSES } from "../constants";
+import { LEAVE_TYPES, LEAVE_STATUSES } from "../../constants";
 import { format } from "date-fns";
 import { toast } from "sonner";
-import { CustomDataTablePagination } from "../components/custom-data-table-pagination";
+import { CustomDataTablePagination } from "./custom-data-table-pagination";
 import {
   Select,
   SelectContent,
@@ -46,7 +46,7 @@ import type {
   LeaveRequestWithEmployee,
   LeaveStatus,
   LeaveType,
-} from "../types";
+} from "../../types";
 
 type LeaveRequestsTableProps = {
   showFilters?: boolean;

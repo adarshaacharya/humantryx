@@ -1,5 +1,5 @@
-import { LeavePoliciesPage } from "@/modules/leaves/policies/leave-policies-page";
+import { LeavePoliciesManagement } from "@/modules/leaves/policies/components/leave-policies-management";
 
 export default function Page() {
-  return <LeavePoliciesPage />;
+  return <LeavePoliciesManagement />;
 }

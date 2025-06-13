@@ -4,7 +4,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { Progress } from "@/components/ui/progress";
-import type { LeaveBalance } from "../types";
+import type { LeaveBalance } from "../../types";
 
 const getLeaveTypeBadge = (type: string) => {
   const typeColors: Record<

@@ -25,7 +25,6 @@ type MenuItem = {
 };
 
 export const getMenuItems = (ability: AppAbility) => {
-
   const MENU_ITEMS: MenuItem[] = [
     {
       title: "Dashboard",
@@ -87,6 +86,11 @@ export const getMenuItems = (ability: AppAbility) => {
           title: "Manage Leaves",
           href: "/dashboard/leaves/manage",
           enabled: ability.can("manage", "Leave"),
+        },
+        {
+          title: "Leave Requests",
+          href: "/dashboard/leaves/requests",
+          enabled: ability.can("read", "Leave"),
         },
         {
           title: "Leave Policies",

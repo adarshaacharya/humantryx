@@ -18,7 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
-import type { LeavePolicy } from "../types";
+import type { LeavePolicy } from "../../types";
 
 interface LeavePolicyTableMeta {
   onEditPolicy: (policy: LeavePolicy) => void;

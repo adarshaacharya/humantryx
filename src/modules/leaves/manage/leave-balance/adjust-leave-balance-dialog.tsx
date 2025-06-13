@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/form";
 import { authClient } from "@/server/auth/auth-client";
 
-import { LEAVE_TYPES } from "../constants";
+import { LEAVE_TYPES } from "../../constants";
 
 const adjustBalanceSchema = z.object({
   employeeId: z.string().uuid("Please select an employee"),

@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/tooltip";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { format } from "date-fns";
-import type { LeaveRequest } from "../types";
+import type { LeaveRequest } from "../../types";
 
 interface LeaveRequestTableMeta {
   onViewRequest: (request: LeaveRequest) => void;

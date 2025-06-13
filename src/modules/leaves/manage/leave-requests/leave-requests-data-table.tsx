@@ -26,8 +26,11 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 import { leaveRequestColumns } from "./leave-requests-table-columns";
-import { LeaveFiltersComponent, type LeaveFilters } from "./leave-filters";
-import type { LeaveRequest } from "../types";
+import {
+  LeaveFiltersComponent,
+  type LeaveFilters,
+} from "./leave-filters";
+import type { LeaveRequest } from "../../types";
 
 const DEFAULT_FILTERS: LeaveFilters = {
   search: undefined,
