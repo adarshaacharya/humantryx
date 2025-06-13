@@ -57,17 +57,16 @@ export const getMenuItems = (ability: AppAbility) => {
       enabled: ability.can("read", "Attendance"),
       submenu: [
         {
-          title: "Daily Attendance",
+          title: "My Attendance",
           href: "/dashboard/attendance",
           enabled: ability.can("read", "Attendance"),
         },
         {
-          title: "Time Logs",
-          href: "/dashboard/attendance/logs",
-        },
-        {
-          title: "Attendance Reports",
-          href: "/dashboard/attendance/reports",
+          title: "Manage Attendance",
+          href: "/dashboard/attendance/manage",
+          enabled:
+            ability.can("manage", "Attendance") ||
+            ability.can("create", "Attendance"),
         },
       ],
     },

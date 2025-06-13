@@ -225,10 +225,14 @@ export class EmployeeService {
 
       // Build filters
       const filters = [
-        eq(employees.organizationId, organizationId),
+        // eq(employees.organizationId, organizationId),
         eq(employees.status, "active"),
         sql`${employees.deletedAt} IS NULL`,
       ];
+
+      if (organizationId) {
+        filters.push(eq(employees.organizationId, organizationId));
+      }
 
       if (searchQuery) {
         filters.push(

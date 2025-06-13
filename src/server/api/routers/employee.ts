@@ -138,19 +138,20 @@ export const employeeRouter = createTRPCRouter({
       const organizationId =
         input.organizationId || session.session.activeOrganizationId;
 
-      if (!organizationId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Organization ID is required",
-        });
-      }
 
-      if (session.session.activeOrganizationId !== organizationId) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Not authorized to view employees in this organization",
-        });
-      }
+      // if (!organizationId) {
+      //   throw new TRPCError({
+      //     code: "BAD_REQUEST",
+      //     message: "Organization ID is required",
+      //   });
+      // }
+
+      // if (session.session.activeOrganizationId !== organizationId) {
+      //   throw new TRPCError({
+      //     code: "FORBIDDEN",
+      //     message: "Not authorized to view employees in this organization",
+      //   });
+      // }
 
       return await EmployeeService.listEmployees({
         ...input,
@@ -256,10 +257,7 @@ export const employeeRouter = createTRPCRouter({
     const { session } = ctx;
 
     if (!session.session.activeOrganizationId) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Active organization ID is required",
-      });
+      return;
     }
 
     return await EmployeeService.getCurrentEmployee({

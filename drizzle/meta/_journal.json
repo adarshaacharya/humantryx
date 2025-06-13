@@ -120,6 +120,20 @@
       "when": 1749553956097,
       "tag": "0016_emp-roles-enum",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1749830047455,
+      "tag": "0017_attendance",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1749830115872,
+      "tag": "0018_attendance-fix",
+      "breakpoints": true
     }
   ]
 }

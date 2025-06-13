@@ -159,12 +159,11 @@ export class LeaveService {
 
     const isHRAdmin = await this.isHRAdmin(session);
 
-    if (currentEmployee) {
+    if (currentEmployee && !isHRAdmin) {
       whereConditions.push(eq(leaveRequests.employeeId, currentEmployee.id));
     }
 
     if (employeeId) {
-   
       whereConditions.push(eq(leaveRequests.employeeId, employeeId));
     }
 

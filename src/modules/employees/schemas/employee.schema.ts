@@ -54,7 +54,7 @@ export const employeeListSchema = z.object({
     .enum(["name", "designation", "createdAt", "email"])
     .default("createdAt"),
   sortDirection: z.enum(["asc", "desc"]).default("desc"),
-  organizationId: z.string().min(1, "Organization ID is required"),
+  organizationId: z.string().optional(),
 });
 
 // Employee by ID schema

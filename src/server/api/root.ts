@@ -5,6 +5,7 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { invitationRouter } from "./routers/invitation";
 import { attachmentsRouter } from "./routers/attachments";
 import { leaveRouter } from "./routers/leave";
+import { attendanceRouter } from "./routers/attendance";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   invitation: invitationRouter,
   attachment: attachmentsRouter,
   leave: leaveRouter,
+  attendance: attendanceRouter,
 });
 
 // export type definition of API
