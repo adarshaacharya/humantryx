@@ -26,6 +26,7 @@
     "@aws-sdk/s3-request-presigner": "3.744.0",
     "@better-fetch/fetch": "^1.1.18",
     "@casl/ability": "^6.7.3",
+    "@casl/react": "^5.0.0",
     "@hookform/resolvers": "^5.0.1",
     "@paralleldrive/cuid2": "^2.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.14",

@@ -20,6 +20,9 @@ importers:
       '@casl/ability':
         specifier: ^6.7.3
         version: 6.7.3
+      '@casl/react':
+        specifier: ^5.0.0
+        version: 5.0.0(@casl/ability@6.7.3)(react@19.1.0)
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.0.1(react-hook-form@7.56.4(react@19.1.0))
@@ -401,6 +404,12 @@ packages:
 
   '@casl/ability@6.7.3':
     resolution: {integrity: sha512-A4L28Ko+phJAsTDhRjzCOZWECQWN2jzZnJPnROWWHjJpyMq1h7h9ZqjwS2WbIUa3Z474X1ZPSgW0f1PboZGC0A==}
+
+  '@casl/react@5.0.0':
+    resolution: {integrity: sha512-jiwr6uOBnQA7h0gs+RJIbFVF24Dw6JLiUPL4pfU0OEjWSJFCcYBz6RPU21XNciWL6xwFDOds81cHosuElxfdmw==}
+    peerDependencies:
+      '@casl/ability': ^4.0.0 || ^5.1.0 || ^6.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@date-fns/tz@1.2.0':
     resolution: {integrity: sha512-LBrd7MiJZ9McsOgxqWX7AaxrDjcFVjWH/tIKJd7pnR7McaslGYOP1QmmiBXdJH/H/yLCT+rcQ7FaPBUxRGUtrg==}
@@ -4449,6 +4458,11 @@ snapshots:
   '@casl/ability@6.7.3':
     dependencies:
       '@ucast/mongo2js': 1.4.0
+
+  '@casl/react@5.0.0(@casl/ability@6.7.3)(react@19.1.0)':
+    dependencies:
+      '@casl/ability': 6.7.3
+      react: 19.1.0
 
   '@date-fns/tz@1.2.0': {}
 

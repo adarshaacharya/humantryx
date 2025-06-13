@@ -6,10 +6,15 @@ import { Badge } from "@/components/ui/badge";
 import { Building2, Users, Settings, User } from "lucide-react";
 import { authClient } from "@/server/auth/auth-client";
 import { getRoleBadgeVariant, getRoleIcon } from "./utils";
+import { useAbility } from "@/providers/ability-context";
+import { TeamOverviewCard } from "./team-overview-card";
 
 export function OrganizationOverview() {
   const currentOrg = authClient.useActiveOrganization();
   const currentMember = authClient.useActiveMember();
+  const ability = useAbility();
+
+  const canManageMember = ability.can("manage", "Member");
 
   if (currentOrg.isPending || currentMember.isPending) {
     return (
@@ -107,7 +112,7 @@ export function OrganizationOverview() {
                   </span>
                 </div>
               </Badge>
-            </div>{" "}
+            </div>
             <div className="text-sm text-gray-600">
               Created:{" "}
               {new Date(currentOrg.data.createdAt).toLocaleDateString()}
@@ -115,65 +120,72 @@ export function OrganizationOverview() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Users className="h-5 w-5" />
-                <span>Members</span>
-              </div>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Total Members:</span>
-                <span className="font-semibold">{members.length}</span>
-              </div>
-
-              {/* Recent Members */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium text-gray-900">
-                  Recent Members
-                </h4>
-                <div className="space-y-2">
-                  {members.slice(0, 3).map((member) => (
-                    <div
-                      key={member.id}
-                      className="flex items-center justify-between"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200">
-                          <User className="h-3 w-3 text-gray-600" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">
-                            {member.user.name}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {member.user.email}
-                          </p>
-                        </div>
-                      </div>
-                      <Badge
-                        variant={getRoleBadgeVariant(member.role)}
-                        className="text-xs"
-                      >
-                        {member.role}
-                      </Badge>
-                    </div>
-                  ))}
+        {/* Members List */}
+        {canManageMember ? (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Users className="h-5 w-5" />
+                  <span>Members</span>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Total Members:</span>
+                  <span className="font-semibold">{members.length}</span>
                 </div>
 
-                {members.length > 3 && (
-                  <p className="text-xs text-gray-500">
-                    +{members.length - 3} more members
-                  </p>
-                )}
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium text-gray-900">
+                    Recent Members
+                  </h4>
+                  <div className="space-y-2">
+                    {members.slice(0, 3).map((member) => (
+                      <div
+                        key={member.id}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200">
+                            <User className="h-3 w-3 text-gray-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">
+                              {member.user.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {member.user.email}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge
+                          variant={getRoleBadgeVariant(member.role)}
+                          className="text-xs"
+                        >
+                          {member.role}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+
+                  {members.length > 3 && (
+                    <p className="text-xs text-gray-500">
+                      +{members.length - 3} more members
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          <TeamOverviewCard
+            organizationName={currentOrg.data.name}
+            memberCount={members.length}
+          />
+        )}
       </div>
     </div>
   );

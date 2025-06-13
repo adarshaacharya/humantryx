@@ -104,6 +104,7 @@ export const auth = betterAuth({
           };
         },
       },
+
     },
   },
 });

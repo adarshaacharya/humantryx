@@ -40,7 +40,7 @@ export interface EmployeeWithUser {
     email: string;
     image: string | null;
   } | null;
-  status : EmployeeStatus
+  status: EmployeeStatus;
 }
 
 export class EmployeeService {
@@ -311,7 +311,7 @@ export class EmployeeService {
         userId: employee.userId,
         memberId: employee.memberId,
         invitationId: employee.invitationId,
-        status : employee.status,
+        status: employee.status,
         user: employee.userUserId
           ? {
               id: employee.userUserId,
@@ -438,5 +438,27 @@ export class EmployeeService {
         message: "Failed to update employee after invitation acceptance",
       });
     }
+  }
+
+  static async getCurrentEmployee({
+    userId,
+    organizationId,
+  }: {
+    userId: string;
+    organizationId: string;
+  }) {
+    const employee = await db.query.employees.findFirst({
+      where: and(
+        eq(employees.userId, userId),
+        eq(employees.organizationId, organizationId),
+      ),
+    });
+    if (!employee) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Employee not found",
+      });
+    }
+    return employee;
   }
 }

@@ -23,11 +23,14 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { MENU_ITEMS } from "./consts/sidebar-itemts";
+import { useAbility } from "@/providers/ability-context";
+import { getMenuItems } from "./consts/sidebar-items";
 
 export function DashboardSideBar() {
   const pathname = usePathname();
   const [openItems, setOpenItems] = useState<string[]>([]);
+  const ability = useAbility();
+  const MENU_ITEMS = getMenuItems(ability);
 
   const toggleItem = (title: string) => {
     setOpenItems((prev) =>
@@ -80,6 +83,8 @@ export function DashboardSideBar() {
         <SidebarGroup>
           <SidebarMenu>
             {MENU_ITEMS.map((item) => {
+              if (!item.enabled) return null;
+
               const Icon = item.icon;
               const hasSubmenu = item.submenu && item.submenu.length > 0;
               const isItemOpen = openItems.includes(item.title);
@@ -112,19 +117,24 @@ export function DashboardSideBar() {
                       </CollapsibleTrigger>
                       <CollapsibleContent>
                         <SidebarMenuSub>
-                          {item.submenu?.map((subItem) => (
-                            <SidebarMenuSubItem key={subItem.href}>
-                              <SidebarMenuSubButton
-                                asChild
-                                className={cn(
-                                  isActive(subItem.href, true) &&
-                                    "bg-primary/10 text-primary font-medium",
-                                )}
-                              >
-                                <Link href={subItem.href}>{subItem.title}</Link>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          ))}
+                          {item.submenu?.map((subItem) => {
+                            if (!subItem.enabled) return null;
+                            return (
+                              <SidebarMenuSubItem key={subItem.href}>
+                                <SidebarMenuSubButton
+                                  asChild
+                                  className={cn(
+                                    isActive(subItem.href, true) &&
+                                      "bg-primary/10 text-primary font-medium",
+                                  )}
+                                >
+                                  <Link href={subItem.href}>
+                                    {subItem.title}
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            );
+                          })}
                         </SidebarMenuSub>
                       </CollapsibleContent>
                     </Collapsible>

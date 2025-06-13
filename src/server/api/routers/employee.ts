@@ -14,6 +14,7 @@ import {
   updateAfterInvitationSchema,
   getEmployeeByUserIdSchema,
 } from "@/modules/employees/schemas/employee.schema";
+import { accessControl } from "../middleware/casl-middleware";
 
 export const employeeRouter = createTRPCRouter({
   create: protectedProcedure
@@ -106,6 +107,11 @@ export const employeeRouter = createTRPCRouter({
   // List employees with pagination, search, and filtering
   list: protectedProcedure
     .input(employeeListSchema)
+    .use(
+      accessControl(async (option, ability) => {
+        return ability.can("manage", "Employee");
+      }),
+    )
     .query(async ({ ctx, input }) => {
       const { session } = ctx;
 
@@ -220,4 +226,20 @@ export const employeeRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await EmployeeService.getEmployeeByUserId(input.userId);
     }),
+
+  getCurrentEmployee: protectedProcedure.query(async ({ ctx }) => {
+    const { session } = ctx;
+
+    if (!session.session.activeOrganizationId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Active organization ID is required",
+      });
+    }
+
+    return await EmployeeService.getCurrentEmployee({
+      organizationId: session.session.activeOrganizationId,
+      userId: session.session.userId,
+    });
+  }),
 });

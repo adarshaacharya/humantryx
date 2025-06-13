@@ -5,6 +5,7 @@ import { Geist } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 
 import { TRPCReactProvider } from "@/trpc/react";
+import { AbilityProvider } from "@/providers/ability-context";
 
 export const metadata: Metadata = {
   title: "Human Loop | AI Powered Human Resource Management System",
@@ -25,8 +26,7 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable}`}>
       <body>
         <TRPCReactProvider>
-          {children}
-
+          <AbilityProvider>{children}</AbilityProvider>
           <Toaster position="top-right" />
         </TRPCReactProvider>
       </body>
