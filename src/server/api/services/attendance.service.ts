@@ -219,7 +219,7 @@ export class AttendanceService {
       limit?: number;
     } = {},
   ) {
-    const { employeeId, startDate, endDate, page = 1, limit = 10 } = options;
+    const { employeeId, startDate, endDate, page, limit } = options;
 
     const currentEmployee = await this.validateEmployee(session.user.id);
     const isHRAdmin = ["hr", "founder"].includes(currentEmployee.designation);
@@ -244,9 +244,8 @@ export class AttendanceService {
       whereConditions.push(lte(attendanceRecords.clockInTime, endDate));
     }
 
-    const offset = (page - 1) * limit;
-
-    const records = await db.query.attendanceRecords.findMany({
+    // Build query options
+    const queryOptions: any = {
       where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
       with: {
         employee: {
@@ -256,25 +255,42 @@ export class AttendanceService {
         },
       },
       orderBy: [desc(attendanceRecords.clockInTime)],
-      limit,
-      offset,
-    });
+    };
 
-    const countResult = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(attendanceRecords)
-      .where(whereConditions.length > 0 ? and(...whereConditions) : undefined);
+    // Add pagination only if specified
+    if (page !== undefined && limit !== undefined) {
+      const offset = (page - 1) * limit;
+      queryOptions.limit = limit;
+      queryOptions.offset = offset;
+    }
 
-    const totalCount = countResult[0]?.count ?? 0;
+    const records = await db.query.attendanceRecords.findMany(queryOptions);
 
+    // If pagination is requested, also get count
+    if (page !== undefined && limit !== undefined) {
+      const countResult = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(attendanceRecords)
+        .where(
+          whereConditions.length > 0 ? and(...whereConditions) : undefined,
+        );
+
+      const totalCount = countResult[0]?.count ?? 0;
+
+      return {
+        data: records,
+        pagination: {
+          page,
+          limit,
+          totalCount,
+          totalPages: Math.ceil(totalCount / limit),
+        },
+      };
+    }
+
+    // Return all data without pagination
     return {
       data: records,
-      pagination: {
-        page,
-        limit,
-        totalCount,
-        totalPages: Math.ceil(totalCount / limit),
-      },
     };
   }
 

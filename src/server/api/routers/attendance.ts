@@ -47,8 +47,8 @@ export const attendanceRouter = createTRPCRouter({
         employeeId: z.string().optional(),
         startDate: z.date().optional(),
         endDate: z.date().optional(),
-        page: z.number().default(1),
-        limit: z.number().default(10),
+        page: z.number().optional(),
+        limit: z.number().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {

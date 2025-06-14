@@ -1,7 +1,7 @@
 "use client";
 
-import { AttendanceSummaryCard } from "@/modules/attendance/components/attendance-summary-card";
-import { AttendanceHistoryTable } from "@/modules/attendance/history/attendance-history-table";
+import { AttendanceSummaryCard } from "@/modules/attendance/history/components/attendance-summary-card";
+import { AttendanceDataTable } from "@/modules/attendance/history/components/attendance-data-table";
 
 export function ManageAttendancePage() {
   return (
@@ -16,8 +16,12 @@ export function ManageAttendancePage() {
       {/* Summary with Employee Selector */}
       <AttendanceSummaryCard showEmployeeSelector />
 
-      {/* All Attendance Records */}
-      <AttendanceHistoryTable />
+      {/* All Attendance Records with Data Table */}
+      <AttendanceDataTable
+        showEmployeeFilter={true}
+        title="All Employee Attendance"
+        description="View and manage attendance records for all employees"
+      />
     </div>
   );
 }

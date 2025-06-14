@@ -67,6 +67,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - avoid using too much try catch blocks, use proper error handling in mutations and queries
 - while fetching trpc data don't destructure useQuery results eg : { data, isLoading } = useQuery() instead use `const employeeManagementQuery = useQuery()` and then access employeeManagementQuery.data and employeeManagementQuery.isLoading
 - if there is any constants or non-stateful data move it out of component
+- always use shadcn data-table with tanstack react table for table instead of creating new one the data-table is inside `components/ui/data-table`
 
 2. Data Layer:
 

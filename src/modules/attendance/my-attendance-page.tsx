@@ -1,7 +1,6 @@
 import { AttendanceClockCard } from "@/modules/attendance/clock/attendance-clock-card";
-import { AttendanceSummaryCard } from "@/modules/attendance/components/attendance-summary-card";
-import { AttendanceHistoryTable } from "@/modules/attendance/history/attendance-history-table";
-import { authClient } from "@/server/auth/auth-client";
+import { AttendanceSummaryCard } from "@/modules/attendance/history/components/attendance-summary-card";
+import { AttendanceDataTable } from "@/modules/attendance/history/components/attendance-data-table";
 import { api } from "@/trpc/server";
 
 export async function MyAttendancePage() {
@@ -22,7 +21,13 @@ export async function MyAttendancePage() {
         <AttendanceSummaryCard />
       </div>
 
-      <AttendanceHistoryTable employeeId={employee?.id} />
+      {/* Attendance History */}
+      <AttendanceDataTable
+        employeeId={employee?.id}
+        showEmployeeFilter={false}
+        title="My Attendance History"
+        description="Your recent attendance records"
+      />
     </div>
   );
 }
