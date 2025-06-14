@@ -6,6 +6,7 @@ import { invitationRouter } from "./routers/invitation";
 import { attachmentsRouter } from "./routers/attachments";
 import { leaveRouter } from "./routers/leave";
 import { attendanceRouter } from "./routers/attendance";
+import { payrollRouter } from "./routers/payroll";
 
 /**
  * This is the primary router for your server.
@@ -20,6 +21,7 @@ export const appRouter = createTRPCRouter({
   attachment: attachmentsRouter,
   leave: leaveRouter,
   attendance: attendanceRouter,
+  payroll: payrollRouter,
 });
 
 // export type definition of API

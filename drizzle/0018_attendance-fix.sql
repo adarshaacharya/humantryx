@@ -1,1 +1,0 @@
-ALTER TABLE "attendance_records" ALTER COLUMN "employee_id" SET DATA TYPE uuid;

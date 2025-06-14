@@ -1,7 +1,7 @@
 CREATE TYPE "public"."attendance_status" AS ENUM('clocked_in', 'clocked_out', 'break_start', 'break_end');--> statement-breakpoint
 CREATE TABLE "attendance_records" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"employee_id" text NOT NULL,
+	"employee_id" uuid NOT NULL,
 	"clock_in_time" timestamp NOT NULL,
 	"clock_out_time" timestamp,
 	"break_start_time" timestamp,

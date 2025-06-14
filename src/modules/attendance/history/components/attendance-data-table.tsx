@@ -75,7 +75,6 @@ export function AttendanceDataTable({
 
   const debouncedSearch = useDebounce(searchTerm, 300);
 
-  // Get attendance history
   const historyQuery = api.attendance.getHistory.useQuery({
     employeeId:
       employeeId || (employeeFilter === "all" ? undefined : employeeFilter),
@@ -83,7 +82,6 @@ export function AttendanceDataTable({
     endDate: dateRange?.to,
   });
 
-  // Filter records client-side for search
   const filteredRecords: AttendanceRecord[] =
     (historyQuery.data?.data as AttendanceRecord[])?.filter((record) => {
       if (!debouncedSearch) return true;
@@ -95,22 +93,18 @@ export function AttendanceDataTable({
 
   const handleViewRecord = useCallback((record: AttendanceRecord) => {
     console.log("View record:", record);
-    // TODO: Implement view record functionality
   }, []);
 
   const handleEditRecord = useCallback((record: AttendanceRecord) => {
     console.log("Edit record:", record);
-    // TODO: Implement edit record functionality
   }, []);
 
   const handleExport = useCallback(() => {
     console.log("Export attendance records");
-    // TODO: Implement export functionality
   }, []);
 
   // Get columns based on whether to show employee info
   const columns = attendanceColumns.filter((column) => {
-    // Check if this is the employee column and we shouldn't show it
     if (
       "accessorKey" in column &&
       column.accessorKey === "employee" &&
