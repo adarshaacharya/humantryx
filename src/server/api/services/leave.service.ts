@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, gte, lte, desc, asc, sql } from "drizzle-orm";
+import { and, eq, gte, lte, desc, asc, sql, inArray } from "drizzle-orm";
 import { db } from "@/server/db";
 import { employees, members } from "@/server/db/schema";
 import {
@@ -460,12 +460,64 @@ export class LeaveService {
       })
       .returning();
 
+    // Automatically initialize leave balances for all existing employees
+    // when a new policy is created
+    const currentYear = new Date().getFullYear();
+    const activeEmployees = await db.query.employees.findMany({
+      where: and(
+        eq(employees.organizationId, activeOrgId),
+        eq(employees.status, "active"),
+      ),
+    });
+
+    // Create leave balance records for employees who don't already have this leave type
+    const balancesToCreate = [];
+    for (const employee of activeEmployees) {
+      // Check if employee already has a balance for this leave type and year
+      const existingBalance = await db.query.leaveBalances.findFirst({
+        where: and(
+          eq(leaveBalances.employeeId, employee.id),
+          eq(leaveBalances.leaveType, input.leaveType),
+          eq(leaveBalances.year, currentYear),
+        ),
+      });
+
+      if (!existingBalance) {
+        balancesToCreate.push({
+          employeeId: employee.id,
+          leaveType: input.leaveType,
+          totalAllowed: input.defaultAllowance,
+          used: 0,
+          remaining: input.defaultAllowance,
+          year: currentYear,
+        });
+      }
+    }
+
+    if (balancesToCreate.length > 0) {
+      await db.insert(leaveBalances).values(balancesToCreate);
+    }
+
     return newPolicy;
   }
 
   static async updateLeavePolicy(input: UpdateLeavePolicy, session: Session) {
     const { activeOrgId } = await this.validateHRAccess(session);
     const { id, ...updateData } = input;
+
+    const currentPolicy = await db.query.leavePolicies.findFirst({
+      where: and(
+        eq(leavePolicies.id, id),
+        eq(leavePolicies.organizationId, activeOrgId),
+      ),
+    });
+
+    if (!currentPolicy) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Leave policy not found",
+      });
+    }
 
     const [updatedPolicy] = await db
       .update(leavePolicies)
@@ -483,6 +535,19 @@ export class LeaveService {
         code: "NOT_FOUND",
         message: "Leave policy not found",
       });
+    }
+
+    // If defaultAllowance was updated, update existing employee balances
+    if (
+      updateData.defaultAllowance !== undefined &&
+      updateData.defaultAllowance !== currentPolicy.defaultAllowance
+    ) {
+      await this.updateEmployeeBalancesForPolicyChange(
+        activeOrgId,
+        updatedPolicy.leaveType,
+        currentPolicy.defaultAllowance,
+        updatedPolicy.defaultAllowance,
+      );
     }
 
     return updatedPolicy;
@@ -584,6 +649,81 @@ export class LeaveService {
     return {
       employeesProcessed: activeEmployees.length,
       balancesInitialized: totalInitialized,
+    };
+  }
+
+  static async updateEmployeeBalancesForPolicyChange(
+    organizationId: string,
+    leaveType:
+      | "annual"
+      | "sick"
+      | "casual"
+      | "maternity"
+      | "paternity"
+      | "emergency",
+    oldAllowance: number,
+    newAllowance: number,
+  ) {
+    const currentYear = new Date().getFullYear();
+    const allowanceDifference = newAllowance - oldAllowance;
+
+    // Get all active employees in the organization
+    const activeEmployees = await db.query.employees.findMany({
+      where: and(
+        eq(employees.organizationId, organizationId),
+        eq(employees.status, "active"),
+      ),
+    });
+
+    // Update existing balances for this leave type and current year
+    const existingBalances = await db.query.leaveBalances.findMany({
+      where: and(
+        eq(leaveBalances.year, currentYear),
+        eq(leaveBalances.leaveType, leaveType),
+        inArray(
+          leaveBalances.employeeId,
+          activeEmployees.map((emp) => emp.id),
+        ),
+      ),
+    });
+
+    // Update each existing balance
+    for (const balance of existingBalances) {
+      const newTotalAllowed = balance.totalAllowed + allowanceDifference;
+      const newRemaining = Math.max(0, balance.remaining + allowanceDifference);
+
+      await db
+        .update(leaveBalances)
+        .set({
+          totalAllowed: newTotalAllowed,
+          remaining: newRemaining,
+        })
+        .where(eq(leaveBalances.id, balance.id));
+    }
+
+    // For employees who don't have a balance record yet, create one with the new allowance
+    const existingEmployeeIds = existingBalances.map((b) => b.employeeId);
+    const employeesWithoutBalance = activeEmployees.filter(
+      (emp) => !existingEmployeeIds.includes(emp.id),
+    );
+
+    if (employeesWithoutBalance.length > 0) {
+      const newBalances = employeesWithoutBalance.map((employee) => ({
+        employeeId: employee.id,
+        leaveType: leaveType as (typeof leaveTypeEnum.enumValues)[number],
+        totalAllowed: newAllowance,
+        used: 0,
+        remaining: newAllowance,
+        year: currentYear,
+      }));
+
+      await db.insert(leaveBalances).values(newBalances);
+    }
+
+    return {
+      updatedBalances: existingBalances.length,
+      newBalances: employeesWithoutBalance.length,
+      allowanceDifference,
     };
   }
 }

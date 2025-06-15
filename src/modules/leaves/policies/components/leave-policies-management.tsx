@@ -46,7 +46,9 @@ export function LeavePoliciesManagement() {
 
   const createPolicyMutation = api.leave.createLeavePolicy.useMutation({
     onSuccess: () => {
-      toast.success("Leave policy created successfully");
+      toast.success(
+        "Leave policy created successfully! Employee balances have been automatically initialized.",
+      );
       setEditDialogOpen(false);
       setSelectedPolicy(null);
       void policiesQuery.refetch();
@@ -58,7 +60,9 @@ export function LeavePoliciesManagement() {
 
   const updatePolicyMutation = api.leave.updateLeavePolicy.useMutation({
     onSuccess: () => {
-      toast.success("Leave policy updated successfully");
+      toast.success(
+        "Leave policy updated successfully! Employee balances have been automatically updated to reflect the changes.",
+      );
       setEditDialogOpen(false);
       setSelectedPolicy(null);
       void policiesQuery.refetch();

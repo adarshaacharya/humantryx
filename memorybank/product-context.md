@@ -140,6 +140,15 @@ The solution is a modern HR management system called "Human Loop" that leverages
    - Notifies employee
    - Syncs with payroll
 
+### Leave Policy Management:
+
+- **Automatic Balance Initialization**: When HR creates new leave policies, employee balances are automatically initialized for all active employees
+- **Smart Balance Updates**: When HR updates policy allowances, existing employee balances are automatically adjusted to reflect the changes
+- **Intelligent Balance Tracking**: System tracks used, remaining, and carry-forward balances
+- **Policy Flexibility**: Support for different leave types (annual, sick, casual, maternity, paternity, emergency)
+- **Carry Forward Rules**: Configurable carry-forward policies with maximum limits
+- **Real-time Synchronization**: All policy changes immediately reflect in employee accounts without manual intervention
+
 ---
 
 ## 6. HR Query Resolution via AI Assistant

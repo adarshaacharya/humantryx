@@ -198,6 +198,41 @@ export function LeavePolicyFormDialog({
             </div>
           )}
 
+          {!selectedPolicy && (
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
+              <div className="flex items-start gap-2">
+                <div className="text-sm">
+                  <p className="font-medium text-blue-900">
+                    📋 Automatic Balance Initialization
+                  </p>
+                  <p className="mt-1 text-blue-700">
+                    When you create this policy, leave balances will be
+                    automatically initialized for all existing active employees
+                    based on the default allowance.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {selectedPolicy && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+              <div className="flex items-start gap-2">
+                <div className="text-sm">
+                  <p className="font-medium text-amber-900">
+                    ⚡ Smart Balance Updates
+                  </p>
+                  <p className="mt-1 text-amber-700">
+                    If you change the allowed days per year, existing employee
+                    balances will be automatically updated to reflect the new
+                    allowance. This ensures all employees get the benefits of
+                    policy improvements immediately.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex justify-end space-x-2 pt-4">
             <Button type="button" variant="outline" onClick={handleCancel}>
               Cancel
