@@ -47,7 +47,9 @@ export function SetSalaryDialog({
   onOpenChange,
   onSuccess,
 }: SetSalaryDialogProps) {
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>("");
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<
+    string | undefined
+  >("");
 
   const form = useForm<SetSalarySettingsForm>({
     resolver: zodResolver(setSalarySettingsSchema),

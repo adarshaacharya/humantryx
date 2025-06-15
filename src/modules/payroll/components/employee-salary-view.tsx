@@ -22,6 +22,7 @@ import { usePayslipGenerator } from "../hooks/use-payslip-generator";
 import type { PayrollRecord, PayrollRecordWithEmployee } from "../types";
 import { toPayrollRecordWithEmployee } from "../types";
 import { getPaymentStatusBadge } from "../constants";
+import { useCurrentEmployee } from "@/hooks/use-current-employee";
 
 export function EmployeeSalaryView() {
   const [payslipPreviewOpen, setPayslipPreviewOpen] = useState(false);
@@ -31,17 +32,20 @@ export function EmployeeSalaryView() {
   const { data: session } = authClient.useSession();
   const organizationId = session?.session?.activeOrganizationId;
   const { generatePayslip } = usePayslipGenerator();
+  const employeeId = useCurrentEmployee()?.id;
 
-  // Fetch employee's own salary settings
   const salarySettingsQuery = api.payroll.getSalarySettings.useQuery(
-    {}, // This will get current user's settings
-    { enabled: !!organizationId },
+    {
+      employeeId: employeeId,
+    },
+    { enabled: !!employeeId },
   );
 
-  // Fetch employee's own payroll records
   const payrollRecordsQuery = api.payroll.getPayrollRecords.useQuery(
-    {}, // Empty object will get current user's records
-    { enabled: !!organizationId },
+    {
+      employeeId: employeeId,
+    },
+    { enabled: !!employeeId },
   );
 
   const handleGeneratePayslip = useCallback((record: PayrollRecord) => {
@@ -282,6 +286,11 @@ export function EmployeeSalaryView() {
         <CardContent>
           {payrollRecords.length > 0 ? (
             <DataTable
+              initialState={{
+                columnVisibility: {
+                  employee: false,
+                },
+              }}
               columns={payrollColumns}
               data={payrollRecords}
               meta={{

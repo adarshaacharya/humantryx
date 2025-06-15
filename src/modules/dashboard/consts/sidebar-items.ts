@@ -114,11 +114,6 @@ export const getMenuItems = (ability: AppAbility) => {
           href: "/dashboard/payroll/payslips",
           enabled: ability.can("read", "Payroll"),
         },
-        {
-          title: "Tax Reports",
-          href: "/dashboard/payroll/tax",
-          enabled: ability.can("read", "Payroll"),
-        },
       ],
     },
     {

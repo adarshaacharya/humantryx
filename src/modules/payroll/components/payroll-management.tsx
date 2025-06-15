@@ -52,7 +52,6 @@ export function PayrollManagement() {
   const ability = useAbility();
   const { generatePayslip } = usePayslipGenerator();
 
-  // Fetch payroll records
   const payrollRecordsQuery = api.payroll.getPayrollRecords.useQuery(
     {
       employeeId: filters.employeeId,
@@ -166,7 +165,7 @@ export function PayrollManagement() {
     (record) => record.paymentStatus === "paid",
   ).length;
 
-  const isHR = ability.can("create", "Payroll");
+  const canCreatePayroll = ability.can("create", "Payroll");
 
   return (
     <div className="space-y-6">
@@ -180,7 +179,7 @@ export function PayrollManagement() {
             Manage employee salaries, generate payroll, and track payments
           </p>
         </div>
-        {isHR && (
+        {canCreatePayroll && (
           <div className="flex gap-2">
             <Button onClick={() => setSetsalaryDialogOpen(true)}>
               <DollarSign className="mr-2 h-4 w-4" />
@@ -254,7 +253,7 @@ export function PayrollManagement() {
       </div>
 
       {/* Quick Actions */}
-      {isHR && (
+      {canCreatePayroll && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -299,7 +298,7 @@ export function PayrollManagement() {
       )}
 
       {/* Alerts for missing salary settings */}
-      {isHR && employeesWithoutSalary.length > 0 && (
+      {canCreatePayroll && employeesWithoutSalary.length > 0 && (
         <Card className="border-orange-200 bg-orange-50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-orange-800">
@@ -378,7 +377,7 @@ export function PayrollManagement() {
               onQuickDownload: handleQuickDownload,
               isLoading: payrollRecordsQuery.isLoading,
               pendingActionId,
-              showEmployeeInfo: isHR,
+              showEmployeeInfo: canCreatePayroll,
             }}
           />
         </CardContent>

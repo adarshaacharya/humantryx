@@ -144,7 +144,6 @@ export function LeaveRequestsTable({
 
   const { data: requests = [], pagination } = leaveRequestsQuery.data ?? {};
 
-
   return (
     <>
       <Card>

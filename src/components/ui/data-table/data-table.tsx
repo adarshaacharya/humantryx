@@ -34,6 +34,12 @@ interface DataTableProps<TData, TValue> {
   onRowClick?: (row: { original: TData }) => void;
   /** Additional metadata to pass to the table, accessible in cell renderers */
   meta?: Record<string, unknown>;
+  initialState?: {
+    rowSelection?: Record<string, boolean>;
+    columnVisibility?: VisibilityState;
+    columnFilters?: ColumnFiltersState;
+    sorting?: SortingState;
+  };
 }
 
 export function DataTable<TData, TValue>({
@@ -41,6 +47,7 @@ export function DataTable<TData, TValue>({
   data,
   onRowClick,
   meta,
+  initialState,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -53,12 +60,19 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
-    state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-      columnFilters,
-    },
+    state: initialState
+      ? {
+          rowSelection: initialState.rowSelection || rowSelection,
+          columnVisibility: initialState.columnVisibility || columnVisibility,
+          columnFilters: initialState.columnFilters || columnFilters,
+          sorting: initialState.sorting || sorting,
+        }
+      : {
+          rowSelection,
+          columnVisibility,
+          columnFilters,
+          sorting,
+        },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
