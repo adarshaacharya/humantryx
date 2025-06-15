@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { LeaveBalanceDataTable } from "./leave-balance/leave-balance-data-table";
 import { AdjustLeaveBalanceDialog } from "./leave-balance/adjust-leave-balance-dialog";
-import { InitializeLeaveBalancesDialog } from "./initialize-leave-balances-dialog";
+import { InitializeLeaveBalancesDialog } from "./leave-balance/initialize-leave-balances-dialog";
 import { LEAVE_TYPES } from "../constants";
 import Link from "next/link";
 

@@ -4,7 +4,6 @@ import { and, eq, ilike, desc, asc, sql, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { auth } from "@/server/auth";
 import { headers } from "next/headers";
-import type { PaginationOptions } from "@/types/table";
 import type { EmployeeStatus } from "@/server/db/consts";
 import type {
   EmployeeListParams,

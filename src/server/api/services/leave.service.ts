@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { and, eq, gte, lte, desc, asc, sql, inArray } from "drizzle-orm";
 import { db } from "@/server/db";
-import { employees, members } from "@/server/db/schema";
+import { employees, members, users } from "@/server/db/schema";
 import {
   leaveRequests,
   leaveBalances,

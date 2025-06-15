@@ -9,12 +9,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Calendar, Clock } from "lucide-react";
+import { Plus } from "lucide-react";
 import { LeaveRequestForm } from "./leave-request-form";
 import { LeaveBalanceCard } from "./leave-balance-card";
-import { LeaveRequestsTable } from "../manage/leave-requests/leave-requests-table";
 import { MyLeaveStatsCard } from "./leave-stats-card";
 import { useCurrentEmployee } from "@/hooks/use-current-employee";
+import { LeaveRequestsTable } from "../requests/components/leave-requests-table";
 
 export function LeavesPage() {
   const [showRequestForm, setShowRequestForm] = useState(false);

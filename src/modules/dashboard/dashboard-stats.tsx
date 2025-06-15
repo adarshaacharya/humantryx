@@ -107,7 +107,7 @@ export function DashboardStats() {
 }
 
 function AdminDashboardStats() {
-  const dashboardQuery = api.dashboard.getStats.useQuery();
+  const dashboardQuery = api.dashboard.getStats?.useQuery();
 
   if (dashboardQuery.isLoading) {
     return <DashboardSkeleton />;
@@ -135,15 +135,15 @@ function AdminDashboardStats() {
             <Users className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalEmployees}</div>
+            <div className="text-2xl font-bold">{stats?.totalEmployees}</div>
             <p className="text-muted-foreground flex items-center text-xs">
-              {stats.employeeGrowthPercent > 0 ? (
+              {stats?.employeeGrowthPercent > 0 ? (
                 <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
-              ) : stats.employeeGrowthPercent < 0 ? (
+              ) : stats?.employeeGrowthPercent < 0 ? (
                 <TrendingDown className="mr-1 h-3 w-3 text-red-500" />
               ) : null}
-              {stats.employeeGrowthPercent > 0 ? "+" : ""}
-              {stats.employeeGrowthPercent.toFixed(1)}% from last month
+              {stats?.employeeGrowthPercent > 0 ? "+" : ""}
+              {stats?.employeeGrowthPercent.toFixed(1)}% from last month
             </p>
           </CardContent>
         </Card>
@@ -154,9 +154,9 @@ function AdminDashboardStats() {
             <UserCheck className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.presentToday}</div>
+            <div className="text-2xl font-bold">{stats?.presentToday}</div>
             <p className="text-muted-foreground text-xs">
-              {stats.attendanceRate.toFixed(1)}% attendance rate
+              {stats?.attendanceRate.toFixed(1)}% attendance rate
             </p>
           </CardContent>
         </Card>
@@ -167,9 +167,9 @@ function AdminDashboardStats() {
             <UserX className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.onLeaveToday}</div>
+            <div className="text-2xl font-bold">{stats?.onLeaveToday}</div>
             <p className="text-muted-foreground text-xs">
-              {stats.leaveRate.toFixed(1)}% of workforce
+              {stats?.leaveRate.toFixed(1)}% of workforce
             </p>
           </CardContent>
         </Card>
@@ -183,16 +183,16 @@ function AdminDashboardStats() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatter.format(stats.monthlyPayroll)}
+              {formatter.format(stats?.monthlyPayroll)}
             </div>
             <p className="text-muted-foreground flex items-center text-xs">
-              {stats.payrollChangePercent > 0 ? (
+              {stats?.payrollChangePercent > 0 ? (
                 <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
-              ) : stats.payrollChangePercent < 0 ? (
+              ) : stats?.payrollChangePercent < 0 ? (
                 <TrendingDown className="mr-1 h-3 w-3 text-red-500" />
               ) : null}
-              {stats.payrollChangePercent > 0 ? "+" : ""}
-              {stats.payrollChangePercent.toFixed(1)}% from last month
+              {stats?.payrollChangePercent > 0 ? "+" : ""}
+              {stats?.payrollChangePercent.toFixed(1)}% from last month
             </p>
           </CardContent>
         </Card>
@@ -353,7 +353,7 @@ function ManagerDashboardStats() {
 }
 
 function EmployeeDashboardStats({ employeeId }: { employeeId?: string }) {
-  const personalStatsQuery = api.dashboard.getPersonalStats.useQuery(
+  const personalStatsQuery = api.dashboard.getPersonalStats?.useQuery(
     { employeeId: employeeId || "" },
     { enabled: !!employeeId },
   );
@@ -383,7 +383,7 @@ function EmployeeDashboardStats({ employeeId }: { employeeId?: string }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {stats.attendanceRate.toFixed(1)}%
+              {stats?.attendanceRate.toFixed(1)}%
             </div>
             <p className="text-muted-foreground text-xs">For this month</p>
           </CardContent>
@@ -395,7 +395,7 @@ function EmployeeDashboardStats({ employeeId }: { employeeId?: string }) {
             <Calendar className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.leaveBalance}</div>
+            <div className="text-2xl font-bold">{stats?.leaveBalance}</div>
             <p className="text-muted-foreground text-xs">Days remaining</p>
           </CardContent>
         </Card>
@@ -406,7 +406,7 @@ function EmployeeDashboardStats({ employeeId }: { employeeId?: string }) {
             <Clock className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.hoursWorked}</div>
+            <div className="text-2xl font-bold">{stats?.hoursWorked}</div>
             <p className="text-muted-foreground text-xs">This month</p>
           </CardContent>
         </Card>
@@ -418,10 +418,10 @@ function EmployeeDashboardStats({ employeeId }: { employeeId?: string }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatter.format(stats.lastPayrollAmount)}
+              {formatter.format(stats?.lastPayrollAmount || 0)}
             </div>
             <p className="text-muted-foreground text-xs">
-              {stats.lastPayrollDate}
+              {stats?.lastPayrollDate || ""}
             </p>
           </CardContent>
         </Card>
@@ -438,7 +438,7 @@ function EmployeeDashboardStats({ employeeId }: { employeeId?: string }) {
           </CardHeader>
           <CardContent>
             <AreaChartComponent
-              data={stats.attendanceHistory}
+              data={stats?.attendanceHistory}
               categories={["hoursWorked"]}
               index="date"
               colors={["#4ade80"]}
