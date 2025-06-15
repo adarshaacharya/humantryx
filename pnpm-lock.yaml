@@ -101,9 +101,6 @@ importers:
       '@trpc/server':
         specifier: ^11.0.0
         version: 11.1.4(typescript@5.8.3)
-      '@types/jspdf':
-        specifier: ^2.0.0
-        version: 2.0.0
       '@upstash/redis':
         specifier: ^1.35.0
         version: 1.35.0
@@ -128,6 +125,9 @@ importers:
       drizzle-orm:
         specifier: ^0.41.0
         version: 0.41.0(gel@2.1.0)(kysely@0.28.2)(postgres@3.4.7)
+      drizzle-zod:
+        specifier: ^0.8.2
+        version: 0.8.2(drizzle-orm@0.41.0(gel@2.1.0)(kysely@0.28.2)(postgres@3.4.7))(zod@3.25.42)
       html2canvas:
         specifier: ^1.4.1
         version: 1.4.1
@@ -2062,10 +2062,6 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
-  '@types/jspdf@2.0.0':
-    resolution: {integrity: sha512-oonYDXI4GegGaG7FFVtriJ+Yqlh4YR3L3NVDiwCEBVG7sbya19SoGx4MW4kg1MCMRPgkbbFTck8YKJL8PrkDfA==}
-    deprecated: This is a stub types definition. jspdf provides its own type definitions, so you do not need this installed.
-
   '@types/node@20.17.55':
     resolution: {integrity: sha512-ESpPDUEtW1a9nueMQtcTq/5iY/7osurPpBpFKH2VAyREKdzoFRRod6Oms0SSTfV7u52CcH7b6dFVnjfPD8fxWg==}
 
@@ -2636,6 +2632,12 @@ packages:
         optional: true
       sqlite3:
         optional: true
+
+  drizzle-zod@0.8.2:
+    resolution: {integrity: sha512-9Do/16OjFFNrQDZgvMtxtDDwKWbFOxUAIwNPKX98SfxrP8H18vhN1BvNXbhelLcdgCE7GEaXDJqBjMExSkhpkA==}
+    peerDependencies:
+      drizzle-orm: '>=0.36.0'
+      zod: ^3.25.1
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -6110,10 +6112,6 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/jspdf@2.0.0':
-    dependencies:
-      jspdf: 3.0.1
-
   '@types/node@20.17.55':
     dependencies:
       undici-types: 6.19.8
@@ -6667,6 +6665,11 @@ snapshots:
       gel: 2.1.0
       kysely: 0.28.2
       postgres: 3.4.7
+
+  drizzle-zod@0.8.2(drizzle-orm@0.41.0(gel@2.1.0)(kysely@0.28.2)(postgres@3.4.7))(zod@3.25.42):
+    dependencies:
+      drizzle-orm: 0.41.0(gel@2.1.0)(kysely@0.28.2)(postgres@3.4.7)
+      zod: 3.25.42
 
   dunder-proto@1.0.1:
     dependencies:

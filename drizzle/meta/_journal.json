@@ -134,6 +134,13 @@
       "when": 1749875594205,
       "tag": "0018_payroll",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1749915367058,
+      "tag": "0019_recruitment",
+      "breakpoints": true
     }
   ]
 }
