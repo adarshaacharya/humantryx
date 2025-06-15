@@ -420,12 +420,33 @@ export class EmployeeService {
     userId: string;
     organizationId: string;
   }) {
-    const employee = await db.query.employees.findFirst({
-      where: and(
-        eq(employees.userId, userId),
-        eq(employees.organizationId, organizationId),
-      ),
-    });
+    const [employee] = await db
+      .select({
+        id: employees.id,
+        designation: employees.designation,
+        createdAt: employees.createdAt,
+        updatedAt: employees.updatedAt,
+        organizationId: employees.organizationId,
+        userId: employees.userId,
+        memberId: employees.memberId,
+        invitationId: employees.invitationId,
+        status: employees.status,
+        user: {
+          id: users.id,
+          name: users.name,
+          email: users.email,
+          image: users.image,
+        },
+      })
+      .from(employees)
+      .leftJoin(users, eq(employees.userId, users.id))
+      .where(
+        and(
+          eq(employees.userId, userId),
+          eq(employees.organizationId, organizationId),
+        ),
+      );
+
     if (!employee) {
       throw new TRPCError({
         code: "NOT_FOUND",

@@ -12,6 +12,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Form,
   FormControl,
   FormField,
@@ -27,6 +34,7 @@ import {
   inviteEmployeeSchema,
   type InviteEmployeeSchemaType,
 } from "../../schemas/employee.schema";
+import { EMPLOYEE_DESIGNATIONS } from "@/server/db/consts";
 
 interface EmployeeInviteDialogProps {
   onInviteSent?: () => void;
@@ -179,12 +187,26 @@ export function EmployeeInviteDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Designation</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter employee's job title"
-                        {...field}
-                      />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select employee designation" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {EMPLOYEE_DESIGNATIONS.map((designation) => (
+                          <SelectItem
+                            key={designation.value}
+                            value={designation.value}
+                          >
+                            {designation.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
