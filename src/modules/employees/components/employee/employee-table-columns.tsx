@@ -25,9 +25,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { format } from "date-fns";
-import type { EmployeeWithUser } from "../../types/employee.types";
 import { getEmployeeStatusBadge } from "../../constants/employee.constants";
 import { IdCell } from "@/components/id-cell";
+import type { EmployeeWithUser } from "@/server/api/types/employee.types";
 
 interface EmployeeTableMeta {
   onViewEmployee: (employee: EmployeeWithUser) => void;
@@ -73,12 +73,11 @@ export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
       );
     },
     cell: ({ row }) => {
-      const name = row.getValue("name") as string;
       const employee = row.original;
 
       return (
         <div className="flex flex-col">
-          <span className="font-medium">{name}</span>
+          <span className="font-medium">{employee.user?.name}</span>
           {employee.user?.email && (
             <span className="text-muted-foreground text-sm">
               {employee.user.email}

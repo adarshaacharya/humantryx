@@ -27,7 +27,7 @@ import {
   updateEmployeeSchema,
   type UpdateEmployeeSchemaType,
 } from "../../schemas/employee.schema";
-import type { EmployeeWithUser } from "../../types/employee.types";
+import type { EmployeeWithUser } from "@/server/api/types/employee.types";
 
 interface EmployeeEditDialogProps {
   employee: EmployeeWithUser | null;
@@ -70,7 +70,7 @@ export function EmployeeEditDialog({
     if (employee) {
       form.reset({
         id: employee.id,
-        name: employee.name,
+        name: employee.user?.name,
         designation: employee.designation,
       });
     }

@@ -11,12 +11,12 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { User, Mail, Briefcase, Calendar, Edit } from "lucide-react";
 import { format } from "date-fns";
+
 import {
-  getInvitationStatusBadge,
-  getInvitationStatusIcon,
-} from "../../constants/invitation.constants";
-import type { EmployeeWithUser } from "../../types/employee.types";
-import { getEmployeeStatusBadge, getEmployeeStatusIcon } from "../../constants/employee.constants";
+  getEmployeeStatusBadge,
+  getEmployeeStatusIcon,
+} from "../../constants/employee.constants";
+import type { EmployeeWithUser } from "@/server/api/types/employee.types";
 
 interface EmployeeDetailsDialogProps {
   employee: EmployeeWithUser | null;
@@ -52,7 +52,7 @@ export function EmployeeDetailsDialog({
           {/* Header with name and status */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">{employee.name}</h3>
+              <h3 className="text-lg font-semibold">{employee.user?.name}</h3>
               <p className="text-muted-foreground">{employee.designation}</p>
             </div>
             <div className="flex items-center gap-2">

@@ -6,42 +6,10 @@ import { auth } from "@/server/auth";
 import { headers } from "next/headers";
 import type { PaginationOptions } from "@/types/table";
 import type { EmployeeStatus } from "@/server/db/consts";
-
-export interface SortOptions {
-  sortBy: "name" | "designation" | "createdAt" | "email";
-  sortDirection: "asc" | "desc";
-}
-
-export interface FilterOptions {
-  searchQuery?: string;
-  designation?: string;
-  status?: "active" | "invited" | "all";
-}
-
-export interface EmployeeListParams
-  extends PaginationOptions,
-    SortOptions,
-    FilterOptions {
-  organizationId: string;
-}
-
-export interface EmployeeWithUser {
-  id: string;
-  designation: string;
-  createdAt: Date;
-  updatedAt: Date | null;
-  organizationId: string;
-  userId: string | null;
-  memberId: string | null;
-  invitationId: string | null;
-  user?: {
-    id: string;
-    name: string;
-    email: string;
-    image: string | null;
-  } | null;
-  status: EmployeeStatus;
-}
+import type {
+  EmployeeListParams,
+  EmployeeWithUser,
+} from "../types/employee.types";
 
 export class EmployeeService {
   static async createEmployee(data: {
@@ -163,7 +131,7 @@ export class EmployeeService {
           userEmail: users.email,
           userImage: users.image,
           userUserId: users.id,
-          invitationStatus: invitations.status,
+          status: employees.status,
         })
         .from(employees)
         .leftJoin(users, eq(employees.userId, users.id))
@@ -192,6 +160,7 @@ export class EmployeeService {
         userId: employee.userId,
         memberId: employee.memberId,
         invitationId: employee.invitationId,
+        status: employee.status,
         user: employee.userUserId
           ? {
               id: employee.userUserId,

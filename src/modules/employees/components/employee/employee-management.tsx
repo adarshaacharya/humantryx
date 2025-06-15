@@ -21,10 +21,10 @@ import { EmployeeDeleteDialog } from "./employee-delete-dialog";
 import { EmployeeDetailsDialog } from "./employee-details-dialog";
 
 import type {
-  EmployeeWithUser,
   EmployeeFilters as IEmployeeFilters,
 } from "../../types/employee.types";
 import { useDebounce } from "@/hooks/use-debounce";
+import type { EmployeeWithUser } from "@/server/api/types/employee.types";
 
 const DEFAULT_FILTERS: IEmployeeFilters = {
   search: undefined,

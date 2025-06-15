@@ -15,26 +15,6 @@ export type Employee = RouterOutputs["employee"]["list"]["employees"][0];
 export type EmployeePagination =
   RouterOutputs["employee"]["list"]["pagination"];
 
-// Define a clean Employee type to work around any type inference issues
-export type EmployeeWithUser = {
-  id: string;
-  name: string;
-  designation: string;
-  createdAt: Date;
-  updatedAt: Date | null;
-  organizationId: string;
-  userId: string | null;
-  memberId: string | null;
-  invitationId: string | null;
-  status: EmployeeStatus;
-  user?: {
-    id: string;
-    name: string;
-    email: string;
-    image: string | null;
-  } | null;
-};
-
 // Frontend-specific types
 export type EmployeeStatus = z.infer<typeof employeeStatusEnum> | "all";
 export type EmployeeSortBy = z.infer<typeof employeeSortByEnum>;

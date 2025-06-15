@@ -2,7 +2,9 @@ import { Badge } from "@/components/ui/badge";
 import type { EmployeeStatus } from "@/server/db/consts";
 import { Calendar, Clock, CheckCircle, XCircle, Mail } from "lucide-react";
 
-export const getEmployeeStatusBadge = (status: EmployeeStatus | "all") => {
+export const getEmployeeStatusBadge = (
+  status: EmployeeStatus | "all" | null,
+) => {
   switch (status) {
     case "invited":
       return (

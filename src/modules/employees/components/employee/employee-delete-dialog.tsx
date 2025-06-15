@@ -11,11 +11,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
-import type { EmployeeWithUser } from "../../types/employee.types";
+import type { EmployeeWithUser } from "@/server/api/types/employee.types";
 
 interface EmployeeDeleteDialogProps {
   employee: EmployeeWithUser | null;
@@ -75,7 +74,7 @@ export function EmployeeDeleteDialog({
               <div className="bg-muted/50 rounded-lg border p-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">{employee.name}</p>
+                    <p className="font-medium">{employee.user?.name}</p>
                     <p className="text-muted-foreground text-sm">
                       {employee.designation}
                     </p>
