@@ -151,7 +151,7 @@ export function EmployeeDetailsDialog({
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Close
             </Button>
-            <Can on="Employee" I="manage">
+            <Can an="Employee" I="manage">
               {onEditEmployee && (
                 <Button
                   onClick={() => {

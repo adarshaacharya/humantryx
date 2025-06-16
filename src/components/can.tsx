@@ -1,26 +1,22 @@
 "use client";
 
-import { type ReactNode } from "react";
-import type { Actions, Subjects } from "@/lib/casl/types";
-import { useAbility } from "@/providers/ability-context";
+import type { AppAbility, subjects } from "@/lib/casl/types";
+import { AbilityContext } from "@/providers/ability-context";
+import { createContextualCan } from "@casl/react";
+import { subject as caslSubject } from "@casl/ability";
 
-type CanProps = {
-  I: Actions;
-  do?: Actions;
-  on: Subjects;
-  this?: any;
-  children: ReactNode;
-  fallback?: ReactNode;
+export const Can = createContextualCan<AppAbility>(AbilityContext.Consumer);
+
+
+/**
+ *
+ * usage :   <Can I="moderate" this={subject("roles", { role })}> {children} </Can>
+ *
+ */
+export const subject = <T extends (typeof subjects)[number]>(
+  type: T,
+  object: string | object,
+) => {
+  object = typeof object === "string" ? { [type]: object } : object;
+  return caslSubject(type, object);
 };
-
-export function Can({
-  I: action,
-  on,
-  this: field,
-  children,
-  fallback = null,
-}: CanProps) {
-  const ability = useAbility();
-
-  return ability.can(action, on, field) ? <>{children}</> : <>{fallback}</>;
-}

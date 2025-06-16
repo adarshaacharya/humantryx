@@ -205,7 +205,7 @@ export function LeaveRequestViewDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Close
           </Button>
-          <Can I="update" do="update" on="LeaveRequests">
+          <Can I="update"  a="LeaveRequests">
             {selectedRequest.status === "pending" && (
               <>
                 <Button

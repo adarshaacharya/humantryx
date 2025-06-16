@@ -187,7 +187,7 @@ export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
                 <TooltipContent>View employee profile</TooltipContent>
               </Tooltip>
 
-              <Can I="manage" on="Employee" do="manage">
+              <Can I="manage" an="Employee">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <DropdownMenuItem

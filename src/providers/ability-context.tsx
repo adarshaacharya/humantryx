@@ -4,7 +4,7 @@ import { defineAbilitiesFor } from "@/lib/casl/ability";
 import type { AppAbility } from "@/lib/casl/types";
 import { createContext, useContext, useEffect, useState } from "react";
 
-export const AbilityContext = createContext<AppAbility | undefined>(undefined);
+export const AbilityContext = createContext<AppAbility>({} as AppAbility);
 
 export function AbilityProvider({ children }: { children: React.ReactNode }) {
   const employee = useCurrentEmployee();
