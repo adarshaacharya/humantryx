@@ -2,15 +2,7 @@
 
 import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowUpDown,
-  MoreHorizontal,
-  Eye,
-  Edit,
-  Trash2,
-  UserX,
-  RefreshCw,
-} from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Eye, Edit, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +20,7 @@ import { format } from "date-fns";
 import { getEmployeeStatusBadge } from "../../constants/employee.constants";
 import { IdCell } from "@/components/id-cell";
 import type { EmployeeWithUser } from "@/server/api/types/employee.types";
+import { Can } from "@/components/can";
 
 interface EmployeeTableMeta {
   onViewEmployee: (employee: EmployeeWithUser) => void;
@@ -194,34 +187,36 @@ export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
                 <TooltipContent>View employee profile</TooltipContent>
               </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuItem
-                    className="flex items-center"
-                    onClick={() => meta.onEditEmployee(employee)}
-                  >
-                    <Edit className="mr-2 h-4 w-4" />
-                    <span>Edit</span>
-                  </DropdownMenuItem>
-                </TooltipTrigger>
-                <TooltipContent>Edit employee details</TooltipContent>
-              </Tooltip>
+              <Can I="manage" on="Employee" do="manage">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuItem
+                      className="flex items-center"
+                      onClick={() => meta.onEditEmployee(employee)}
+                    >
+                      <Edit className="mr-2 h-4 w-4" />
+                      <span>Edit</span>
+                    </DropdownMenuItem>
+                  </TooltipTrigger>
+                  <TooltipContent>Edit employee details</TooltipContent>
+                </Tooltip>
 
-              <DropdownMenuSeparator />
+                <DropdownMenuSeparator />
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuItem
-                    className="text-destructive flex items-center"
-                    onClick={() => meta.onDeleteEmployee(employee)}
-                    disabled={isLoading}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    <span>{isLoading ? "Deleting..." : "Delete"}</span>
-                  </DropdownMenuItem>
-                </TooltipTrigger>
-                <TooltipContent>Remove employee</TooltipContent>
-              </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuItem
+                      className="text-destructive flex items-center"
+                      onClick={() => meta.onDeleteEmployee(employee)}
+                      disabled={isLoading}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      <span>{isLoading ? "Deleting..." : "Delete"}</span>
+                    </DropdownMenuItem>
+                  </TooltipTrigger>
+                  <TooltipContent>Remove employee</TooltipContent>
+                </Tooltip>
+              </Can>
             </TooltipProvider>
           </DropdownMenuContent>
         </DropdownMenu>

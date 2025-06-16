@@ -6,7 +6,7 @@ import { useAbility } from "@/providers/ability-context";
 
 type CanProps = {
   I: Actions;
-  do: Actions;
+  do?: Actions;
   on: Subjects;
   this?: any;
   children: ReactNode;
@@ -14,8 +14,7 @@ type CanProps = {
 };
 
 export function Can({
-  I,
-  do: action,
+  I: action,
   on,
   this: field,
   children,

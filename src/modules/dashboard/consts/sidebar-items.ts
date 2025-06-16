@@ -36,7 +36,7 @@ export const getMenuItems = (ability: AppAbility) => {
       title: "Employees",
       icon: Users,
       href: "/dashboard/employees",
-      enabled: ability.can("manage", "Employee"),
+      enabled: ability.can("read", "Employee"),
       submenu: [
         {
           title: "All Employees",

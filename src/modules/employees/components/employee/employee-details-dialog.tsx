@@ -17,6 +17,7 @@ import {
   getEmployeeStatusIcon,
 } from "../../constants/employee.constants";
 import type { EmployeeWithUser } from "@/server/api/types/employee.types";
+import { Can } from "@/components/can";
 
 interface EmployeeDetailsDialogProps {
   employee: EmployeeWithUser | null;
@@ -150,17 +151,19 @@ export function EmployeeDetailsDialog({
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Close
             </Button>
-            {onEditEmployee && (
-              <Button
-                onClick={() => {
-                  onEditEmployee(employee);
-                  onOpenChange(false);
-                }}
-              >
-                <Edit className="mr-2 h-4 w-4" />
-                Edit Employee
-              </Button>
-            )}
+            <Can on="Employee" I="manage">
+              {onEditEmployee && (
+                <Button
+                  onClick={() => {
+                    onEditEmployee(employee);
+                    onOpenChange(false);
+                  }}
+                >
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit Employee
+                </Button>
+              )}
+            </Can>
           </div>
         </div>
       </DialogContent>

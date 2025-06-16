@@ -129,7 +129,7 @@ export const employeeRouter = createTRPCRouter({
     .input(employeeListSchema)
     .use(
       accessControl(async (option, ability) => {
-        return ability.can("manage", "Employee");
+        return ability.can("read", "Employee");
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -137,7 +137,6 @@ export const employeeRouter = createTRPCRouter({
 
       const organizationId =
         input.organizationId || session.session.activeOrganizationId;
-
 
       // if (!organizationId) {
       //   throw new TRPCError({

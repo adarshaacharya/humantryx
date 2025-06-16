@@ -47,6 +47,7 @@ export function defineAbilitiesFor(
       ability.can("read", "Organization", {
         id: employee.organizationId,
       });
+      ability.can("read", "Employee");
       ability.can(["create"], "LeaveRequests");
       ability.can("read", "LeavePolicies", {
         organizationId: employee.organizationId,
