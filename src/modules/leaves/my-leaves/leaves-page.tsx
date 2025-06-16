@@ -15,6 +15,7 @@ import { LeaveBalanceCard } from "./leave-balance-card";
 import { MyLeaveStatsCard } from "./leave-stats-card";
 import { useCurrentEmployee } from "@/hooks/use-current-employee";
 import { LeaveRequestsTable } from "../requests/components/leave-requests-table";
+import { AILeaveRequestForm } from "./ai-leave-request-form";
 
 export function LeavesPage() {
   const [showRequestForm, setShowRequestForm] = useState(false);
@@ -32,23 +33,27 @@ export function LeavesPage() {
           </p>
         </div>
 
-        <Dialog open={showRequestForm} onOpenChange={setShowRequestForm}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Request Leave
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>New Leave Request</DialogTitle>
-            </DialogHeader>
-            <LeaveRequestForm
-              onSuccess={() => setShowRequestForm(false)}
-              onCancel={() => setShowRequestForm(false)}
-            />
-          </DialogContent>
-        </Dialog>
+        <div className="flex items-center gap-3">
+          <Dialog open={showRequestForm} onOpenChange={setShowRequestForm}>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <Plus className="mr-2 h-4 w-4" />
+                Request Leave
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>New Leave Request</DialogTitle>
+              </DialogHeader>
+              <LeaveRequestForm
+                onSuccess={() => setShowRequestForm(false)}
+                onCancel={() => setShowRequestForm(false)}
+              />
+            </DialogContent>
+          </Dialog>
+
+          <AILeaveRequestForm />
+        </div>
       </div>
 
       {/* Leave Balances */}

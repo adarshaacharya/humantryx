@@ -32,7 +32,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 - **Backend**: Next.js with TRPC, upstash for caching
 - **Validateion**: Zod for input validation
 - **Database**: PostgreSQL with Drizzle ORM
-- **AI Integration**: OpenAI API for AI-powered features
+- **AI Integration**: OpenAI API for AI-powered features with langchain js and pinecone db for vector storage
 - **Authentication**: Better-auth for user authentication and management
 - **Deployment**: Vercel for frontend and backend hosting
 
@@ -106,9 +106,12 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 
 6. AI Integration:
 
-- Use Vercel AI SDK
-- Implement unified API for AI features
-- Handle streaming responses properly
+- Use Vercel AI SDK and langchain for AI features
+- Use OpenAI API for embeddings while using Groq for llm features 
+- Use Pinecone DB for vector storage
+
+Embeddings : https://js.langchain.com/docs/integrations/text_embedding/
+Vector store : https://js.langchain.com/docs/integrations/vectorstores/
 
 6. Backend:
 

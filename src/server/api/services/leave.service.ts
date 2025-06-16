@@ -109,7 +109,7 @@ export class LeaveService {
     if (!balance || balance.remaining < totalDays) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Insufficient leave balance",
+        message: `Insufficient leave balance for ${leaveType} leave`,
       });
     }
   }

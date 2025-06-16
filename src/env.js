@@ -37,6 +37,9 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_TOKEN: z.string().min(1, {
       message: "UPSTASH_REDIS_REST_TOKEN must be set",
     }),
+    GROQ_API_KEY: z.string().min(1, {
+      message: "GROQ_API_KEY must be set",
+    }),
   },
 
   /**
@@ -77,6 +80,7 @@ export const env = createEnv({
     NEXT_PUBLIC_R2_PUBLIC_URL: process.env.NEXT_PUBLIC_R2_PUBLIC_URL,
     UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
     UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    GROQ_API_KEY: process.env.GROQ_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

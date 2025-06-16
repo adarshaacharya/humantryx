@@ -127,22 +127,18 @@ export const getMenuItems = (ability: AppAbility) => {
       title: "AI Features",
       icon: Sparkles,
       href: "/dashboard/ai",
-      enabled: ability.can("read", "AI"),
       submenu: [
         {
           title: "Resume Screening",
           href: "/dashboard/ai/resume-screening",
-          enabled: ability.can("read", "AI"),
         },
         {
           title: "Sentiment Analysis",
           href: "/dashboard/ai/sentiment",
-          enabled: ability.can("read", "AI"),
         },
         {
           title: "Predictive Analytics",
           href: "/dashboard/ai/analytics",
-          enabled: ability.can("read", "AI"),
         },
       ],
     },
@@ -166,16 +162,9 @@ export const getMenuItems = (ability: AppAbility) => {
       ],
     },
     {
-      title: "Reports",
-      icon: BarChart3,
-      href: "/dashboard/reports",
-    },
-
-    {
       title: "Company",
       icon: Building,
       href: "/dashboard/company",
-      enabled: ability.can("read", "Company"),
       submenu: [
         {
           title: "Departments",
@@ -190,11 +179,6 @@ export const getMenuItems = (ability: AppAbility) => {
           href: "/dashboard/company/announcements",
         },
       ],
-    },
-    {
-      title: "Settings",
-      icon: Settings,
-      href: "/dashboard/settings",
     },
   ];
   return MENU_ITEMS;
