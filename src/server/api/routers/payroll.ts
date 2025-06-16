@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { PayrollService } from "../services/payroll.service";
+import { accessControl } from "../middleware/casl-middleware";
 
 export const payrollRouter = createTRPCRouter({
   // Set up salary settings for an employee
@@ -21,6 +22,12 @@ export const payrollRouter = createTRPCRouter({
     .input(
       z.object({
         employeeId: z.string().optional(),
+      }),
+    )
+    .use(
+      accessControl(async (option, ability) => {
+        const employeeId = option.input.employeeId;
+        return ability.can("read", "SalarySettings", employeeId);
       }),
     )
     .query(async ({ ctx, input }) => {

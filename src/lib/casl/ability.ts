@@ -26,6 +26,7 @@ export function defineAbilitiesFor(
     case "hr":
       ability.can("manage", "Employee");
       ability.can(["create", "read", "update", "delete"], "Payroll");
+      ability.can("manage", "SalarySettings");
       ability.can(["read", "create"], "Attendance");
       ability.can("manage", "LeaveRequests");
       ability.can("manage", "LeavePolicies");
@@ -36,6 +37,9 @@ export function defineAbilitiesFor(
       ability.can(["read", "create"], "Attendance");
       ability.can(["read", "create", "update"], "LeaveRequests");
       ability.can("read", "LeavePolicies");
+      ability.can("read", "Payroll", {
+        employeeId: employee.id,
+      });
       break;
 
     // for employees
@@ -54,6 +58,7 @@ export function defineAbilitiesFor(
         employeeId: employee.id,
       });
       ability.can("read", "Payroll", { employeeId: employee.id });
+      ability.can("read", "SalarySettings", { employeeId: employee.id });
 
       break;
   }

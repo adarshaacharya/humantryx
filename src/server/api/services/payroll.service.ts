@@ -108,12 +108,8 @@ export class PayrollService {
     let targetEmployeeId = employeeId;
 
     if (!employeeId) {
-      // Get current user's employee record
       const employee = await this.validateEmployee(session.user.id);
       targetEmployeeId = employee.id;
-    } else {
-      // Validate HR access when viewing other employees
-      await this.validateHRAccess(session);
     }
 
     const settings = await db.query.employeeSalarySettings.findFirst({

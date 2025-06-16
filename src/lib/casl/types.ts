@@ -7,6 +7,7 @@ export type Subjects =
   | "Employee"
   | "Member"
   | "Payroll"
+  | "SalarySettings"
   | "Attendance"
   | "LeaveRequests"
   | "LeavePolicies"

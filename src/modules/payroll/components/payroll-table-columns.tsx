@@ -22,6 +22,7 @@ import { format } from "date-fns";
 import type { PayrollRecord, PayrollTableMeta } from "../types";
 import { getPaymentStatusBadge } from "../constants";
 import { IdCell } from "@/components/id-cell";
+import { useAbility } from "@/providers/ability-context";
 
 export const payrollColumns: ColumnDef<PayrollRecord>[] = [
   {
@@ -194,6 +195,7 @@ export const payrollColumns: ColumnDef<PayrollRecord>[] = [
       const meta = table.options.meta as PayrollTableMeta;
 
       const isLoading = meta?.isLoading && meta?.pendingActionId === record.id;
+      const ability = useAbility();
 
       return (
         <DropdownMenu>
@@ -229,13 +231,15 @@ export const payrollColumns: ColumnDef<PayrollRecord>[] = [
               Quick Download
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => meta?.onUpdatePaymentStatus?.(record)}
-              className="cursor-pointer"
-            >
-              <CreditCard className="mr-2 h-4 w-4" />
-              Update Payment
-            </DropdownMenuItem>
+            {ability.can("update", "Payroll") && (
+              <DropdownMenuItem
+                onClick={() => meta?.onUpdatePaymentStatus?.(record)}
+                className="cursor-pointer"
+              >
+                <CreditCard className="mr-2 h-4 w-4" />
+                Update Payment
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );
