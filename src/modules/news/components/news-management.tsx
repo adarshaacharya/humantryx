@@ -21,10 +21,8 @@ export function NewsManagement() {
   const currentEmployee = useCurrentEmployee();
   const utils = api.useUtils();
 
-  // Queries
   const newsQuery = api.news.getNews.useQuery();
 
-  // Mutations
   const createNewsMutation = api.news.createNews.useMutation({
     onSuccess: async () => {
       await utils.news.getNews.invalidate();

@@ -11,17 +11,19 @@ import {
   Shield,
   UserCheck,
 } from "lucide-react";
-import { authClient } from "@/server/auth/auth-client";
+import { authClient, useSession } from "@/server/auth/auth-client";
 import { getRoleBadgeVariant, getRoleIcon } from "./utils";
 import { useAbility } from "@/providers/ability-context";
 import { useCurrentEmployee } from "@/hooks/use-current-employee";
 import { format } from "date-fns";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function PersonalDetails() {
   const currentOrg = authClient.useActiveOrganization();
   const currentMember = authClient.useActiveMember();
   const ability = useAbility();
   const employee = useCurrentEmployee();
+  const { data: session } = useSession();
 
   const canManageMember = ability.can("manage", "Member");
 
@@ -92,16 +94,25 @@ export function PersonalDetails() {
             {employee && (
               <div className="rounded-lg border bg-gradient-to-r from-indigo-50 to-purple-50 p-4">
                 <div className="flex items-start space-x-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-indigo-200 bg-indigo-100">
-                    <span className="text-sm font-semibold text-indigo-600">
-                      {employee.user?.name?.charAt(0)?.toUpperCase() || "U"}
-                    </span>
-                  </div>
+                  {session?.user?.image ? (
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage src={session?.user?.image} />
+                      <AvatarFallback className="bg-primary/20 text-primary font-semibold">
+                        {session?.user?.name?.charAt(0) ?? "-"}
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <Avatar className="h-12 w-12">
+                      <AvatarFallback className="bg-primary/20 text-primary">
+                        <User className="h-6 w-6" />
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
                   <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-lg font-semibold text-gray-900">
+                    <h3 className="text-foreground truncate text-lg font-semibold">
                       {employee.user?.name || "Unknown User"}
                     </h3>
-                    <p className="mb-3 truncate text-sm text-gray-600">
+                    <p className="text-muted-foreground mb-3 truncate text-sm">
                       {employee.user?.email}
                     </p>
                     <div className="mb-3 flex items-center space-x-2">

@@ -5,6 +5,7 @@ import { db } from "@/server/db";
 import { employees, invitations, members, users } from "@/server/db/schema";
 import type { InvitationWithDetails } from "@/modules/employees/types/invitation.types";
 import type { PaginationOptions } from "@/types/table";
+import type { EmployeeDesignation } from "@/server/db/consts";
 
 export interface SortOptions {
   sortBy: "email" | "status" | "createdAt" | "expiresAt";
@@ -31,7 +32,7 @@ export class InvitationService {
     email: string;
     organizationId: string;
     inviterId: string;
-    designation: string;
+    designation: EmployeeDesignation;
   }) {
     try {
       const { auth } = await import("@/server/auth");
