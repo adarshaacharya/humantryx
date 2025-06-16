@@ -30,6 +30,7 @@ export function defineAbilitiesFor(
       ability.can(["read", "create"], "Attendance");
       ability.can("manage", "LeaveRequests");
       ability.can("manage", "LeavePolicies");
+      ability.can("manage", "News"); // HR can manage all news
       break;
 
     case "project_manager":
@@ -40,6 +41,7 @@ export function defineAbilitiesFor(
       ability.can("read", "Payroll", {
         employeeId: employee.id,
       });
+      ability.can(["create", "read", "update", "delete"], "News");
       break;
 
     // for employees
@@ -60,6 +62,7 @@ export function defineAbilitiesFor(
       });
       ability.can("read", "Payroll", { employeeId: employee.id });
       ability.can("read", "SalarySettings", { employeeId: employee.id });
+      ability.can(["create", "read", "update", "delete"], "News");
 
       break;
   }

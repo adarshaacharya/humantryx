@@ -141,6 +141,13 @@
       "when": 1749915367058,
       "tag": "0019_recruitment",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1750047853020,
+      "tag": "0020_news",
+      "breakpoints": true
     }
   ]
 }

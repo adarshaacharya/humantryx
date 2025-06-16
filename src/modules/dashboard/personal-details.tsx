@@ -1,12 +1,10 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Building2,
   Users,
-  Settings,
   User,
   Calendar,
   Crown,
@@ -318,27 +316,7 @@ export function PersonalDetails() {
                   </div>
                 </div>
               </div>
-            ) : (
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium text-gray-900">
-                  Your Access
-                </h4>
-                <div className="rounded-lg border bg-gray-50 p-3">
-                  <div className="text-center">
-                    <p className="mb-1 text-sm text-gray-600">
-                      You have{" "}
-                      <span className="font-semibold text-gray-900">
-                        {currentMember.data?.role}
-                      </span>{" "}
-                      access to
-                    </p>
-                    <p className="text-lg font-semibold text-blue-600">
-                      {currentOrg.data.name}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
+            ) : null}
           </CardContent>
         </Card>
       </div>

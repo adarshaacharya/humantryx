@@ -10,6 +10,7 @@ import {
   Clock,
   Building,
   Sparkles,
+  Newspaper,
 } from "lucide-react";
 
 type MenuItem = {
@@ -30,6 +31,12 @@ export const getMenuItems = (ability: AppAbility) => {
       title: "Dashboard",
       icon: LayoutDashboard,
       href: "/dashboard",
+      enabled: true,
+    },
+    {
+      title: "News",
+      icon: Newspaper,
+      href: "/dashboard/news",
       enabled: true,
     },
     {
@@ -163,6 +170,7 @@ export const getMenuItems = (ability: AppAbility) => {
       icon: BarChart3,
       href: "/dashboard/reports",
     },
+
     {
       title: "Company",
       icon: Building,
