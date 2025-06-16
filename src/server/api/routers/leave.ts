@@ -9,6 +9,7 @@ import {
   updateLeavePolicySchema,
 } from "@/modules/leaves/schemas";
 import { LeaveService } from "../services/leave.service";
+import { accessControl } from "../middleware/casl-middleware";
 
 export const leaveRouter = createTRPCRouter({
   create: protectedProcedure
@@ -68,9 +69,19 @@ export const leaveRouter = createTRPCRouter({
       );
     }),
 
-  getLeavePolicies: protectedProcedure.query(async ({ ctx }) => {
-    return LeaveService.getLeavePolicies(ctx.session);
-  }),
+  getLeavePolicies: protectedProcedure
+    .use(
+      accessControl(async (option, ability) => {
+        return ability.can(
+          "read",
+          "LeavePolicies",
+          option.ctx.session.session.activeOrganizationId ?? undefined,
+        );
+      }),
+    )
+    .query(async ({ ctx }) => {
+      return LeaveService.getLeavePolicies(ctx.session);
+    }),
 
   createLeavePolicy: protectedProcedure
     .input(createLeavePolicySchema)

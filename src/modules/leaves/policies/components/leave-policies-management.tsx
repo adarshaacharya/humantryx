@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { type LeaveType } from "../../constants";
 import { LeavePoliciesTable } from "./leave-policies-table";
 import { LeavePolicyFormDialog } from "./leave-policy-form-dialog";
+import { useAbility } from "@/providers/ability-context";
 
 type PolicyFormData = {
   leaveType: LeaveType;
@@ -43,6 +44,9 @@ export function LeavePoliciesManagement() {
   );
 
   const policiesQuery = api.leave.getLeavePolicies.useQuery();
+  const ability = useAbility();
+
+  const canCreatePolicy = ability.can("create", "LeavePolicies");
 
   const createPolicyMutation = api.leave.createLeavePolicy.useMutation({
     onSuccess: () => {
@@ -125,10 +129,12 @@ export function LeavePoliciesManagement() {
             Manage leave policies and entitlements for your organization
           </p>
         </div>
-        <Button onClick={() => setEditDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Policy
-        </Button>
+        {canCreatePolicy ? (
+          <Button onClick={() => setEditDialogOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Policy
+          </Button>
+        ) : null}
       </div>
 
       <LeavePolicyFormDialog

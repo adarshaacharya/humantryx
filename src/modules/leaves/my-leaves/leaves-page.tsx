@@ -25,11 +25,10 @@ export function LeavesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Leave Management
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">My leaves</h1>
           <p className="text-muted-foreground">
-            Manage your leave requests and view balances
+            View your leave balances, request new leaves, and manage your leave
+            requests.
           </p>
         </div>
 
@@ -64,7 +63,7 @@ export function LeavesPage() {
       </div>
 
       {/* Leave Requests */}
-      <LeaveRequestsTable showFilters={false} />
+      <LeaveRequestsTable employeeId={employee?.id} showFilters={false} />
     </div>
   );
 }

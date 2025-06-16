@@ -8,7 +8,8 @@ export type Subjects =
   | "Member"
   | "Payroll"
   | "Attendance"
-  | "Leave"
+  | "LeaveRequests"
+  | "LeavePolicies"
   | "Company"
   | "AI"
   | "Organization";

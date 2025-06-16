@@ -313,7 +313,7 @@ export function LeaveRequestsTable({
                                 View Details
                               </DropdownMenuItem>
 
-                              <Can I="update" do="update" on="Leave">
+                              <Can I="update" do="update" on="LeaveRequests">
                                 {request.status === "pending" && (
                                   <>
                                     <DropdownMenuItem

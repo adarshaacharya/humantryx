@@ -15,7 +15,6 @@ import { LeaveRequestsTable } from "./components/leave-requests-table";
 import { LEAVE_TYPES } from "../constants";
 
 export function LeaveRequestsPage() {
-  // Get statistics
   const statsQuery = api.leave.list.useQuery({
     page: 1,
     limit: 100, // Get recent requests for stats

@@ -63,7 +63,7 @@ export function QuickActions() {
       : []),
 
     // Leave management (HR, Admin, and Project Managers)
-    ...(ability.can("manage", "Leave") || ability.can("update", "Leave")
+    ...(ability.can("manage", "LeaveRequests") || ability.can("update", "LeaveRequests")
       ? [
           {
             icon: Calendar,

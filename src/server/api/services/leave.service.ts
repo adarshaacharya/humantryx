@@ -423,7 +423,15 @@ export class LeaveService {
   }
 
   static async getLeavePolicies(session: Session) {
-    const { activeOrgId } = await this.validateHRAccess(session);
+    // const { activeOrgId } = await this.validateHRAccess(session);
+    const activeOrgId = session.session.activeOrganizationId;
+
+    if (!activeOrgId) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "No active organization found",
+      });
+    }
 
     return db.query.leavePolicies.findMany({
       where: eq(leavePolicies.organizationId, activeOrgId),

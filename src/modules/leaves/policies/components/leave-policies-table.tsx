@@ -1,17 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Edit, Trash2, Plus, Settings } from "lucide-react";
-import { LEAVE_TYPES, type LeaveType } from "../../constants";
+import { Plus, Settings } from "lucide-react";
+import { type LeaveType } from "../../constants";
+import { leavePolicyColumns } from "./leave-policies-table-columns";
+import { DataTable } from "@/components/ui/data-table/data-table";
+import { useAbility } from "@/providers/ability-context";
 
 type LeavePolicy = {
   id: string;
@@ -43,9 +37,7 @@ export function LeavePoliciesTable({
   onCreateNew,
   isDeleting,
 }: LeavePoliciesTableProps) {
-  const getLeaveTypeInfo = (type: string) => {
-    return LEAVE_TYPES.find((lt) => lt.value === type) ?? LEAVE_TYPES[0]!;
-  };
+  const ability = useAbility();
 
   if (isLoading) {
     return (
@@ -72,70 +64,19 @@ export function LeavePoliciesTable({
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Leave Type</TableHead>
-          <TableHead>Allowed Days</TableHead>
-          <TableHead>Carry Forward</TableHead>
-          <TableHead>Max Carry Forward</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {policies.map((policy) => {
-          const typeInfo = getLeaveTypeInfo(policy.leaveType);
-          return (
-            <TableRow key={policy.id}>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <span>{typeInfo.icon}</span>
-                  <span className="font-medium">{typeInfo.label}</span>
-                  <Badge variant="secondary" className={typeInfo.color}>
-                    {policy.leaveType}
-                  </Badge>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline">{policy.defaultAllowance} days</Badge>
-              </TableCell>
-              <TableCell>
-                <Badge variant={policy.carryForward ? "default" : "secondary"}>
-                  {policy.carryForward ? "Yes" : "No"}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                {policy.carryForward ? (
-                  <Badge variant="outline">
-                    {policy.maxCarryForward ?? 0} days
-                  </Badge>
-                ) : (
-                  <span className="text-muted-foreground">N/A</span>
-                )}
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex items-center justify-end gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onEdit(policy)}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onDelete(policy.id)}
-                    disabled={isDeleting}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+    <DataTable
+      columns={leavePolicyColumns}
+      initialState={{
+        columnVisibility: {
+          actions: ability.can("manage", "LeavePolicies"),
+        },
+      }}
+      data={policies}
+      meta={{
+        onEdit,
+        onDelete,
+        isDeleting,
+      }}
+    />
   );
 }

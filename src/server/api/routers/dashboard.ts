@@ -27,7 +27,7 @@ export const dashboardRouter = createTRPCRouter({
   getPendingLeaveRequests: protectedProcedure
     .use(
       accessControl(async (option, ability) => {
-        return ability.can("update", "Leave");
+        return ability.can("update", "LeaveRequests");
       }),
     )
     .query(async ({ ctx }) => {

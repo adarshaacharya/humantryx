@@ -27,13 +27,15 @@ export function defineAbilitiesFor(
       ability.can("manage", "Employee");
       ability.can(["create", "read", "update", "delete"], "Payroll");
       ability.can(["read", "create"], "Attendance");
-      ability.can("manage", "Leave");
+      ability.can("manage", "LeaveRequests");
+      ability.can("manage", "LeavePolicies");
       break;
 
     case "project_manager":
       ability.can(["read", "update"], "Employee");
       ability.can(["read", "create"], "Attendance");
-      ability.can(["read", "create", "update"], "Leave");
+      ability.can(["read", "create", "update"], "LeaveRequests");
+      ability.can("read", "LeavePolicies");
       break;
 
     // for employees
@@ -41,8 +43,11 @@ export function defineAbilitiesFor(
       ability.can("read", "Organization", {
         id: employee.organizationId,
       });
-      ability.can(["create"], "Leave");
-      ability.can("read", "Leave", {
+      ability.can(["create"], "LeaveRequests");
+      ability.can("read", "LeavePolicies", {
+        organizationId: employee.organizationId,
+      });
+      ability.can("read", "LeaveRequests", {
         employeeId: employee.id,
       });
       ability.can("read", "Attendance", {

@@ -74,27 +74,27 @@ export const getMenuItems = (ability: AppAbility) => {
       title: "Leave Management",
       icon: Calendar,
       href: "/dashboard/leaves",
-      enabled: ability.can("read", "Leave"),
+      enabled: ability.can("read", "LeaveRequests"),
       submenu: [
         {
           title: "My Leaves",
           href: "/dashboard/leaves",
-          enabled: ability.can("read", "Leave"),
+          enabled: ability.can("read", "LeaveRequests"),
         },
         {
-          title: "Manage Leaves",
+          title: "Manage Leaves Balance",
           href: "/dashboard/leaves/manage",
-          enabled: ability.can("manage", "Leave"),
+          enabled: ability.can("manage", "LeaveRequests"),
         },
         {
           title: "Leave Requests",
           href: "/dashboard/leaves/requests",
-          enabled: ability.can("read", "Leave"),
+          enabled: ability.can("manage", "LeaveRequests"),
         },
         {
           title: "Leave Policies",
           href: "/dashboard/leaves/policies",
-          enabled: ability.can("manage", "Leave"),
+          enabled: ability.can("read", "LeavePolicies"),
         },
       ],
     },
@@ -143,7 +143,6 @@ export const getMenuItems = (ability: AppAbility) => {
       title: "Recruitment",
       icon: UserPlus,
       href: "/dashboard/recruitment",
-      enabled: ability.can("manage", "Recruitment"),
       submenu: [
         {
           title: "Job Postings",
