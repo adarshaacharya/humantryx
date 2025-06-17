@@ -10,6 +10,7 @@ import { payrollRouter } from "./routers/payroll";
 import { dashboardRouter } from "./routers/dashboard";
 import { newsRouter } from "./routers/news";
 import { aiRouter } from "./routers/ai";
+import { recruitmentRouter } from "./routers/recruitment";
 
 /**
  * This is the primary router for your server.
@@ -28,6 +29,7 @@ export const appRouter = createTRPCRouter({
   dashboard: dashboardRouter,
   news: newsRouter,
   ai: aiRouter,
+  recruitment: recruitmentRouter,
 });
 
 // export type definition of API

@@ -31,6 +31,7 @@ export function defineAbilitiesFor(
       ability.can("manage", "LeaveRequests");
       ability.can("manage", "LeavePolicies");
       ability.can("manage", "News"); // HR can manage all news
+      ability.can("manage", "Recruitment");
       break;
 
     case "project_manager":

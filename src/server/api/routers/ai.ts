@@ -14,4 +14,17 @@ export const aiRouter = createTRPCRouter({
       const output = await AIService.generateLeaveRequest({ text: input.text });
       return LeaveService.createLeaveRequest(output, ctx.session);
     }),
+
+  screenResume: protectedProcedure
+    .input(
+      z.object({
+        resumeUrl: z.string().url("Valid resume URL is required"),
+        jobId: z.string().uuid("Valid job ID is required"),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      console.log({ input });
+      const output = await AIService.screenResume(input);
+      return output;
+    }),
 });

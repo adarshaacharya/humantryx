@@ -2,9 +2,18 @@ import { groqModel } from "@/server/ai/groq";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createLeaveRequestSchema } from "@/modules/leaves/schemas";
 import { TRPCError } from "@trpc/server";
+import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
+import { z } from "zod";
+import { db } from "@/server/db";
+import { eq } from "drizzle-orm";
+import { jobPostings } from "@/server/db/recruitment";
 
 export class AIService {
-  static async generateLeaveRequest({ text }: { text: string }) {
+  static async generateLeaveRequest({
+    text,
+  }: {
+    text: string;
+  }) {
     const systemTemplate = `
          Create a leave request based on the following text: {text}. 
          If the text does not contain a valid leave request, throw an error asking for more information.
@@ -39,5 +48,96 @@ export class AIService {
     }
 
     return output;
+  }
+
+  static async screenResume({
+    resumeUrl,
+    jobId,
+  }: {
+    resumeUrl: string;
+    jobId: string;
+  }) {
+    const job = await db.query.jobPostings.findFirst({
+      where: eq(jobPostings.id, jobId),
+    });
+
+    if (!job) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Job posting not found.",
+      });
+    }
+
+    const response = await fetch(resumeUrl);
+
+    if (!response.ok) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Resume not found at the provided URL.",
+      });
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const blob = new Blob([arrayBuffer], { type: "application/pdf" });
+
+    const loader = new WebPDFLoader(blob);
+    const documents = await loader.load();
+
+    if (documents.length === 0) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "No documents found at the provided URL.",
+      });
+    }
+
+    const content = documents.map((doc) => doc.pageContent).join("\n");
+
+    const systemTemplate = `
+      You are an HR assistant. Compare a resume with a job description and output structured screening results.
+
+      Output this JSON:
+
+      {{
+        matchScore: number (0 to 100),
+        matchedSkills: string[],
+        missingSkills: string[],
+        recommendation: "shortlist" | "reject",
+        reasoning: string
+      }}
+
+      Evaluate based on required skills and experience in the job.
+
+      Job Description: {job}
+      Resume Content: {resume}
+    `;
+
+    const comparisonPrompt = ChatPromptTemplate.fromMessages([
+      ["system", systemTemplate],
+      ["human", "Resume: {resume}\n\nJob: {job}"],
+    ]);
+
+    const structuredScreeningLlm = groqModel.withStructuredOutput(
+      z.object({
+        matchScore: z.number().min(0).max(100),
+        matchedSkills: z.array(z.string()),
+        missingSkills: z.array(z.string()),
+        recommendation: z.enum(["shortlist", "reject"]),
+        reasoning: z.string(),
+      }),
+      {
+        name: "screenResumeMatch",
+      },
+    );
+
+    const screeningChain = comparisonPrompt.pipe(structuredScreeningLlm);
+
+    const screeningOutput = await screeningChain.invoke({
+      resume: content,
+      job: `${job.title}\n${job.description}`,
+    });
+
+    console.log("Screened Resume Output:", screeningOutput);
+
+    return screeningOutput;
   }
 }

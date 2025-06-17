@@ -11,6 +11,7 @@ import {
   Building,
   Sparkles,
   Newspaper,
+  Briefcase,
 } from "lucide-react";
 
 type MenuItem = {
@@ -106,6 +107,24 @@ export const getMenuItems = (ability: AppAbility) => {
       ],
     },
     {
+      title: "Recruitment",
+      icon: Briefcase,
+      href: "/dashboard/recruitment/jobs",
+      enabled: ability.can("manage", "Recruitment"), // HR and admins can access recruitment
+      submenu: [
+        {
+          title: "Job Postings",
+          href: "/dashboard/recruitment/jobs",
+          enabled: ability.can("manage", "Recruitment"),
+        },
+        {
+          title: "Applications",
+          href: "/dashboard/recruitment/applications",
+          enabled: ability.can("manage", "Recruitment"),
+        },
+      ],
+    },
+    {
       title: "Payroll",
       icon: DollarSign,
       href: "/dashboard/payroll",
@@ -127,6 +146,7 @@ export const getMenuItems = (ability: AppAbility) => {
       title: "AI Features",
       icon: Sparkles,
       href: "/dashboard/ai",
+
       submenu: [
         {
           title: "Resume Screening",
@@ -142,25 +162,7 @@ export const getMenuItems = (ability: AppAbility) => {
         },
       ],
     },
-    {
-      title: "Recruitment",
-      icon: UserPlus,
-      href: "/dashboard/recruitment",
-      submenu: [
-        {
-          title: "Job Postings",
-          href: "/dashboard/recruitment/jobs",
-        },
-        {
-          title: "Applications",
-          href: "/dashboard/recruitment/applications",
-        },
-        {
-          title: "Interview Schedule",
-          href: "/dashboard/recruitment/interviews",
-        },
-      ],
-    },
+
     {
       title: "Company",
       icon: Building,
