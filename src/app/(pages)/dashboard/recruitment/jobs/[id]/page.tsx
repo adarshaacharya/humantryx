@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { JobDetail } from "@/modules/recruitment/components/job-detail";
-import { JobApplications } from "@/modules/recruitment/components/job-applications";
+import { JobDetail } from "@/modules/recruitment/postings/listing/job-detail";
+import { JobApplications } from "@/modules/recruitment/postings/listing/job-applications";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 

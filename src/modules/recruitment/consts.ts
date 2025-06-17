@@ -95,3 +95,41 @@ export const getRecommendationVariant = (recommendation: string) => {
       return "outline";
   }
 };
+
+export const getStatusVariant = (status: string) => {
+  const statusConfig = JOB_STATUSES.find((s) => s.value === status);
+  return statusConfig?.variant || "default";
+};
+
+export const getLocationIcon = (locationType: string) => {
+  const locationConfig = JOB_LOCATION_TYPES.find(
+    (l) => l.value === locationType,
+  );
+  return locationConfig?.icon || "🏢";
+};
+
+export const formatSalaryRange = (
+  min?: number | null,
+  max?: number | null,
+  currency : string | null = "USD",
+) => {
+  if (!min && !max) return null;
+
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency : currency || "USD",
+    minimumFractionDigits: 0,
+  });
+
+  if (min && max) {
+    return `${formatter.format(min)} - ${formatter.format(max)}`;
+  }
+
+  if (min) {
+    return `From ${formatter.format(min)}`;
+  }
+
+  if (max) {
+    return `Up to ${formatter.format(max)}`;
+  }
+};

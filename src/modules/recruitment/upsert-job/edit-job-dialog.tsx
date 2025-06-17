@@ -35,14 +35,14 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { X, Plus } from "lucide-react";
-import { jobFormSchema, type JobFormData } from "../schemas/job-form.schema";
+import { jobFormSchema, type JobFormData } from "../../schemas/job-form.schema";
 import {
   JOB_LOCATION_TYPES,
   COMMON_SKILLS,
   EXPERIENCE_LEVELS,
   SALARY_CURRENCIES,
   JOB_STATUSES,
-} from "../consts";
+} from "../../consts";
 
 interface EditJobDialogProps {
   job: any;

@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { Brain, FileText, Clock, CheckCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
-import { getRecommendationVariant } from "../consts";
+import { getRecommendationVariant } from "../../consts";
 
 interface ResumeScreeningDialogProps {
   resumeUrl?: string;

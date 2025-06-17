@@ -1,9 +1,9 @@
 import { Suspense } from "react";
-import { JobsHeader } from "@/modules/recruitment/components/jobs-header";
-import { JobsList } from "@/modules/recruitment/components/jobs-list";
-import { JobsStats } from "@/modules/recruitment/components/jobs-stats";
+import { JobsHeader } from "@/modules/recruitment/postings/components/jobs-header";
+import { JobsList } from "@/modules/recruitment/postings/listing/jobs-list";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { JobsStats } from "@/modules/recruitment/postings/components/jobs-stats";
 
 export default function JobsPage() {
   return (

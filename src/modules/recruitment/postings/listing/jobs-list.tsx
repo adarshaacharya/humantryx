@@ -27,8 +27,8 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { JOB_STATUSES, JOB_LOCATION_TYPES } from "../consts";
-import type { JobStatus } from "../consts";
+import { JOB_STATUSES, JOB_LOCATION_TYPES } from "../../consts";
+import type { JobStatus } from "../../consts";
 
 interface Job {
   id: string;
@@ -311,7 +311,11 @@ export function JobsList() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setEditingJob(job)}>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setEditingJob(job);
+                          }}
+                        >
                           <Edit className="mr-2 h-4 w-4" />
                           Edit
                         </DropdownMenuItem>

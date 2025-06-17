@@ -11,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CreateJobDialog } from "./create-job-dialog";
-import { JOB_STATUSES } from "../consts";
+import { CreateJobDialog } from "../upsert-job/create-job-dialog";
+import { JOB_STATUSES } from "../../consts";
 import { EMPLOYEE_DEPARTMENTS } from "@/server/db/consts";
 
 interface JobsHeaderProps {

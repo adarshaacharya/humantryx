@@ -22,9 +22,15 @@ import {
 import { formatDistanceToNow, format } from "date-fns";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { JOB_STATUSES, JOB_LOCATION_TYPES } from "../consts";
+import {
+  JOB_STATUSES,
+  JOB_LOCATION_TYPES,
+  getStatusVariant,
+  getLocationIcon,
+  formatSalaryRange,
+} from "../../consts";
 import { useState } from "react";
-import { EditJobDialog } from "./edit-job-dialog";
+import { EditJobDialog } from "../upsert-job/edit-job-dialog";
 
 interface JobDetailProps {
   jobId: string;
@@ -83,40 +89,6 @@ export function JobDetail({ jobId }: JobDetailProps) {
   }
 
   const job = jobQuery.data;
-
-  const getStatusVariant = (status: string) => {
-    const statusConfig = JOB_STATUSES.find((s) => s.value === status);
-    return statusConfig?.variant || "default";
-  };
-
-  const getLocationIcon = (locationType: string) => {
-    const locationConfig = JOB_LOCATION_TYPES.find(
-      (l) => l.value === locationType,
-    );
-    return locationConfig?.icon || "🏢";
-  };
-
-  const formatSalaryRange = (min?: number, max?: number, currency = "USD") => {
-    if (!min && !max) return null;
-
-    const formatter = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency,
-      minimumFractionDigits: 0,
-    });
-
-    if (min && max) {
-      return `${formatter.format(min)} - ${formatter.format(max)}`;
-    }
-
-    if (min) {
-      return `From ${formatter.format(min)}`;
-    }
-
-    if (max) {
-      return `Up to ${formatter.format(max)}`;
-    }
-  };
 
   const handlePublishJob = () => {
     publishJobMutation.mutate({ id: jobId });

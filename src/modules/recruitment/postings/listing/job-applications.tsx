@@ -16,9 +16,9 @@ import {
   Brain,
 } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
-import { APPLICATION_STATUSES } from "../consts";
-import { UploadResumeDialog } from "./upload-resume-dialog";
-import { ResumeScreeningDialog } from "./resume-screening-dialog";
+import { APPLICATION_STATUSES } from "../../consts";
+import { UploadResumeDialog } from "../resume-screening/upload-resume-dialog";
+import { ResumeScreeningDialog } from "../resume-screening/resume-screening-dialog";
 
 interface JobApplicationsProps {
   jobId: string;

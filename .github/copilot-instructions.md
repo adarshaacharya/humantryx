@@ -130,12 +130,14 @@ Vector store : https://js.langchain.com/docs/integrations/vectorstores/
 - use clear, descriptive names for variables, functions, classes, components.
 - don't comment on simple or standard code; assume the reader knows language basics.
 - dont use direct params instead use objects to pass params, for example instead of `function createEmployee(name: string, age: number)` use `function createEmployee({ name, age }: { name: string; age: number })`
+- please move utils or helper functions into separate file don't pollute the component file with too many functions
 
 1. Typescript :
 
 - Implement proper TypeScript types for all props and functions and avoid `any`, but please dont try to create custom types unless necessary, try to infer types from backend data types or infer zod schema
 - Use type unless interface is necessary, prefer type over interface unless you need to extend it or use it in a class
-- try to extend or pick type instead of creating new one
+- try to extend or pick type instead of creating new one, use zod inference instead of creating new type, for example if you are using `Employee` type in frontend and backend, use `z.infer<typeof employeeSchema>` instead of creating new type
+- please share type between frontend and backend , so that we can have type safety across the application, for example if you are using `Employee` type in frontend and backend, please import it from `src/server/db/schema.ts` or `src/server/db/types.ts` instead of creating new one
 
 ## Important Links
 

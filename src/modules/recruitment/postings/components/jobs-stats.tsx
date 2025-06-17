@@ -3,7 +3,6 @@
 import { api } from "@/trpc/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase, Users, FileText, TrendingUp } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 
 export function JobsStats() {
   const statsQuery = api.recruitment.getStats.useQuery();
