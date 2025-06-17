@@ -1,4 +1,8 @@
-import type { EmployeeStatus } from "@/server/db/consts";
+import type {
+  EmployeeDepartment,
+  EmployeeDesignation,
+  EmployeeStatus,
+} from "@/server/db/consts";
 import type { PaginationOptions } from "@/types/table";
 
 export interface SortOptions {
@@ -21,7 +25,8 @@ export interface EmployeeListParams
 
 export interface EmployeeWithUser {
   id: string;
-  designation: string;
+  designation: EmployeeDesignation;
+  department: EmployeeDepartment;
   createdAt: Date;
   updatedAt: Date | null;
   organizationId: string;
@@ -34,5 +39,5 @@ export interface EmployeeWithUser {
     email: string;
     image: string | null;
   } | null;
-  status: EmployeeStatus | null
+  status: EmployeeStatus | null;
 }

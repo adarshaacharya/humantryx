@@ -151,6 +151,16 @@ export function InvitationDetailsDialog({
                       </span>
                     </div>
                   )}
+                  {invitation.employeeDepartment && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-muted-foreground text-sm">
+                        Department:
+                      </span>
+                      <span className="text-sm">
+                        {invitation.employeeDepartment}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
                     <span className="text-muted-foreground text-sm">
                       Employee ID:

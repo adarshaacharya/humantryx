@@ -4,6 +4,10 @@ import type {
   invitationFiltersSchema,
   invitationListSchema,
 } from "../schemas/invitation.schema";
+import type {
+  EmployeeDepartment,
+  EmployeeDesignation,
+} from "@/server/db/consts";
 
 // Base invitation type from Better Auth
 export interface InvitationWithDetails {
@@ -22,7 +26,8 @@ export interface InvitationWithDetails {
   // Employee details if linked
   employeeId?: string | null;
   employeeName?: string | null;
-  employeeDesignation?: string | null;
+  employeeDesignation?: EmployeeDesignation | null;
+  employeeDepartment?: EmployeeDepartment | null;
 }
 
 // Frontend-specific types

@@ -1,12 +1,26 @@
+import {
+  EMPLOYEE_DEPARTMENTS,
+  type EmployeeDepartment,
+} from "@/server/db/consts";
+import {
+  employeeDepartmentEnum,
+  employeeDesignationEnum,
+} from "@/server/db/employees";
 import { z } from "zod";
 
 // Employee creation schema
 export const createEmployeeSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name is too long"),
   designation: z
-    .string()
-    .min(1, "Designation is required")
-    .max(100, "Designation is too long"),
+    .enum(employeeDesignationEnum.enumValues, {
+      errorMap: () => ({ message: "Invalid designation" }),
+    })
+    .describe("Designation of the employee"),
+  department: z
+    .enum(employeeDepartmentEnum.enumValues, {
+      errorMap: () => ({ message: "Invalid department" }),
+    })
+    .describe("Department of the employee"),
   organizationId: z.string().min(1, "Organization ID is required"),
   invitationId: z.string().optional(),
   userId: z.string().optional(),
@@ -25,9 +39,16 @@ export const updateEmployeeSchema = z.object({
     .max(100, "Name is too long")
     .optional(),
   designation: z
-    .string()
-    .min(1, "Designation is required")
-    .max(100, "Designation is too long")
+    .enum(employeeDesignationEnum.enumValues, {
+      errorMap: () => ({ message: "Invalid designation" }),
+    })
+    .describe("Designation of the employee")
+    .optional(),
+  department: z
+    .enum(employeeDepartmentEnum.enumValues, {
+      errorMap: () => ({ message: "Invalid department" }),
+    })
+    .describe("Department of the employee")
     .optional(),
   userId: z.string().optional(),
   memberId: z.string().optional(),
@@ -37,10 +58,16 @@ export const updateEmployeeSchema = z.object({
 export const inviteEmployeeSchema = z.object({
   email: z.string().email("Invalid email address"),
   designation: z
-    .string()
-    .min(1, "Designation is required")
-    .max(100, "Designation is too long"),
+    .enum(employeeDesignationEnum.enumValues, {
+      errorMap: () => ({ message: "Invalid designation" }),
+    })
+    .describe("Designation of the employee"),
   organizationId: z.string().min(1, "Organization ID is required"),
+  department: z
+    .enum(employeeDepartmentEnum.enumValues, {
+      errorMap: () => ({ message: "Invalid department" }),
+    })
+    .describe("Department of the employee"),
 });
 
 // Employee list query schema
@@ -48,7 +75,7 @@ export const employeeListSchema = z.object({
   limit: z.number().min(1).max(100).default(10),
   offset: z.number().min(0).default(0),
   searchQuery: z.string().optional(),
-  designation: z.string().optional(),
+  designation: z.enum(employeeDesignationEnum.enumValues).optional(),
   status: z.enum(["active", "invited", "all"]).default("all"),
   sortBy: z
     .enum(["name", "designation", "createdAt", "email"])

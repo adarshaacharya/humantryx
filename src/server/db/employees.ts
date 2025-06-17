@@ -1,5 +1,5 @@
 import { pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { exists, relations } from "drizzle-orm";
 import { users } from "./users";
 import { organizations, members, invitations } from "./organizations";
 import { timestamps } from "./timestamps";
@@ -26,6 +26,15 @@ export const employeeDesignationEnum = pgEnum("employee_designation", [
   "founder",
 ]);
 
+export const employeeDepartmentEnum = pgEnum("department", [
+  "engineering",
+  "product",
+  "system_administration",
+  "business_analysis",
+  "founder_office",
+  "human_resources",
+]);
+
 export const employees = pgTable("employees", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
@@ -39,6 +48,7 @@ export const employees = pgTable("employees", {
     onDelete: "set null",
   }),
   designation: employeeDesignationEnum("designation").notNull(),
+  department: employeeDepartmentEnum("department").notNull(),
   status: employeeStatusEnum("status").notNull(),
   ...timestamps,
 });

@@ -5,7 +5,10 @@ import { db } from "@/server/db";
 import { employees, invitations, members, users } from "@/server/db/schema";
 import type { InvitationWithDetails } from "@/modules/employees/types/invitation.types";
 import type { PaginationOptions } from "@/types/table";
-import type { EmployeeDesignation } from "@/server/db/consts";
+import type {
+  EmployeeDepartment,
+  EmployeeDesignation,
+} from "@/server/db/consts";
 
 export interface SortOptions {
   sortBy: "email" | "status" | "createdAt" | "expiresAt";
@@ -33,6 +36,7 @@ export class InvitationService {
     organizationId: string;
     inviterId: string;
     designation: EmployeeDesignation;
+    department: EmployeeDepartment;
   }) {
     try {
       const { auth } = await import("@/server/auth");
@@ -60,6 +64,7 @@ export class InvitationService {
           invitationId: invitationResult.id,
           designation: data.designation,
           status: "invited", // Default status for new invitations
+          department: data.department,
         })
         .returning()
         .execute();

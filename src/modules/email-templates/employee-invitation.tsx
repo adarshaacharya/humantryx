@@ -1,3 +1,4 @@
+import type { EmployeeDesignation } from "@/server/db/consts";
 import {
   Body,
   Button,
@@ -14,7 +15,7 @@ import {
 
 interface EmployeeInvitationEmailProps {
   email: string;
-  designation: string;
+  designation: EmployeeDesignation;
   organizationName: string;
   invitationId: string;
   invitationLink: string;

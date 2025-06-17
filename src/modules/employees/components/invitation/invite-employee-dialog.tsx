@@ -34,7 +34,10 @@ import {
   inviteEmployeeSchema,
   type InviteEmployeeSchemaType,
 } from "../../schemas/employee.schema";
-import { EMPLOYEE_DESIGNATIONS } from "@/server/db/consts";
+import {
+  EMPLOYEE_DEPARTMENTS,
+  EMPLOYEE_DESIGNATIONS,
+} from "@/server/db/consts";
 
 interface EmployeeInviteDialogProps {
   onInviteSent?: () => void;
@@ -66,8 +69,9 @@ export function EmployeeInviteDialog({
     resolver: zodResolver(inviteEmployeeSchema),
     defaultValues: {
       email: "",
-      designation: "",
+      designation: "data_scientist",
       organizationId: organizationId ?? "",
+      department: "engineering",
     },
   });
 
@@ -203,6 +207,37 @@ export function EmployeeInviteDialog({
                             value={designation.value}
                           >
                             {designation.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="department"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Department</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select employee department" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {EMPLOYEE_DEPARTMENTS.map((department) => (
+                          <SelectItem
+                            key={department.value}
+                            value={department.value}
+                          >
+                            {department.label}
                           </SelectItem>
                         ))}
                       </SelectContent>

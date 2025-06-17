@@ -62,7 +62,8 @@ export function EmployeeEditDialog({
     defaultValues: {
       id: "",
       name: "",
-      designation: "",
+      designation: "data_scientist",
+      department: "engineering",
     },
   });
 
@@ -72,6 +73,7 @@ export function EmployeeEditDialog({
         id: employee.id,
         name: employee.user?.name,
         designation: employee.designation,
+        department: employee.department,
       });
     }
   }, [employee, form]);

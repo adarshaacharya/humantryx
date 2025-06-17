@@ -202,18 +202,18 @@ export function PersonalDetails() {
                 </div>
                 <div className="rounded-lg border border-purple-200 bg-purple-50 p-3 text-center">
                   <div className="truncate text-sm font-bold text-purple-600">
-                    {employee?.designation
-                      ? employee.designation
+                    {employee?.department
+                      ? employee.department
                           .split("_")
                           .map(
                             (word) =>
                               word.charAt(0).toUpperCase() + word.slice(1),
                           )
                           .join(" ")
-                      : "Employee"}
+                      : "-"}
                   </div>
                   <div className="text-xs font-medium text-gray-600">
-                    Your Designation
+                    Your Department
                   </div>
                 </div>
               </div>

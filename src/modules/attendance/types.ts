@@ -1,5 +1,10 @@
 // Types for attendance components
 
+import type {
+  EmployeeDepartment,
+  EmployeeDesignation,
+} from "@/server/db/consts";
+
 export type AttendanceRecord = {
   id: string;
   employeeId: string;
@@ -18,7 +23,8 @@ export type AttendanceRecord = {
   locationClockOut: string | null;
   employee: {
     id: string;
-    designation: string;
+    designation: EmployeeDesignation;
+    department: EmployeeDepartment;
     userId: string | null;
     organizationId: string;
     status: "active" | "invited" | "terminated" | "resigned" | "on_leave";

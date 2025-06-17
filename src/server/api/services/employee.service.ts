@@ -5,7 +5,11 @@ import { TRPCError } from "@trpc/server";
 import { auth } from "@/server/auth";
 import { headers } from "next/headers";
 import { cache, invalidateCache, invalidatePattern } from "@/lib/redis";
-import type { EmployeeDesignation, EmployeeStatus } from "@/server/db/consts";
+import type {
+  EmployeeDepartment,
+  EmployeeDesignation,
+  EmployeeStatus,
+} from "@/server/db/consts";
 import type {
   EmployeeListParams,
   EmployeeWithUser,
@@ -49,12 +53,14 @@ export class EmployeeService {
     userId?: string;
     memberId?: string;
     status: EmployeeStatus;
+    department: EmployeeDepartment;
   }) {
     try {
       const employee = await db
         .insert(employees)
         .values({
           designation: data.designation,
+          department: data.department,
           organizationId: data.organizationId,
           invitationId: data.invitationId ?? null,
           userId: data.userId ?? null,
@@ -199,6 +205,7 @@ export class EmployeeService {
           .select({
             id: employees.id,
             designation: employees.designation,
+            department: employees.department,
             createdAt: employees.createdAt,
             updatedAt: employees.updatedAt,
             organizationId: employees.organizationId,
@@ -232,6 +239,7 @@ export class EmployeeService {
         return {
           id: employee.id,
           designation: employee.designation,
+          department: employee.department,
           createdAt: employee.createdAt,
           updatedAt: employee.updatedAt,
           organizationId: employee.organizationId,
@@ -343,6 +351,7 @@ export class EmployeeService {
             .select({
               id: employees.id,
               designation: employees.designation,
+              department: employees.department,
               createdAt: employees.createdAt,
               updatedAt: employees.updatedAt,
               organizationId: employees.organizationId,
@@ -366,6 +375,7 @@ export class EmployeeService {
             (employee) => ({
               id: employee.id,
               designation: employee.designation,
+              department: employee.department,
               createdAt: employee.createdAt,
               updatedAt: employee.updatedAt,
               organizationId: employee.organizationId,
@@ -557,6 +567,7 @@ export class EmployeeService {
           .select({
             id: employees.id,
             designation: employees.designation,
+            department: employees.department,
             createdAt: employees.createdAt,
             updatedAt: employees.updatedAt,
             organizationId: employees.organizationId,
