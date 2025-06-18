@@ -144,13 +144,6 @@ export const getMenuItems = (ability: AppAbility) => {
       icon: FileText,
       href: "/dashboard/documents",
       enabled: ability.can("read", "Documents"),
-      submenu: [
-        {
-          title: "Policies",
-          href: "/dashboard/documents/policies",
-          enabled: ability.can("read", "Documents"),
-        },
-      ],
     },
 
     {

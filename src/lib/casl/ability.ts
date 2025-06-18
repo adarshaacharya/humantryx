@@ -65,6 +65,7 @@ export function defineAbilitiesFor(
       ability.can("read", "Payroll", { employeeId: employee.id });
       ability.can("read", "SalarySettings", { employeeId: employee.id });
       ability.can(["create", "read", "update", "delete"], "News");
+      ability.can("read", "Documents"); // Regular employees can read documents
 
       break;
   }

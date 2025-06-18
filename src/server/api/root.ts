@@ -11,6 +11,7 @@ import { dashboardRouter } from "./routers/dashboard";
 import { newsRouter } from "./routers/news";
 import { aiRouter } from "./routers/ai";
 import { recruitmentRouter } from "./routers/recruitment";
+import { documentsRouter } from "./routers/documents";
 
 /**
  * This is the primary router for your server.
@@ -30,6 +31,7 @@ export const appRouter = createTRPCRouter({
   news: newsRouter,
   ai: aiRouter,
   recruitment: recruitmentRouter,
+  documents: documentsRouter,
 });
 
 // export type definition of API
