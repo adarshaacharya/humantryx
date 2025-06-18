@@ -198,9 +198,7 @@ export function JobDetail({ jobId }: JobDetailProps) {
         </CardHeader>
 
         <CardContent className="space-y-8">
-          {/* Job Details Grid */}
           <div className="grid gap-6 md:grid-cols-2">
-            {/* Salary Information */}
             {formatSalaryRange(
               job.salaryRangeMin,
               job.salaryRangeMax,

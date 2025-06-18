@@ -1,11 +1,16 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { RecruitmentService } from "@/server/api/services/recruitment.service";
-import { jobStatusEnum, jobLocationTypeEnum } from "@/server/db/recruitment";
+import {
+  jobStatusEnum,
+  jobLocationTypeEnum,
+  aiRecommendationEnum,
+} from "@/server/db/recruitment";
 
 // Zod schemas for validation
 const jobStatusSchema = z.enum(jobStatusEnum.enumValues);
 const jobLocationTypeSchema = z.enum(jobLocationTypeEnum.enumValues);
+const aiRecommendationSchema = z.enum(aiRecommendationEnum.enumValues);
 
 const createJobPostingSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
@@ -42,6 +47,19 @@ const jobListParamsSchema = z.object({
   search: z.string().optional(),
   limit: z.number().min(1).max(100).default(10),
   offset: z.number().min(0).default(0),
+});
+
+const createAIScreeningResultSchema = z.object({
+  jobApplicationId: z.string().uuid(),
+  matchScore: z.number().min(0).max(100),
+  confidence: z.number().min(0).max(100),
+  recommendation: aiRecommendationSchema,
+  matchedSkills: z.array(z.string()).default([]),
+  missingSkills: z.array(z.string()).default([]),
+  summary: z.string().min(1, "Summary is required"),
+  aiModel: z.string().optional(),
+  processingTime: z.number().optional(),
+  screenedByEmployeeId: z.string().uuid().optional(),
 });
 
 export const recruitmentRouter = createTRPCRouter({
@@ -108,9 +126,39 @@ export const recruitmentRouter = createTRPCRouter({
 
   // Get job applications
   getApplications: protectedProcedure
+    .input(
+      z.object({
+        jobId: z.string().uuid(),
+        status: z
+          .enum(["all", "pending", "screened"])
+          .optional()
+          .default("all"),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      if (!ctx.session.session.activeOrganizationId) {
+        throw new Error("No active organization");
+      }
+
+      return RecruitmentService.getJobApplications({
+        jobPostingId: input.jobId,
+        organizationId: ctx.session.session.activeOrganizationId,
+        status: input.status,
+      });
+    }),
+
+  // Get application counts for tabs
+  getApplicationCounts: protectedProcedure
     .input(z.object({ jobId: z.string().uuid() }))
-    .query(async ({ input }) => {
-      return RecruitmentService.getJobApplications(input.jobId);
+    .query(async ({ input, ctx }) => {
+      if (!ctx.session.session.activeOrganizationId) {
+        throw new Error("No active organization");
+      }
+
+      return RecruitmentService.getJobApplicationCounts({
+        jobPostingId: input.jobId,
+        organizationId: ctx.session.session.activeOrganizationId,
+      });
     }),
 
   // Create job application (for manual resume uploads)
@@ -145,5 +193,26 @@ export const recruitmentRouter = createTRPCRouter({
         id: input.id,
         status: "closed",
       });
+    }),
+
+  // Create AI screening result
+  createScreeningResult: protectedProcedure
+    .input(createAIScreeningResultSchema)
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.session.session.activeOrganizationId) {
+        throw new Error("No active organization");
+      }
+
+      return RecruitmentService.createAIScreeningResult({
+        ...input,
+        organizationId: ctx.session.session.activeOrganizationId,
+      });
+    }),
+
+  // Get AI screening result for an application
+  getScreeningResult: protectedProcedure
+    .input(z.object({ jobApplicationId: z.string().uuid() }))
+    .query(async ({ input }) => {
+      return RecruitmentService.getAIScreeningResult(input.jobApplicationId);
     }),
 });

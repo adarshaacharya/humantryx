@@ -2,11 +2,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Mail, Calendar, FileText, Brain } from "lucide-react";
+import { Mail, Calendar, FileText, Brain, Sparkles } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { APPLICATION_STATUSES } from "../../consts";
-import { ResumeScreeningDialog } from "../../resume-screening/resume-screening-dialog";
 import type { JobApplicationType } from "../../types";
+import { ResumeScreeningDialog } from "../../resume-screening/resume-screening-dialog";
+import { AIResultsViewer } from "../../resume-screening/ai-results-viewer";
+import { startCase } from "lodash-es";
 
 interface ApplicationCardProps {
   application: JobApplicationType;
@@ -24,7 +26,6 @@ export function ApplicationCard({ application, jobId }: ApplicationCardProps) {
       <CardContent className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex flex-1 items-start gap-4">
-            {/* Avatar */}
             <Avatar className="h-12 w-12">
               <AvatarFallback className="bg-primary/10">
                 {application.candidateName
@@ -74,12 +75,34 @@ export function ApplicationCard({ application, jobId }: ApplicationCardProps) {
                 </div>
               </div>
 
-              {/* Cover Letter Preview */}
               {application.coverLetter && (
                 <div className="text-sm">
                   <p className="text-muted-foreground line-clamp-2">
                     {application.coverLetter}
                   </p>
+                </div>
+              )}
+
+              {application.aiScreeningResult?.recommendation && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Badge
+                    variant={
+                      application.aiScreeningResult.recommendation ===
+                      "shortlist"
+                        ? "default"
+                        : application.aiScreeningResult.recommendation ===
+                            "reject"
+                          ? "destructive"
+                          : "secondary"
+                    }
+                    className="text-xs"
+                  >
+                    AI Evaluation:{" "}
+                    {startCase(application.aiScreeningResult.recommendation)}
+                  </Badge>
+                  <span className="text-muted-foreground">
+                    Score: {application.aiScreeningResult.matchScore}%
+                  </span>
                 </div>
               )}
             </div>
@@ -104,14 +127,32 @@ export function ApplicationCard({ application, jobId }: ApplicationCardProps) {
                   resumeUrl={application.resumeUrl}
                   candidateName={application.candidateName}
                   jobId={jobId}
+                  applicationId={application.id}
                   trigger={
                     <Button variant="outline" size="sm">
-                      <Brain className="mr-1 h-4 w-4" />
+                      <Sparkles className="mr-1 h-4 w-4" />
                       AI Screen
                     </Button>
                   }
                 />
               </>
+            )}
+
+            {/* View AI Results Button - Only show if AI screening results exist */}
+            {application.aiScreeningResult?.recommendation && (
+              <AIResultsViewer
+                application={application}
+                trigger={
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="hover:bg-primary/10 gap-1 transition-all"
+                  >
+                    <Brain className="text-primary h-4 w-4" />
+                    View AI Results
+                  </Button>
+                }
+              />
             )}
           </div>
         </div>

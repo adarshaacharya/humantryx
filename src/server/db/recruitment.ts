@@ -12,19 +12,25 @@ import {
 import { employees } from "./employees";
 import { organizations } from "./organizations";
 
-// Enums for recruitment
 export const jobStatusEnum = pgEnum("job_status", ["open", "closed", "draft"]);
+
 export const jobLocationTypeEnum = pgEnum("job_location_type", [
   "remote",
   "onsite",
   "hybrid",
 ]);
+
 export const applicationStatusEnum = pgEnum("application_status", [
   "applied",
   "shortlisted",
   "interviewed",
   "hired",
   "rejected",
+]);
+
+export const aiRecommendationEnum = pgEnum("ai_recommendation", [
+  "shortlist",
+  "reject",
 ]);
 
 // Job Postings Table
@@ -44,18 +50,17 @@ export const jobPostings = pgTable("job_postings", {
   locationType: jobLocationTypeEnum("location_type")
     .notNull()
     .default("onsite"),
-  location: text("location"), // City/Office location for onsite/hybrid
+  location: text("location"),
   status: jobStatusEnum("status").notNull().default("draft"),
 
   // Optional Fields
   salaryRangeMin: integer("salary_range_min"),
   salaryRangeMax: integer("salary_range_max"),
   salaryCurrency: text("salary_currency").default("USD"),
-  experienceRequired: text("experience_required"), // e.g., "2-4 years"
-  skills: json("skills").$type<string[]>().default([]), // Array of skill strings
-  requirements: text("requirements"), // Additional requirements
+  experienceRequired: text("experience_required"),
+  skills: json("skills").$type<string[]>().default([]),
+  requirements: text("requirements"),
 
-  // Metadata
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -73,14 +78,12 @@ export const jobApplications = pgTable("job_applications", {
     .notNull()
     .references(() => organizations.id, { onDelete: "cascade" }),
 
-  // Candidate Information
   candidateName: text("candidate_name").notNull(),
   candidateEmail: text("candidate_email").notNull(),
   candidatePhone: text("candidate_phone"),
-  resumeUrl: text("resume_url"), // S3/Storage URL for resume
+  resumeUrl: text("resume_url"),
   coverLetter: text("cover_letter"),
 
-  // Application Status
   status: applicationStatusEnum("status").notNull().default("applied"),
 
   // HR Management Fields
@@ -93,13 +96,37 @@ export const jobApplications = pgTable("job_applications", {
   interviewNotes: text("interview_notes"),
   rejectionReason: text("rejection_reason"),
 
-  // Metadata
   appliedAt: timestamp("applied_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   reviewedAt: timestamp("reviewed_at"),
 });
 
-// Relations
+export const aiScreeningResults = pgTable("ai_screening_results", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  jobApplicationId: uuid("job_application_id")
+    .notNull()
+    .references(() => jobApplications.id, { onDelete: "cascade" }),
+  organizationId: text("organization_id")
+    .notNull()
+    .references(() => organizations.id, { onDelete: "cascade" }),
+
+  matchScore: integer("match_score").notNull(),
+  confidence: integer("confidence").notNull(),
+  recommendation: aiRecommendationEnum("recommendation").notNull(),
+  matchedSkills: json("matched_skills").$type<string[]>().notNull().default([]),
+  missingSkills: json("missing_skills").$type<string[]>().notNull().default([]),
+  summary: text("summary").notNull(),
+
+  aiModel: text("ai_model"),
+  processingTime: integer("processing_time"),
+
+  screenedAt: timestamp("screened_at").defaultNow().notNull(),
+  screenedByEmployeeId: uuid("screened_by_employee_id").references(
+    () => employees.id,
+    { onDelete: "set null" },
+  ),
+});
+
 export const jobPostingsRelations = relations(jobPostings, ({ one, many }) => ({
   organization: one(organizations, {
     fields: [jobPostings.organizationId],
@@ -114,7 +141,7 @@ export const jobPostingsRelations = relations(jobPostings, ({ one, many }) => ({
 
 export const jobApplicationsRelations = relations(
   jobApplications,
-  ({ one }) => ({
+  ({ one, many }) => ({
     jobPosting: one(jobPostings, {
       fields: [jobApplications.jobPostingId],
       references: [jobPostings.id],
@@ -125,6 +152,25 @@ export const jobApplicationsRelations = relations(
     }),
     reviewedByEmployee: one(employees, {
       fields: [jobApplications.reviewedByEmployeeId],
+      references: [employees.id],
+    }),
+    aiScreeningResults: many(aiScreeningResults),
+  }),
+);
+
+export const aiScreeningResultsRelations = relations(
+  aiScreeningResults,
+  ({ one }) => ({
+    jobApplication: one(jobApplications, {
+      fields: [aiScreeningResults.jobApplicationId],
+      references: [jobApplications.id],
+    }),
+    organization: one(organizations, {
+      fields: [aiScreeningResults.organizationId],
+      references: [organizations.id],
+    }),
+    screenedByEmployee: one(employees, {
+      fields: [aiScreeningResults.screenedByEmployeeId],
       references: [employees.id],
     }),
   }),

@@ -19,6 +19,7 @@ import { formatDistanceToNow, format } from "date-fns";
 import { APPLICATION_STATUSES } from "../../consts";
 import { UploadResumeDialog } from "./upload-resume-dialog";
 import { ResumeScreeningDialog } from "../../resume-screening/resume-screening-dialog";
+import { ApplicationsSkeleton } from "../../components/skeletons";
 
 interface JobApplicationsProps {
   jobId: string;
@@ -235,6 +236,7 @@ export function JobApplications({ jobId }: JobApplicationsProps) {
                           resumeUrl={application.resumeUrl}
                           candidateName={application.candidateName}
                           jobId={jobId}
+                          applicationId={application.id}
                           trigger={
                             <Button variant="outline" size="sm">
                               <Brain className="mr-1 h-4 w-4" />
@@ -254,44 +256,6 @@ export function JobApplications({ jobId }: JobApplicationsProps) {
             ))}
           </div>
         )}
-      </CardContent>
-    </Card>
-  );
-}
-
-function ApplicationsSkeleton() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          <div className="bg-muted h-6 w-32 animate-pulse rounded" />
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="rounded-lg border p-4">
-              <div className="flex items-start gap-3">
-                <div className="bg-muted h-10 w-10 animate-pulse rounded-full" />
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="bg-muted h-5 w-48 animate-pulse rounded" />
-                    <div className="bg-muted h-5 w-20 animate-pulse rounded" />
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="bg-muted h-4 w-40 animate-pulse rounded" />
-                    <div className="bg-muted h-4 w-32 animate-pulse rounded" />
-                  </div>
-                  <div className="bg-muted h-4 w-full animate-pulse rounded" />
-                </div>
-                <div className="flex gap-2">
-                  <div className="bg-muted h-8 w-20 animate-pulse rounded" />
-                  <div className="bg-muted h-8 w-24 animate-pulse rounded" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </CardContent>
     </Card>
   );

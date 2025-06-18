@@ -74,6 +74,7 @@
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
     "langchain": "^0.3.28",
+    "lodash-es": "^4.17.21",
     "lucide-react": "^0.511.0",
     "motion": "^12.15.0",
     "next": "^15.3.3",
@@ -96,6 +97,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/postcss": "^4.0.15",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.14.10",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

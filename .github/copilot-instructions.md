@@ -146,6 +146,7 @@ Vector store : https://js.langchain.com/docs/integrations/vectorstores/
 
 6. Backend:
 
+- first rule please avoid unnecessary comments
 - Use TRPC for API routes
 - Implement proper error handling
 - Use Zod for input validation

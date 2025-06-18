@@ -9,11 +9,7 @@ import { eq } from "drizzle-orm";
 import { jobPostings } from "@/server/db/recruitment";
 
 export class AIService {
-  static async generateLeaveRequest({
-    text,
-  }: {
-    text: string;
-  }) {
+  static async generateLeaveRequest({ text }: { text: string }) {
     const systemTemplate = `
          Create a leave request based on the following text: {text}. 
          If the text does not contain a valid leave request, throw an error asking for more information.
@@ -124,7 +120,7 @@ export class AIService {
     const structuredScreeningLlm = groqModel.withStructuredOutput(
       z.object({
         matchScore: z.number().min(0).max(100),
-        confidence : z.number().min(0).max(100),
+        confidence: z.number().min(0).max(100),
         matchedSkills: z.array(z.string()),
         missingSkills: z.array(z.string()),
         recommendation: z.enum(["shortlist", "reject"]),

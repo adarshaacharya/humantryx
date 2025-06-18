@@ -28,10 +28,11 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
+import type { AIRecommendation } from "@/server/api/services/recruitment.service";
 
 interface ScreeningResult {
   score: number;
-  recommendation: "hire" | "interview" | "reject";
+  recommendation: AIRecommendation;
   matchedSkills: string[];
   missingSkills: string[];
   summary: string;
@@ -43,6 +44,7 @@ interface ResumeScreeningDialogProps {
   resumeUrl?: string;
   candidateName: string;
   jobId: string;
+  applicationId: string;
   existingResults?: ScreeningResult;
   trigger?: React.ReactNode;
 }
@@ -51,6 +53,7 @@ export function ResumeScreeningDialog({
   resumeUrl,
   candidateName,
   jobId,
+  applicationId,
   existingResults,
   trigger,
 }: ResumeScreeningDialogProps) {
@@ -61,7 +64,8 @@ export function ResumeScreeningDialog({
 
   const utils = api.useUtils();
   const aiScreenMutation = api.ai.screenResume.useMutation();
-
+  const saveScreeningResultMutation =
+    api.recruitment.createScreeningResult.useMutation();
 
   const handleScreenResume = async () => {
     if (!resumeUrl) {
@@ -79,10 +83,7 @@ export function ResumeScreeningDialog({
       // Transform the AI service response to match our UI expectations
       const transformedResult: ScreeningResult = {
         score: result.matchScore || 0,
-        recommendation:
-          result.recommendation === "shortlist"
-            ? "interview"
-            : (result.recommendation as "hire" | "interview" | "reject"),
+        recommendation: result.recommendation || "reject",
         matchedSkills: result.matchedSkills || [],
         missingSkills: result.missingSkills || [],
         summary: result.reasoning || "No analysis summary available.",
@@ -103,12 +104,41 @@ export function ResumeScreeningDialog({
     }
   };
 
-  const getRecommendationVariant = (recommendation: string) => {
+  const handleSaveResults = async () => {
+    if (!screeningResults) {
+      toast.error("No screening results to save");
+      return;
+    }
+
+    try {
+      await saveScreeningResultMutation.mutateAsync({
+        jobApplicationId: applicationId,
+        matchScore: screeningResults.score,
+        confidence: screeningResults.confidence,
+        recommendation: screeningResults.recommendation,
+        matchedSkills: screeningResults.matchedSkills,
+        missingSkills: screeningResults.missingSkills,
+        summary: screeningResults.summary,
+        aiModel: "groq-llama",
+        processingTime: Date.now() - Date.now(), // This would be calculated properly in real implementation
+      });
+
+      // Refresh applications data
+      await utils.recruitment.getApplications.invalidate({ jobId });
+
+      toast.success("Analysis results saved successfully!");
+      setOpen(false);
+    } catch (error) {
+      console.error("Error saving screening results:", error);
+      toast.error("Failed to save analysis results. Please try again.");
+    }
+  };
+
+  const getRecommendationVariant = (recommendation: AIRecommendation) => {
     switch (recommendation) {
-      case "hire":
+      case "shortlist":
         return "default";
-      case "interview":
-        return "secondary";
+
       case "reject":
         return "destructive";
       default:
@@ -116,12 +146,10 @@ export function ResumeScreeningDialog({
     }
   };
 
-  const getRecommendationIcon = (recommendation: string) => {
+  const getRecommendationIcon = (recommendation: AIRecommendation) => {
     switch (recommendation) {
-      case "hire":
+      case "shortlist":
         return <CheckCircle className="h-4 w-4" />;
-      case "interview":
-        return <Clock className="h-4 w-4" />;
       case "reject":
         return <AlertCircle className="h-4 w-4" />;
       default:
@@ -371,24 +399,13 @@ export function ResumeScreeningDialog({
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {screeningResults.recommendation === "hire" && (
+                    {screeningResults.recommendation === "shortlist" && (
                       <div className="rounded-lg border border-green-200 bg-green-100 p-3">
                         <p className="text-sm font-medium text-green-800">
                           ✅ <strong>Strong Candidate:</strong> This candidate
                           demonstrates excellent alignment with the job
                           requirements. Consider proceeding with an offer or
                           final interview.
-                        </p>
-                      </div>
-                    )}
-
-                    {screeningResults.recommendation === "interview" && (
-                      <div className="rounded-lg border border-blue-200 bg-blue-100 p-3">
-                        <p className="text-sm font-medium text-blue-800">
-                          📋 <strong>Interview Recommended:</strong> This
-                          candidate shows promising potential. Schedule an
-                          interview to assess cultural fit and clarify any skill
-                          gaps.
                         </p>
                       </div>
                     )}
@@ -462,7 +479,21 @@ export function ResumeScreeningDialog({
             <Button variant="outline" onClick={() => setOpen(false)}>
               Close
             </Button>
-            {screeningResults && <Button>Save Analysis Results</Button>}
+            {screeningResults && (
+              <Button
+                onClick={handleSaveResults}
+                disabled={saveScreeningResultMutation.isPending}
+              >
+                {saveScreeningResultMutation.isPending ? (
+                  <>
+                    <Brain className="mr-2 h-4 w-4 animate-pulse" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save Analysis Results"
+                )}
+              </Button>
+            )}
           </div>
         </div>
       </DialogContent>
