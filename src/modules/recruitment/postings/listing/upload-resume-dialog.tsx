@@ -150,7 +150,7 @@ export function UploadResumeDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen} >
       <DialogTrigger asChild>
         {trigger || (
           <Button>
@@ -159,7 +159,7 @@ export function UploadResumeDialog({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="min-w-2xl">
         <DialogHeader>
           <DialogTitle>Upload Candidate Resume</DialogTitle>
           <DialogDescription>

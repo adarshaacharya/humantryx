@@ -99,11 +99,16 @@ export class AIService {
 
       {{
         matchScore: number (0 to 100),
+        confidence: number (0 to 100), 
         matchedSkills: string[],
         missingSkills: string[],
         recommendation: "shortlist" | "reject",
         reasoning: string
       }}
+
+      where,
+      - matchScore: Percentage match of the resume with the job description.
+      - confidence: represents how sure you are about the accuracy of your score based on the clarity and completeness of the resume
 
       Evaluate based on required skills and experience in the job.
 
@@ -119,6 +124,7 @@ export class AIService {
     const structuredScreeningLlm = groqModel.withStructuredOutput(
       z.object({
         matchScore: z.number().min(0).max(100),
+        confidence : z.number().min(0).max(100),
         matchedSkills: z.array(z.string()),
         missingSkills: z.array(z.string()),
         recommendation: z.enum(["shortlist", "reject"]),
