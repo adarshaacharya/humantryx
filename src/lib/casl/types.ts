@@ -31,6 +31,7 @@ export type Subjects =
   | "AI"
   | "Organization"
   | "News"
-  | "Recruitment";
+  | "Recruitment"
+  | "Documents"
 
 export type AppAbility = MongoAbility<[Actions, Subjects]>;

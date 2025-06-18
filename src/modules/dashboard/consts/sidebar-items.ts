@@ -4,14 +4,11 @@ import {
   Users,
   Calendar,
   DollarSign,
-  Settings,
-  BarChart3,
-  UserPlus,
   Clock,
   Building,
-  Sparkles,
   Newspaper,
   Briefcase,
+  FileText,
 } from "lucide-react";
 
 type MenuItem = {
@@ -143,22 +140,15 @@ export const getMenuItems = (ability: AppAbility) => {
       ],
     },
     {
-      title: "AI Features",
-      icon: Sparkles,
-      href: "/dashboard/ai",
-
+      title: "Documents",
+      icon: FileText,
+      href: "/dashboard/documents",
+      enabled: ability.can("read", "Documents"),
       submenu: [
         {
-          title: "Resume Screening",
-          href: "/dashboard/ai/resume-screening",
-        },
-        {
-          title: "Sentiment Analysis",
-          href: "/dashboard/ai/sentiment",
-        },
-        {
-          title: "Predictive Analytics",
-          href: "/dashboard/ai/analytics",
+          title: "Policies",
+          href: "/dashboard/documents/policies",
+          enabled: ability.can("read", "Documents"),
         },
       ],
     },
