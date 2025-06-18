@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useCurrentEmployee } from "@/hooks/use-current-employee";
@@ -44,6 +43,8 @@ import {
   SALARY_CURRENCIES,
 } from "../../consts";
 import { EMPLOYEE_DEPARTMENTS } from "@/server/db/consts";
+import { RichTextEditor } from "@/components/wysiwig/rich-text-editor";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface CreateJobDialogProps {
   open: boolean;
@@ -125,7 +126,7 @@ export function CreateJobDialog({ open, onOpenChange }: CreateJobDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+      <DialogContent className="max-h-[90vh] min-w-3xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create Job Posting</DialogTitle>
           <DialogDescription>
@@ -243,9 +244,8 @@ export function CreateJobDialog({ open, onOpenChange }: CreateJobDialogProps) {
                 <FormItem>
                   <FormLabel>Job Description</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <RichTextEditor
                       placeholder="Describe the role, responsibilities, and what you're looking for..."
-                      className="min-h-[120px]"
                       {...field}
                     />
                   </FormControl>

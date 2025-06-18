@@ -1,14 +1,14 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/wysiwig/rich-text-editor";
 import {
   Dialog,
   DialogContent,
@@ -35,7 +35,6 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { X, Plus } from "lucide-react";
-import { jobFormSchema, type JobFormData } from "../../schemas/job-form.schema";
 import {
   JOB_LOCATION_TYPES,
   COMMON_SKILLS,
@@ -43,9 +42,43 @@ import {
   SALARY_CURRENCIES,
   JOB_STATUSES,
 } from "../../consts";
+import { EMPLOYEE_DEPARTMENTS } from "@/server/db/consts";
+
+// Create edit form schema directly
+const editJobFormSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1, "Title is required"),
+  department: z.string().min(1, "Department is required"),
+  description: z.string().min(1, "Description is required"),
+  locationType: z.enum(["onsite", "remote", "hybrid"]),
+  location: z.string().optional(),
+  salaryRangeMin: z.number().optional(),
+  salaryRangeMax: z.number().optional(),
+  salaryCurrency: z.string(),
+  experienceRequired: z.string().optional(),
+  skills: z.array(z.string()),
+  requirements: z.string().optional(),
+  status: z.enum(["draft", "open", "closed"]),
+});
+
+type EditJobFormData = z.infer<typeof editJobFormSchema>;
 
 interface EditJobDialogProps {
-  job: any;
+  job: {
+    id: string;
+    title: string;
+    department: string;
+    description: string;
+    locationType: string;
+    location?: string | null;
+    salaryRangeMin?: number | null;
+    salaryRangeMax?: number | null;
+    salaryCurrency?: string | null;
+    experienceRequired?: string | null;
+    skills?: string[] | null;
+    requirements?: string | null;
+    status: string;
+  };
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -55,8 +88,8 @@ export function EditJobDialog({ job, open, onOpenChange }: EditJobDialogProps) {
 
   const utils = api.useUtils();
 
-  const form = useForm<JobFormData & { id: string }>({
-    resolver: zodResolver(jobFormSchema.extend({ id: z.string() })),
+  const form = useForm<EditJobFormData>({
+    resolver: zodResolver(editJobFormSchema),
   });
 
   const updateJobMutation = api.recruitment.update.useMutation({
@@ -80,7 +113,8 @@ export function EditJobDialog({ job, open, onOpenChange }: EditJobDialogProps) {
         title: job.title || "",
         department: job.department || "",
         description: job.description || "",
-        locationType: job.locationType || "onsite",
+        locationType:
+          (job.locationType as "onsite" | "remote" | "hybrid") || "onsite",
         location: job.location || "",
         salaryRangeMin: job.salaryRangeMin || undefined,
         salaryRangeMax: job.salaryRangeMax || undefined,
@@ -88,12 +122,12 @@ export function EditJobDialog({ job, open, onOpenChange }: EditJobDialogProps) {
         experienceRequired: job.experienceRequired || "",
         skills: job.skills || [],
         requirements: job.requirements || "",
-        status: job.status || "draft",
+        status: (job.status as "draft" | "open" | "closed") || "draft",
       });
     }
   }, [job, open, form]);
 
-  const onSubmit = (data: JobFormData & { id: string }) => {
+  const onSubmit = (data: EditJobFormData) => {
     updateJobMutation.mutate(data);
   };
 
@@ -197,11 +231,13 @@ export function EditJobDialog({ job, open, onOpenChange }: EditJobDialogProps) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {EMPLOYEE_DEPARTMENTS.map((dept) => (
-                            <SelectItem key={dept.value} value={dept.value}>
-                              {dept.label}
-                            </SelectItem>
-                          ))}
+                          {EMPLOYEE_DEPARTMENTS.map(
+                            (dept: { value: string; label: string }) => (
+                              <SelectItem key={dept.value} value={dept.value}>
+                                {dept.label}
+                              </SelectItem>
+                            ),
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -269,9 +305,8 @@ export function EditJobDialog({ job, open, onOpenChange }: EditJobDialogProps) {
                 <FormItem>
                   <FormLabel>Job Description</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <RichTextEditor
                       placeholder="Describe the role, responsibilities, and what you're looking for..."
-                      className="min-h-[120px]"
                       {...field}
                     />
                   </FormControl>
@@ -513,5 +548,5 @@ export function EditJobDialog({ job, open, onOpenChange }: EditJobDialogProps) {
 }
 
 // Need to import z
-import { z } from "zod";
-import { EMPLOYEE_DEPARTMENTS } from "@/server/db/consts";
+
+// Already imported above

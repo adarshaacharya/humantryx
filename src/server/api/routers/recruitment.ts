@@ -15,7 +15,17 @@ const aiRecommendationSchema = z.enum(aiRecommendationEnum.enumValues);
 const createJobPostingSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
   department: z.string().min(1, "Department is required"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  description: z
+    .string()
+    .min(1, "Description is required")
+    .refine(
+      (val) => {
+        // For HTML content, check if it has meaningful content (not just empty tags)
+        const textContent = val.replace(/<[^>]*>/g, "").trim();
+        return textContent.length >= 10;
+      },
+      { message: "Description must be at least 10 characters" },
+    ),
   locationType: jobLocationTypeSchema,
   location: z.string().optional(),
   salaryRangeMin: z.number().positive().optional(),

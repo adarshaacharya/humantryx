@@ -1,12 +1,11 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
-  MapPin,
   Calendar,
   Users,
   DollarSign,
@@ -31,6 +30,7 @@ import {
 } from "../../consts";
 import { useState } from "react";
 import { EditJobDialog } from "../upsert-job/edit-job-dialog";
+import { JobDescriptionRenderer } from "../../components/job-description-renderer";
 
 interface JobDetailProps {
   jobId: string;
@@ -276,11 +276,7 @@ export function JobDetail({ jobId }: JobDetailProps) {
           {/* Job Description */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Job Description</h2>
-            <div className="prose prose-sm max-w-none">
-              <p className="leading-relaxed whitespace-pre-wrap">
-                {job.description}
-              </p>
-            </div>
+            <JobDescriptionRenderer content={job.description} />
           </div>
 
           {/* Required Skills */}
