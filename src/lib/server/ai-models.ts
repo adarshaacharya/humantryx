@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import { ChatGroq } from "@langchain/groq";
 import { OpenAIEmbeddings } from "@langchain/openai";
 
@@ -9,4 +10,5 @@ export const groqModel = new ChatGroq({
 export const getOpenAIEmbeddings = () =>
   new OpenAIEmbeddings({
     model: "text-embedding-3-small",
+    openAIApiKey: env.OPENAI_API_KEY,
   });

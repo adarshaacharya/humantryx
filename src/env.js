@@ -46,6 +46,9 @@ export const env = createEnv({
     PINECONE_INDEX: z.string().min(1, {
       message: "PINECONE_INDEX must be set",
     }),
+    OPENAI_API_KEY: z.string().min(1, {
+      message: "OPENAI_API_KEY must be set",
+    }),
   },
 
   /**
@@ -89,6 +92,7 @@ export const env = createEnv({
     GROQ_API_KEY: process.env.GROQ_API_KEY,
     PINECONE_API_KEY: process.env.PINECONE_API_KEY,
     PINECONE_INDEX: process.env.PINECONE_INDEX,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

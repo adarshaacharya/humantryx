@@ -27,4 +27,15 @@ export const aiRouter = createTRPCRouter({
       const output = await AIService.screenResume(input);
       return output;
     }),
+
+  askDocs: protectedProcedure
+    .input(
+      z.object({
+        question: z.string().min(1, "Question is required"),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // const output = await AIService.askDocuments(input.question, ctx.session);
+      // return output;
+    }),
 });

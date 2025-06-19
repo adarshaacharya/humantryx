@@ -7,18 +7,11 @@ import { z } from "zod";
 import { db } from "@/server/db";
 import { eq } from "drizzle-orm";
 import { jobPostings } from "@/server/db/recruitment";
-import { PPTXLoader } from "@langchain/community/document_loaders/fs/pptx";
-import { DocxLoader } from "@langchain/community/document_loaders/fs/docx";
-import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+import AIPrompts from "@/server/ai/prompts";
 
 export class AIService {
   static async generateLeaveRequest({ text }: { text: string }) {
-    const systemTemplate = `
-         Create a leave request based on the following text: {text}. 
-         If the text does not contain a valid leave request, throw an error asking for more information.
-         If the text doesn't contains leave time duration or date, throw an error asking for the duration.
-         Output start and end dates in ISO format (YYYY-MM-DD).
-       `;
+    const systemTemplate = AIPrompts.generateLeaveRequestPrompt;
 
     const prompt = ChatPromptTemplate.fromMessages([
       ["system", systemTemplate],
@@ -91,29 +84,7 @@ export class AIService {
 
     const content = documents.map((doc) => doc.pageContent).join("\n");
 
-    const systemTemplate = `
-      You are an HR assistant. Compare a resume with a job description and output structured screening results.
-
-      Output this JSON:
-
-      {{
-        matchScore: number (0 to 100),
-        confidence: number (0 to 100), 
-        matchedSkills: string[],
-        missingSkills: string[],
-        recommendation: "shortlist" | "reject",
-        reasoning: string
-      }}
-
-      where,
-      - matchScore: Percentage match of the resume with the job description.
-      - confidence: represents how sure you are about the accuracy of your score based on the clarity and completeness of the resume
-
-      Evaluate based on required skills and experience in the job.
-
-      Job Description: {job}
-      Resume Content: {resume}
-    `;
+    const systemTemplate = AIPrompts.screenResumePrompt;
 
     const comparisonPrompt = ChatPromptTemplate.fromMessages([
       ["system", systemTemplate],
@@ -144,47 +115,5 @@ export class AIService {
     console.log("Screened Resume Output:", screeningOutput);
 
     return screeningOutput;
-  }
-
-  // from here ingesting starts
-  public static async ingestPDF(blob: Blob) {
-    const loader = new PDFLoader(blob, { parsedItemSeparator: "" });
-
-    return loader.load();
-  }
-
-  public static async ingestPPTX(blob: Blob) {
-    const loader = new PPTXLoader(blob);
-
-    const docs = await loader.load();
-
-    return this.textSplitter.splitDocuments(docs);
-  }
-
-  public static async ingestDOCX(blob: Blob) {
-    const loader = new DocxLoader(blob);
-
-    const docs = await loader.load();
-
-    return this.textSplitter.splitDocuments(docs);
-  }
-
-  static async ingestFile(url: string) {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Document not found at the provided URL.",
-      });
-    }
-
-    const arrayBuffer = await response.arrayBuffer();
-    const blob = new Blob([arrayBuffer], { type: "application/pdf" });
-
-    const loader = new WebPDFLoader(blob);
-    const documents = await loader.load();
-
-    return documents;
   }
 }

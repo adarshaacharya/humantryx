@@ -1,13 +1,12 @@
 import { TRPCError } from "@trpc/server";
-import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
 import { PPTXLoader } from "@langchain/community/document_loaders/fs/pptx";
 import { DocxLoader } from "@langchain/community/document_loaders/fs/docx";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { type Document } from "@langchain/core/documents";
-import { createIndexIfNecessary, initPinecone } from "@/lib/server/pinecone";
+import { initPinecone } from "@/lib/server/pinecone";
 import { env } from "@/env";
-import { getOpenAIEmbeddings, openAIEmbeddings } from "@/lib/server/ai-models";
+import { getOpenAIEmbeddings } from "@/lib/server/ai-models";
 import cuid2 from "@paralleldrive/cuid2";
 import { PineconeStore } from "@langchain/pinecone";
 
@@ -19,7 +18,7 @@ export class LangchainService {
 
   // load + split documents
   public static async ingestPDF(blob: Blob) {
-    const loader = new PDFLoader(blob, { parsedItemSeparator: "" });
+    const loader = new PDFLoader(blob);
 
     const docs = await loader.load();
 
@@ -96,7 +95,9 @@ export class LangchainService {
       };
     });
 
-    return castedSplits;
+    const docs = await this.embedFile(castedSplits);
+
+    return docs;
   }
 
   static async embedFile(documents: Document[]) {
@@ -122,6 +123,8 @@ export class LangchainService {
         pineconeIndex,
       },
     );
+
+    console.log("Documents embedded successfully:", documents.length);
 
     return vectorStore;
   }

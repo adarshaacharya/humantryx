@@ -6,6 +6,7 @@ import type {
   documentTypeEnum,
   documentVisibilityEnum,
 } from "@/server/db/documents";
+import { LangchainService } from "./langchain.service";
 
 type DocumentType = (typeof documentTypeEnum.enumValues)[number];
 type DocumentVisibility = (typeof documentVisibilityEnum.enumValues)[number];
@@ -32,6 +33,8 @@ export class DocumentsService {
         uploadedBy: input.uploadedBy,
       })
       .returning();
+
+    await LangchainService.ingestFile(input.url);
 
     return document;
   }
