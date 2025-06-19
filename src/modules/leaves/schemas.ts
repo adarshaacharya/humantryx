@@ -1,21 +1,21 @@
 import { z } from "zod";
 
 export const createLeaveRequestSchema = z.object({
-  leaveType: z.enum([
-    "annual",
-    "sick",
-    "casual",
-    "maternity",
-    "paternity",
-    "emergency",
-  ]),
+  leaveType: z
+    .enum(["annual", "sick", "casual", "maternity", "paternity", "emergency"])
+    .describe("Type of leave being requested"),
   startDate: z
     .string()
-    .refine((date) => !isNaN(Date.parse(date)), "Invalid start date"),
+    .refine((date) => !isNaN(Date.parse(date)), "Invalid start date")
+    .describe("Start date of the leave request"),
   endDate: z
     .string()
-    .refine((date) => !isNaN(Date.parse(date)), "Invalid end date"),
-  reason: z.string().min(10, "Reason must be at least 10 characters"),
+    .refine((date) => !isNaN(Date.parse(date)), "Invalid end date")
+    .describe("End date of the leave request"),
+  reason: z
+    .string()
+    .min(10, "Reason must be at least 10 characters")
+    .describe("Reason for the leave request"),
 });
 
 export const updateLeaveRequestSchema = z.object({

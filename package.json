@@ -22,6 +22,7 @@
     "better-auth:generate": "npx @better-auth/cli@latest generate --config src/server/auth/index.ts"
   },
   "dependencies": {
+    "@ai-sdk/react": "^1.2.12",
     "@aws-sdk/client-s3": "3.744.0",
     "@aws-sdk/s3-request-presigner": "3.744.0",
     "@better-fetch/fetch": "^1.1.18",

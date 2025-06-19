@@ -43,7 +43,6 @@ async function deleteIndex(indexName: string) {
 export async function createIndexIfNecessary(indexName: string) {
   await pinecone.createIndex({
     name: indexName,
-    // The voyage-law-2 model has a dimensionality of 1024
     dimension: 1024,
     spec: {
       serverless: {

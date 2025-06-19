@@ -6,9 +6,21 @@ import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { type Document } from "@langchain/core/documents";
 import { initPinecone } from "@/lib/server/pinecone";
 import { env } from "@/env";
-import { getOpenAIEmbeddings } from "@/lib/server/ai-models";
+import { getOpenAIEmbeddings, groqModel } from "@/lib/server/ai-models";
 import cuid2 from "@paralleldrive/cuid2";
 import { PineconeStore } from "@langchain/pinecone";
+import { LangChainAdapter } from "ai";
+import {
+  ChatPromptTemplate,
+  MessagesPlaceholder,
+} from "@langchain/core/prompts";
+import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
+import { createRetrievalChain } from "langchain/chains/retrieval";
+import { type Message as VercelChatMessage } from "ai";
+import { z } from "zod";
+import AIPrompts from "@/server/ai/prompts";
+import { createHistoryAwareRetriever } from "langchain/chains/history_aware_retriever";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
 
 export class LangchainService {
   static textSplitter = new RecursiveCharacterTextSplitter({
@@ -127,5 +139,85 @@ export class LangchainService {
     console.log("Documents embedded successfully:", documents.length);
 
     return vectorStore;
+  }
+
+  static async retrieveDocumentChunks(topK = 5) {
+    const pinecone = initPinecone();
+
+    const openAIEmbeddings = getOpenAIEmbeddings();
+
+    const pineconeIndex = (await pinecone).Index(env.PINECONE_INDEX);
+
+    const vectorStore = await PineconeStore.fromExistingIndex(
+      openAIEmbeddings,
+      {
+        pineconeIndex,
+      },
+    );
+
+    const retriever = vectorStore.asRetriever(topK);
+
+    return retriever;
+  }
+
+  static async chat({
+    question,
+    chatHistory = [],
+  }: {
+    question: string;
+    chatHistory: VercelChatMessage[];
+  }) {
+    const retriever = await this.retrieveDocumentChunks();
+
+    // make aware of chat history in case of follow-up questions
+    const contextualizeQPrompt = ChatPromptTemplate.fromMessages([
+      ["system", AIPrompts.contextualizeQSystemPrompt],
+      new MessagesPlaceholder("chat_history"),
+      ["user", "{input}"],
+    ]);
+
+    const historyAwareRetriever = await createHistoryAwareRetriever({
+      llm: groqModel,
+      retriever,
+      rephrasePrompt: contextualizeQPrompt,
+    });
+
+    const qaPrompt = ChatPromptTemplate.fromMessages([
+      ["system", AIPrompts.getDocumentInfoPrompt],
+      new MessagesPlaceholder("chat_history"),
+      ["user", "{input}"],
+    ]);
+
+    const questionAnswerChain = await createStuffDocumentsChain({
+      llm: groqModel,
+      prompt: qaPrompt,
+    });
+
+    const ragChain = await createRetrievalChain({
+      retriever: historyAwareRetriever,
+      combineDocsChain: questionAnswerChain,
+    });
+
+    const invokedChain = await ragChain.invoke({
+      input: question,
+      chat_history: this.convertToLangChainMessage(chatHistory),
+    });
+
+    const response = await questionAnswerChain.stream({
+      input: invokedChain,
+      chat_history: this.convertToLangChainMessage(chatHistory),
+    });
+
+    return LangChainAdapter.toDataStreamResponse(response);
+  }
+
+  static convertToLangChainMessage(messages: VercelChatMessage[]): AIMessage[] {
+    return messages.map((msg) => {
+      if (msg.role === "user") {
+        return new HumanMessage(msg.content);
+      } else {
+        return new AIMessage(msg.content);
+      }
+    });
   }
 }

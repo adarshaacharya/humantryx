@@ -93,12 +93,12 @@ export class AIService {
 
     const structuredScreeningLlm = groqModel.withStructuredOutput(
       z.object({
-        matchScore: z.number().min(0).max(100),
-        confidence: z.number().min(0).max(100),
-        matchedSkills: z.array(z.string()),
-        missingSkills: z.array(z.string()),
-        recommendation: z.enum(["shortlist", "reject"]),
-        reasoning: z.string(),
+        matchScore: z.number().min(0).max(100).describe("Percentage match of the resume with the job description. Higher the score, better the match."),
+        confidence: z.number().min(0).max(100).describe("Confidence level in the match score between 1-100. Higher the confidence, more reliable the match."),
+        matchedSkills: z.array(z.string()).describe("List of skills from the resume that match the job requirements."),
+        missingSkills: z.array(z.string()).describe("List of skills from the job requirements that are missing in the resume."),
+        recommendation: z.enum(["shortlist", "reject"]).describe("Recommendation for the resume based on the job requirements."),
+        reasoning: z.string().describe("Reasoning behind the recommendation."),
       }),
       {
         name: "screenResumeMatch",

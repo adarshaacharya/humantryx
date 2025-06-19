@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@ai-sdk/react':
+        specifier: ^1.2.12
+        version: 1.2.12(react@19.1.0)(zod@3.25.42)
       '@aws-sdk/client-s3':
         specifier: 3.744.0
         version: 3.744.0
