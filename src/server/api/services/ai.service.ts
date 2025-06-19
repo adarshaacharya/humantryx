@@ -1,4 +1,4 @@
-import { groqModel } from "@/server/ai/groq";
+import { groqModel } from "@/lib/server/ai-models";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createLeaveRequestSchema } from "@/modules/leaves/schemas";
 import { TRPCError } from "@trpc/server";
@@ -7,6 +7,9 @@ import { z } from "zod";
 import { db } from "@/server/db";
 import { eq } from "drizzle-orm";
 import { jobPostings } from "@/server/db/recruitment";
+import { PPTXLoader } from "@langchain/community/document_loaders/fs/pptx";
+import { DocxLoader } from "@langchain/community/document_loaders/fs/docx";
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 
 export class AIService {
   static async generateLeaveRequest({ text }: { text: string }) {
@@ -141,5 +144,47 @@ export class AIService {
     console.log("Screened Resume Output:", screeningOutput);
 
     return screeningOutput;
+  }
+
+  // from here ingesting starts
+  public static async ingestPDF(blob: Blob) {
+    const loader = new PDFLoader(blob, { parsedItemSeparator: "" });
+
+    return loader.load();
+  }
+
+  public static async ingestPPTX(blob: Blob) {
+    const loader = new PPTXLoader(blob);
+
+    const docs = await loader.load();
+
+    return this.textSplitter.splitDocuments(docs);
+  }
+
+  public static async ingestDOCX(blob: Blob) {
+    const loader = new DocxLoader(blob);
+
+    const docs = await loader.load();
+
+    return this.textSplitter.splitDocuments(docs);
+  }
+
+  static async ingestFile(url: string) {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Document not found at the provided URL.",
+      });
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const blob = new Blob([arrayBuffer], { type: "application/pdf" });
+
+    const loader = new WebPDFLoader(blob);
+    const documents = await loader.load();
+
+    return documents;
   }
 }

@@ -40,6 +40,12 @@ export const env = createEnv({
     GROQ_API_KEY: z.string().min(1, {
       message: "GROQ_API_KEY must be set",
     }),
+    PINECONE_API_KEY: z.string().min(1, {
+      message: "PINECONE_API_KEY must be set",
+    }),
+    PINECONE_INDEX: z.string().min(1, {
+      message: "PINECONE_INDEX must be set",
+    }),
   },
 
   /**
@@ -81,6 +87,8 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
     UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
     GROQ_API_KEY: process.env.GROQ_API_KEY,
+    PINECONE_API_KEY: process.env.PINECONE_API_KEY,
+    PINECONE_INDEX: process.env.PINECONE_INDEX,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
