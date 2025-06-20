@@ -17,8 +17,8 @@ export function Navigation() {
   const navItems = [
     { name: "Features", href: "#features", icon: Users },
     { name: "AI-Powered", href: "#ai", icon: Brain },
-    { name: "Analytics", href: "#stats", icon: BarChart3 },
-    { name: "Security", href: "#security", icon: Shield },
+    { name: "Benefits", href: "#benefits", icon: BarChart3 },
+    { name: "About", href: "#stats", icon: Shield },
   ];
 
   return (

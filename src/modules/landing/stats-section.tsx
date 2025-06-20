@@ -7,80 +7,69 @@ import {
   Users,
   TrendingUp,
   Clock,
-  DollarSign,
-  Award,
+  Brain,
+  CheckCircle,
   Building,
-  Globe,
   Zap,
+  Shield,
+  Sparkles,
 } from "lucide-react";
 
 export function StatsSection() {
   const mainStats = [
     {
       icon: Users,
-      number: "50,000+",
-      label: "Employees Managed",
-      description: "Across global organizations",
-      color: "from-blue-500 to-cyan-500",
-    },
-    {
-      icon: Building,
       number: "500+",
       label: "Companies Trust Us",
       description: "From startups to enterprises",
-      color: "from-purple-500 to-pink-500",
     },
     {
       icon: Clock,
-      number: "85%",
+      number: "80%",
       label: "Time Reduction",
       description: "In HR administrative tasks",
-      color: "from-green-500 to-emerald-500",
     },
     {
-      icon: DollarSign,
-      number: "$2.5M+",
-      label: "Cost Savings",
-      description: "Generated for our clients",
-      color: "from-orange-500 to-red-500",
-    },
-  ];
-
-  const achievements = [
-    {
-      icon: Award,
-      title: "Best HR Tech 2024",
-      subtitle: "HR Excellence Awards",
+      icon: Brain,
+      number: "24/7",
+      label: "AI Automation",
+      description: "Intelligent decisions never sleep",
     },
     {
       icon: TrendingUp,
-      title: "99.9% Uptime",
-      subtitle: "Reliable & Secure",
+      number: "99.9%",
+      label: "Uptime",
+      description: "Reliable service you can count on",
     },
+  ];
+
+  const modernBenefits = [
     {
-      icon: Globe,
-      title: "Global Presence",
-      subtitle: "25+ Countries",
+      icon: CheckCircle,
+      title: "AI-First Approach",
+      description:
+        "Built from the ground up with AI at its core, not as an afterthought",
     },
     {
       icon: Zap,
-      title: "Lightning Fast",
-      subtitle: "< 200ms Response",
+      title: "Instant Setup",
+      description: "Get your entire HR system running in minutes, not months",
+    },
+    {
+      icon: Building,
+      title: "Scale Effortlessly",
+      description: "Grows with your team from 5 to 5000 employees seamlessly",
+    },
+    {
+      icon: Sparkles,
+      title: "Smart Automation",
+      description:
+        "AI handles routine tasks so your team can focus on strategic work",
     },
   ];
 
-  const testimonialStats = [
-    { metric: "98%", label: "Customer Satisfaction" },
-    { metric: "4.9/5", label: "Average Rating" },
-    { metric: "95%", label: "Would Recommend" },
-    { metric: "92%", label: "Renewal Rate" },
-  ];
-
   return (
-    <section
-      id="stats"
-      className="bg-slate-50/50 px-4 py-24 sm:px-6 lg:px-8 dark:bg-slate-900/50"
-    >
+    <section id="stats" className="bg-muted/30 px-4 py-24 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Section Header */}
         <div className="mb-16 text-center">
@@ -88,41 +77,40 @@ export function StatsSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-4 inline-flex items-center"
+            className="mb-4"
           >
-            <Badge variant="secondary" className="px-3 py-1">
-              <TrendingUp className="mr-2 h-4 w-4" />
-              Proven Results
+            <Badge variant="secondary" className="px-4 py-2">
+              <Shield className="mr-2 h-4 w-4" />
+              Why Choose Human Loop
             </Badge>
           </motion.div>
-
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="mb-6 text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl dark:text-white"
+            className="text-foreground mb-4 text-3xl font-bold sm:text-4xl lg:text-5xl"
           >
-            Numbers That{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Speak for Themselves
+            Built for{" "}
+            <span className="from-primary to-primary/70 bg-gradient-to-r bg-clip-text text-transparent">
+              Modern HR Teams
             </span>
           </motion.h2>
-
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="mx-auto max-w-3xl text-xl text-slate-600 dark:text-slate-300"
+            className="text-muted-foreground mx-auto max-w-3xl text-lg"
           >
-            See why thousands of HR professionals and organizations worldwide
-            choose Human Loop to transform their human resource management.
+            Join the companies that have already transformed their HR operations
+            with our AI-powered platform. Experience the difference intelligent
+            automation makes.
           </motion.p>
         </div>
 
-        {/* Main Stats Grid */}
-        <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        {/* Main Stats */}
+        <div className="mb-20 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {mainStats.map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -130,134 +118,102 @@ export function StatsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
-              className="group"
             >
-              <Card className="border-0 bg-white/80 text-center shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl dark:bg-slate-800/80">
-                <CardContent className="p-8">
-                  <div
-                    className={`inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${stat.color} mb-6 shadow-lg`}
-                  >
-                    <stat.icon className="h-8 w-8 text-white" />
+              <Card className="group bg-background/60 hover:shadow-primary/5 border-0 text-center backdrop-blur-sm transition-all duration-300 hover:shadow-lg">
+                <CardContent className="p-6">
+                  <div className="bg-primary/10 group-hover:bg-primary/20 mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300">
+                    <stat.icon className="text-primary h-7 w-7" />
                   </div>
-
-                  <motion.div
-                    initial={{ scale: 0.5 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 + 0.2, type: "spring" }}
-                    className="mb-2 text-4xl font-bold text-slate-900 dark:text-white"
-                  >
+                  <div className="text-foreground mb-2 text-3xl font-bold">
                     {stat.number}
-                  </motion.div>
-
-                  <h3 className="mb-2 text-lg font-semibold text-slate-900 dark:text-white">
+                  </div>
+                  <div className="text-foreground mb-2 font-semibold">
                     {stat.label}
-                  </h3>
-
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                  </div>
+                  <div className="text-muted-foreground text-sm">
                     {stat.description}
-                  </p>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
           ))}
         </div>
 
-        {/* Achievements */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16 grid grid-cols-2 gap-6 lg:grid-cols-4"
-        >
-          {achievements.map((achievement, index) => (
-            <motion.div
-              key={achievement.title}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="rounded-2xl border border-slate-200/50 bg-white/60 p-6 text-center backdrop-blur-sm transition-colors hover:border-blue-300 dark:border-slate-700/50 dark:bg-slate-800/60 dark:hover:border-blue-600"
-            >
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900">
-                <achievement.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-              </div>
-              <h4 className="mb-1 font-bold text-slate-900 dark:text-white">
-                {achievement.title}
-              </h4>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                {achievement.subtitle}
-              </p>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* Modern vs Traditional Section */}
+        <div className="mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-12 text-center"
+          >
+            <h3 className="text-foreground mb-4 text-2xl font-bold sm:text-3xl">
+              Modern HRMS vs Traditional Systems
+            </h3>
+            <p className="text-muted-foreground mx-auto max-w-2xl">
+              See why forward-thinking companies are making the switch to
+              AI-powered HR management.
+            </p>
+          </motion.div>
 
-        {/* Customer Satisfaction */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 to-purple-600 p-12 text-white"
-        >
-          {/* Background Elements */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 h-32 w-32 -translate-x-16 -translate-y-16 rounded-full border border-white" />
-            <div className="absolute right-0 bottom-0 h-48 w-48 translate-x-24 translate-y-24 rounded-full border border-white" />
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {modernBenefits.map((benefit, index) => (
+              <motion.div
+                key={benefit.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 + index * 0.1 }}
+              >
+                <Card className="group bg-background/60 h-full border-0 backdrop-blur-sm transition-all duration-300 hover:shadow-lg">
+                  <CardContent className="p-6 text-center">
+                    <div className="bg-primary/10 group-hover:bg-primary/20 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg transition-all duration-300">
+                      <benefit.icon className="text-primary h-6 w-6" />
+                    </div>
+                    <h4 className="text-foreground mb-3 font-semibold">
+                      {benefit.title}
+                    </h4>
+                    <p className="text-muted-foreground text-sm">
+                      {benefit.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
           </div>
+        </div>
 
-          <div className="relative">
-            <div className="mb-12 text-center">
-              <h3 className="mb-4 text-2xl font-bold sm:text-3xl">
-                Loved by HR Teams Worldwide
-              </h3>
-              <p className="mx-auto max-w-2xl text-xl opacity-90">
-                Our commitment to excellence is reflected in the satisfaction
-                and success of our users.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
-              {testimonialStats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="text-center"
-                >
-                  <div className="mb-2 text-3xl font-bold sm:text-4xl">
-                    {stat.metric}
-                  </div>
-                  <div className="text-sm opacity-80">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Testimonial Quote */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-              className="mx-auto mt-12 max-w-3xl text-center"
-            >
-              <blockquote className="mb-6 text-xl italic opacity-90">
-                "Human Loop has revolutionized our HR processes. The AI-powered
-                features save us hours daily, and the insights help us make
-                better decisions for our workforce."
-              </blockquote>
-              <div className="flex items-center justify-center space-x-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
-                  <Users className="h-6 w-6" />
-                </div>
-                <div className="text-left">
-                  <div className="font-semibold">Sarah Johnson</div>
-                  <div className="text-sm opacity-80">VP of HR, TechCorp</div>
-                </div>
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.8 }}
+          className="text-center"
+        >
+          <div className="bg-background/60 mx-auto max-w-2xl rounded-2xl border p-8 backdrop-blur-sm">
+            <Brain className="text-primary mx-auto mb-4 h-12 w-12" />
+            <h3 className="text-foreground mb-4 text-xl font-semibold">
+              Ready to Experience the Difference?
+            </h3>
+            <p className="text-muted-foreground mb-6">
+              Join hundreds of companies already saving time and improving
+              efficiency with Human Loop.
+            </p>
+            <div className="text-muted-foreground flex flex-wrap items-center justify-center gap-4 text-sm">
+              <div className="flex items-center">
+                <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+                Free trial available
               </div>
-            </motion.div>
+              <div className="flex items-center">
+                <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+                No setup fees
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+                Cancel anytime
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
