@@ -8,8 +8,6 @@ export async function POST(req: Request) {
       messages: VercelChatMessage[];
     };
 
-    console.log({ messages });
-
     if (!messages || messages.length === 0) {
       return new Response("No messages provided", { status: 400 });
     }

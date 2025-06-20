@@ -29,21 +29,20 @@ export function QuickActions() {
 
   // Define actions based on user abilities
   const actions = [
-    // Admin/HR actions
     ...(ability.can("manage", "Employee")
       ? [
           {
             icon: UserPlus,
             title: "Invite Employee",
             description: "Onboard new team member",
-            route: "/employees",
+            route: "/dashboard/employees",
             onClick: () => handleActionClick("/employees"),
           },
           {
             icon: Users,
             title: "Manage Employees",
             description: "View and manage staff",
-            route: "/employees",
+            route: "/dashboard/employees",
             onClick: () => handleActionClick("/employees"),
           },
         ]
@@ -56,14 +55,15 @@ export function QuickActions() {
             icon: DollarSign,
             title: "Process Payroll",
             description: "Generate monthly payroll",
-            route: "/payroll",
+            route: "/dashboard/payroll",
             onClick: () => handleActionClick("/payroll"),
           },
         ]
       : []),
 
     // Leave management (HR, Admin, and Project Managers)
-    ...(ability.can("manage", "LeaveRequests") || ability.can("update", "LeaveRequests")
+    ...(ability.can("manage", "LeaveRequests") ||
+    ability.can("update", "LeaveRequests")
       ? [
           {
             icon: Calendar,
@@ -82,7 +82,7 @@ export function QuickActions() {
             icon: Clock,
             title: "Mark Attendance",
             description: "Record daily attendance",
-            route: "/attendance",
+            route: "/dashboard/attendance",
             onClick: () => handleActionClick("/attendance"),
           },
         ]

@@ -23,7 +23,6 @@ export const aiRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      console.log({ input });
       const output = await AIService.screenResume(input);
       return output;
     }),
