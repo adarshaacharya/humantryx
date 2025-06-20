@@ -12,13 +12,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2, MoreVertical, Calendar } from "lucide-react";
+import { Edit, Trash2, MoreVertical, Calendar, Eye } from "lucide-react";
 import type { NewsWithAuthor } from "../types";
 
 interface NewsCardProps {
   article: NewsWithAuthor;
   onEdit: (article: NewsWithAuthor) => void;
   onDelete: (article: NewsWithAuthor) => void;
+  onView?: (article: NewsWithAuthor) => void;
   currentUserId?: string;
   isDeleting?: boolean;
 }
@@ -27,6 +28,7 @@ export function NewsCard({
   article,
   onEdit,
   onDelete,
+  onView,
   currentUserId,
   isDeleting = false,
 }: NewsCardProps) {
@@ -127,13 +129,39 @@ export function NewsCard({
           </div>
 
           {shouldShowReadMore && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => setShowFullContent(!showFullContent)}
+                className="text-primary hover:text-primary/80 h-auto p-0 text-sm"
+              >
+                {showFullContent ? "Show less" : "Read more"}
+              </Button>
+
+              {onView && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onView(article)}
+                  className="h-auto gap-1 px-3 py-1 text-xs"
+                >
+                  <Eye className="h-3 w-3" />
+                  View Details
+                </Button>
+              )}
+            </div>
+          )}
+
+          {!shouldShowReadMore && onView && (
             <Button
-              variant="link"
+              variant="outline"
               size="sm"
-              onClick={() => setShowFullContent(!showFullContent)}
-              className="text-primary hover:text-primary/80 h-auto p-0 text-sm"
+              onClick={() => onView(article)}
+              className="mt-2 h-auto gap-1 px-3 py-1 text-xs"
             >
-              {showFullContent ? "Show less" : "Read more"}
+              <Eye className="h-3 w-3" />
+              View Details
             </Button>
           )}
         </div>

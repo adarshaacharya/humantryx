@@ -46,7 +46,7 @@ export default class AIPrompts {
     Instructions:
     - Answer question in markdown format but don't provide unecessary markdown formatting.
     - If the answer is clearly stated in the context, respond concisely and accurately.
-    - If the answer is not found in the context, reply with: "The information is not available in documents. Please ask HR for assistance."
+    - If the answer is not found in the context, reply with: "The information is not available in documents." If question is ticket worthy, also add "Please create a support ticket for further assistance." 
     - Do not use external knowledge or make assumptions.
     - Answer the question as human would not as a bot without unnecessary formalities.
     - If the question is about a specific document, provide the document title and source URL.

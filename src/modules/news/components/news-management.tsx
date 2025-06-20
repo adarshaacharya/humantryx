@@ -7,12 +7,14 @@ import { NewsCard } from "./news-card";
 import { NewsDialog } from "./news-dialog";
 import { NewsForm } from "./news-form";
 import { NewsDeleteDialog } from "./news-delete-dialog";
+import { NewsDetailModal } from "./news-detail-modal";
 import { Card, CardContent } from "@/components/ui/card";
 import { Newspaper, RefreshCw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCurrentEmployee } from "@/hooks/use-current-employee";
 import type { CreateNewsForm, UpdateNewsForm } from "../schemas";
 import type { NewsWithAuthor } from "../types";
+import { NewsLoading } from "./loading";
 
 export function NewsManagement() {
   const [editingArticle, setEditingArticle] = useState<NewsWithAuthor | null>(
@@ -22,6 +24,10 @@ export function NewsManagement() {
     null,
   );
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState<NewsWithAuthor | null>(
+    null,
+  );
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const currentEmployee = useCurrentEmployee();
   const utils = api.useUtils();
@@ -72,10 +78,8 @@ export function NewsManagement() {
   const handleFormSubmit = useCallback(
     async (data: CreateNewsForm | UpdateNewsForm) => {
       if ("id" in data) {
-        // Update news
         await updateNewsMutation.mutateAsync(data);
       } else {
-        // Create news
         await createNewsMutation.mutateAsync(data);
       }
     },
@@ -93,6 +97,11 @@ export function NewsManagement() {
   const handleDeleteNews = useCallback((article: NewsWithAuthor) => {
     setArticleToDelete(article);
     setIsDeleteDialogOpen(true);
+  }, []);
+
+  const handleViewDetails = useCallback((article: NewsWithAuthor) => {
+    setSelectedArticle(article);
+    setIsDetailModalOpen(true);
   }, []);
 
   const handleRefresh = useCallback(() => {
@@ -173,25 +182,7 @@ export function NewsManagement() {
 
         {isLoading ? (
           <div className="grid gap-4">
-            {[...Array(3)].map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <CardContent className="p-4">
-                  <div className="flex items-start gap-3">
-                    <div className="bg-muted h-10 w-10 rounded-full" />
-                    <div className="flex-1 space-y-2">
-                      <div className="bg-muted h-4 w-3/4 rounded" />
-                      <div className="bg-muted h-3 w-1/2 rounded" />
-                      <div className="bg-muted h-3 w-1/4 rounded" />
-                    </div>
-                  </div>
-                  <div className="mt-3 space-y-2">
-                    <div className="bg-muted h-3 rounded" />
-                    <div className="bg-muted h-3 w-5/6 rounded" />
-                    <div className="bg-muted h-3 w-4/6 rounded" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            <NewsLoading />
           </div>
         ) : newsArticles.length === 0 ? (
           <Card className="border-2 border-dashed">
@@ -218,6 +209,7 @@ export function NewsManagement() {
                 article={article}
                 onEdit={handleEditNews}
                 onDelete={handleDeleteNews}
+                onView={handleViewDetails}
                 currentUserId={currentEmployee?.user?.id}
                 isDeleting={isDeleting}
               />
@@ -235,6 +227,16 @@ export function NewsManagement() {
           setArticleToDelete(null);
           setIsDeleteDialogOpen(false);
         }}
+      />
+
+      {/* Detail Modal */}
+      <NewsDetailModal
+        article={selectedArticle}
+        isOpen={isDetailModalOpen}
+        onOpenChange={setIsDetailModalOpen}
+        onEdit={handleEditNews}
+        onDelete={handleDeleteNews}
+        currentUserId={currentEmployee?.user?.id}
       />
     </div>
   );
