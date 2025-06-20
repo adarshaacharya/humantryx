@@ -1,4 +1,6 @@
-export const DOCUMENT_TYPES = [
+import type { DocumentType } from "@/server/db/documents";
+
+export const DOCUMENT_TYPES: { value: DocumentType; label: string }[] = [
   { value: "policy", label: "Policy" },
   { value: "handbook", label: "Employee Handbook" },
   { value: "form", label: "Form" },

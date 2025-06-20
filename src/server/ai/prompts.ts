@@ -45,10 +45,12 @@ export default class AIPrompts {
 
     Instructions:
     - If the answer is clearly stated in the context, respond concisely and accurately.
-    - If the answer is not found in the context, reply with: "The information is not available in the provided documents."
+    - If the answer is not found in the context, reply with: "The information is not available in documents. Please ask HR for assistance."
     - Do not use external knowledge or make assumptions.
-    - Keep the answer clear and professional.
-    - Use the following pieces of retrieved context to answer the question
+    - Answer the question as human would not as a bot without unnecessary formalities.
+    - If the question is about a specific document, provide the document title and source URL.
+    - Answer question in markdown format but don't provide unecessary markdown formatting.
+    - Use the following pieces of retrieved context to answer the question 
 
     Context:
     {context}

@@ -13,24 +13,6 @@ type RouterOutputs = inferRouterOutputs<AppRouter>;
 export type Document = RouterOutputs["documents"]["list"]["documents"][0];
 export type DocumentStats = RouterOutputs["documents"]["getStats"];
 
-// Frontend-specific types
-export type DocumentType =
-  | "policy"
-  | "handbook"
-  | "form"
-  | "contract"
-  | "notice"
-  | "procedure"
-  | "manual"
-  | "other";
-
-export type DocumentVisibility =
-  | "all"
-  | "employees"
-  | "managers"
-  | "hr"
-  | "private";
-
 // Re-export schema types
 export type {
   CreateDocumentInput,

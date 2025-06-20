@@ -194,7 +194,7 @@ export function DocumentUploadDialog({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+      <DialogContent className="max-h-[90vh] min-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Upload Document</DialogTitle>
           <DialogDescription>
@@ -291,7 +291,7 @@ export function DocumentUploadDialog({
                       disabled={isUploading}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select document type" />
                         </SelectTrigger>
                       </FormControl>
@@ -340,7 +340,7 @@ export function DocumentUploadDialog({
                     disabled={isUploading}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select visibility level" />
                       </SelectTrigger>
                     </FormControl>

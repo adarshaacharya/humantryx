@@ -66,9 +66,11 @@ export class LangchainService {
   static async ingestFile({
     fileUrl,
     attachmentId,
+    fileName,
   }: {
     fileUrl: string;
     attachmentId: string;
+    fileName?: string;
   }) {
     const response = await fetch(fileUrl);
 
@@ -101,7 +103,6 @@ export class LangchainService {
       });
     }
 
-    // TODO: create separate table to store file metadata
     const blob = new Blob([arrayBuffer], { type: mimeType });
 
     const splittedDocs: Document[] = [];
@@ -133,7 +134,7 @@ export class LangchainService {
           ...doc.metadata,
           docId: cuid2.createId(),
           attachmentId: attachmentId, // attachmentId acts bridge between our db and pinecone for crud operations
-          fileName: fileUrl.split("/").pop() || "unknown",
+          fileName: fileName || fileUrl.split("/").pop(),
           source: fileUrl,
           fileType: fileExtension,
         },

@@ -4,6 +4,7 @@ import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import Image from "next/image";
+import { Markdown } from "./markdown";
 
 export interface ChatBubbleProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: "sent" | "received";
@@ -76,7 +77,7 @@ const ChatBubbleMessage = forwardRef<HTMLDivElement, ChatBubbleMessageProps>(
     <div
       ref={ref}
       className={cn(
-        "group relative max-w-xs rounded-xl px-3 py-2 text-sm shadow-sm",
+        "group overflow-wrap-anywhere relative max-w-xs rounded-xl px-3 py-2 text-sm break-words shadow-sm",
         variant === "sent"
           ? "bg-primary text-primary-foreground ml-auto"
           : "bg-muted",
@@ -91,6 +92,8 @@ const ChatBubbleMessage = forwardRef<HTMLDivElement, ChatBubbleMessageProps>(
           <div className="size-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
           <div className="size-1.5 animate-bounce rounded-full bg-current" />
         </div>
+      ) : typeof children === "string" ? (
+        <Markdown>{children}</Markdown>
       ) : (
         children
       )}

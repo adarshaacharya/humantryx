@@ -269,6 +269,13 @@ export class DocumentsService {
       .where(eq(documents.id, id))
       .returning();
 
+    if (!document) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Document not found",
+      });
+    }
+
     return document;
   }
 

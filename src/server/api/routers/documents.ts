@@ -9,6 +9,7 @@ import {
 import { TRPCError } from "@trpc/server";
 import { accessControl } from "../middleware/casl-middleware";
 import { LangchainService } from "../services/langchain.service";
+import { PineconeService } from "../services/pinecone.service";
 
 export const documentsRouter = createTRPCRouter({
   // Create a new document
@@ -29,6 +30,7 @@ export const documentsRouter = createTRPCRouter({
       await LangchainService.ingestFile({
         fileUrl: attachment?.fullPath,
         attachmentId: attachment.id,
+        fileName: attachment.fileName,
       });
 
       return document;
@@ -149,7 +151,11 @@ export const documentsRouter = createTRPCRouter({
         });
       }
 
-      return await DocumentsService.delete(input.id);
+      const document = await DocumentsService.delete(input.id);
+
+      await PineconeService.removeDocument({
+        attachmentId: document.attachmentId,
+      });
     }),
 
   // Get document statistics
