@@ -3,18 +3,7 @@
 import { motion } from "motion/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  ArrowRight,
-  X,
-  CheckCircle,
-  Clock,
-  Brain,
-  Zap,
-  Users,
-  FileText,
-  BarChart3,
-  Shield,
-} from "lucide-react";
+import { X, CheckCircle, Brain, Zap, FileText, BarChart3 } from "lucide-react";
 
 export function BenefitsSection() {
   const comparisons = [

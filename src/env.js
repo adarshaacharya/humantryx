@@ -64,6 +64,7 @@ export const env = createEnv({
       message: "R2_BUCKET_NAME must be set",
     }),
     NEXT_PUBLIC_R2_PUBLIC_URL: z.string().url(),
+    NEXT_PUBLIC_C15T_URL: z.string().url(),
   },
 
   /**
@@ -93,6 +94,7 @@ export const env = createEnv({
     PINECONE_API_KEY: process.env.PINECONE_API_KEY,
     PINECONE_INDEX: process.env.PINECONE_INDEX,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    NEXT_PUBLIC_C15T_URL: process.env.NEXT_PUBLIC_C15T_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

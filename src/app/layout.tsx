@@ -6,6 +6,11 @@ import { Toaster } from "@/components/ui/sonner";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { AbilityProvider } from "@/providers/ability-context";
+import {
+  ConsentManagerDialog,
+  ConsentManagerProvider,
+  CookieBanner,
+} from "@c15t/nextjs";
 
 export const metadata: Metadata = {
   title: "Human Loop | AI Powered Human Resource Management System",
@@ -26,7 +31,18 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable}`}>
       <body>
         <TRPCReactProvider>
-          <AbilityProvider>{children}</AbilityProvider>
+          <AbilityProvider>
+            <ConsentManagerProvider
+              options={{
+                mode: "c15t",
+                backendURL: "/api/c15t"
+              }}
+            >
+              {children}
+              <ConsentManagerDialog />
+              <CookieBanner />
+            </ConsentManagerProvider>
+          </AbilityProvider>
           <Toaster position="top-right" />
         </TRPCReactProvider>
       </body>

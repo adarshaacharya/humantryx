@@ -3,6 +3,7 @@
  * for Docker builds.
  */
 import "./src/env.js";
+import { env } from "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -15,6 +16,14 @@ const config = {
         pathname: "/**",
       },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/c15t/:path*",
+        destination: `${env.NEXT_PUBLIC_C15T_URL}/:path*`,
+      },
+    ];
   },
 };
 
