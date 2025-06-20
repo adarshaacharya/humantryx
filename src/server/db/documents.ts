@@ -9,6 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { employees } from "./employees";
+import { attachments } from "./attachments";
 
 // Document type enum
 export const documentTypeEnum = pgEnum("document_type", [
@@ -38,7 +39,9 @@ export const documents = pgTable("documents", {
   description: text("description").notNull(),
   type: documentTypeEnum("type").notNull(),
   visibility: documentVisibilityEnum("visibility").notNull(),
-  url: text("url").notNull(),
+  attachmentId: uuid("attachment_id")
+    .notNull()
+    .references(() => attachments.id, { onDelete: "cascade" }),
   uploadedBy: text("uploaded_by")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -60,6 +63,10 @@ export const documentsRelations = relations(documents, ({ one }) => ({
   employee: one(employees, {
     fields: [documents.employeeId],
     references: [employees.id],
+  }),
+  attachment: one(attachments, {
+    fields: [documents.attachmentId],
+    references: [attachments.id],
   }),
 }));
 

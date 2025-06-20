@@ -48,7 +48,8 @@ export function ImageUploader({
     try {
       const response = await attachmentMutation.mutateAsync({
         fileName: file.name,
-        fileType: file.type,
+        mimeType: file.type,
+        type : "image",
       });
 
       await uploadFileToS3({

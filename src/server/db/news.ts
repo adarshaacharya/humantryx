@@ -1,7 +1,7 @@
 import { pgTable, text, uuid, boolean } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { employees } from "./employees";
-import { timestamps } from "./timestamps";
+import { timestamps } from "./columns";
 
 // News table
 export const news = pgTable("news", {

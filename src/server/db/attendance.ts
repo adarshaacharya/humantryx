@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { employees } from "./employees";
-import { timestamps } from "./timestamps";
+import { timestamps } from "./columns";
 
 export const attendanceStatusEnum = pgEnum("attendance_status", [
   "clocked_in",

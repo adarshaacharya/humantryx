@@ -18,8 +18,8 @@ export const createDocumentSchema = z.object({
   visibility: z.enum(documentVisibilityEnum.enumValues, {
     errorMap: () => ({ message: "Invalid visibility level" }),
   }),
-  url: z.string().url("Invalid URL"),
   employeeId: z.string().uuid().optional(),
+  attachmentId: z.string().uuid(),
 });
 
 // Update document schema
@@ -47,7 +47,7 @@ export const updateDocumentSchema = z.object({
     .optional(),
   employeeId: z.string().uuid().optional(),
   isActive: z.boolean().optional(),
-  url: z.string().url("Invalid URL").optional(),
+  attachmentId: z.string().uuid().optional(),
 });
 
 // Document filters schema

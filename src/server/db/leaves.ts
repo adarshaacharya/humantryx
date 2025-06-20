@@ -9,7 +9,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { employees } from "./employees";
-import { timestamps } from "./timestamps";
+import { timestamps } from "./columns";
 
 // Leave types enum
 export const leaveTypeEnum = pgEnum("leave_type", [

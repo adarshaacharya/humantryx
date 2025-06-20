@@ -183,6 +183,27 @@
       "when": 1750268718290,
       "tag": "0025_foamy_rafael_vega",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1750404190263,
+      "tag": "0026_attachments",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1750405692699,
+      "tag": "0027_attachment-path",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1750406566068,
+      "tag": "0028_docs-url-remove",
+      "breakpoints": true
     }
   ]
 }

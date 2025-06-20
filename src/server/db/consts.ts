@@ -43,4 +43,3 @@ export const EMPLOYEE_DEPARTMENTS: readonly {
   { label: "Founder Office", value: "founder_office" },
   { label: "Human Resources", value: "human_resources" },
 ] as const;
-

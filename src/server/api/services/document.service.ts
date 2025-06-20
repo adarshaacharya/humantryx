@@ -1,12 +1,13 @@
 import { eq, and, or, like, desc, asc, count, gt } from "drizzle-orm";
 import { db } from "@/server/db";
-import { documents, employees, users } from "@/server/db/schema";
+import { attachments, documents, employees, users } from "@/server/db/schema";
 import type { DocumentFilters } from "@/modules/documents/schemas";
 import type {
   documentTypeEnum,
   documentVisibilityEnum,
 } from "@/server/db/documents";
-import { LangchainService } from "./langchain.service";
+import { TRPCError } from "@trpc/server";
+import { AttachmentService } from "./attachment.service";
 
 type DocumentType = (typeof documentTypeEnum.enumValues)[number];
 type DocumentVisibility = (typeof documentVisibilityEnum.enumValues)[number];
@@ -15,28 +16,37 @@ export class DocumentsService {
   static async create(input: {
     title: string;
     description: string;
-    url: string;
     type: DocumentType;
     visibility: DocumentVisibility;
     uploadedBy: string;
     employeeId?: string;
+    attachmentId: string;
   }) {
     const [document] = await db
       .insert(documents)
       .values({
         title: input.title,
         description: input.description,
-        url: input.url,
         type: input.type,
         visibility: input.visibility,
         employeeId: input.employeeId || null,
         uploadedBy: input.uploadedBy,
+        attachmentId: input.attachmentId,
       })
       .returning();
 
-    await LangchainService.ingestFile(input.url);
+    if (!document) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to create document",
+      });
+    }
 
-    return document;
+    const attachment = await AttachmentService.getAttachmentById(
+      input.attachmentId,
+    );
+
+    return { document, attachment };
   }
 
   static async update(input: {
@@ -77,7 +87,6 @@ export class DocumentsService {
         id: documents.id,
         title: documents.title,
         description: documents.description,
-        url: documents.url,
         type: documents.type,
         visibility: documents.visibility,
         employeeId: documents.employeeId,
@@ -95,10 +104,15 @@ export class DocumentsService {
           name: users.name,
           image: users.image,
         },
+        attachment: {
+          id: attachments.id,
+          fullPath: attachments.fullPath,
+        },
       })
       .from(documents)
       .leftJoin(employees, eq(documents.employeeId, employees.id))
       .leftJoin(users, eq(documents.uploadedBy, users.id))
+      .leftJoin(attachments, eq(documents.attachmentId, attachments.id))
       .where(eq(documents.id, id))
       .limit(1);
 
@@ -208,7 +222,6 @@ export class DocumentsService {
         id: documents.id,
         title: documents.title,
         description: documents.description,
-        url: documents.url,
         type: documents.type,
         visibility: documents.visibility,
         employeeId: documents.employeeId,
@@ -226,10 +239,15 @@ export class DocumentsService {
           name: users.name,
           image: users.image,
         },
+        attachment: {
+          id: attachments.id,
+          fullPath: attachments.fullPath,
+        },
       })
       .from(documents)
       .leftJoin(employees, eq(documents.employeeId, employees.id))
       .leftJoin(users, eq(documents.uploadedBy, users.id))
+      .leftJoin(attachments, eq(documents.attachmentId, attachments.id))
       .where(and(...whereConditions))
       .orderBy(orderFn(sortColumn))
       .limit(limit)

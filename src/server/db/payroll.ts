@@ -10,7 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { employees } from "./employees";
-import { timestamps } from "./timestamps";
+import { timestamps } from "./columns";
 
 export const paymentStatusEnum = pgEnum("payment_status", [
   "pending",

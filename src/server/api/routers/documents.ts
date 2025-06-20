@@ -8,6 +8,7 @@ import {
 } from "@/modules/documents/schemas";
 import { TRPCError } from "@trpc/server";
 import { accessControl } from "../middleware/casl-middleware";
+import { LangchainService } from "../services/langchain.service";
 
 export const documentsRouter = createTRPCRouter({
   // Create a new document
@@ -19,10 +20,18 @@ export const documentsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return await DocumentsService.create({
+      const { document, attachment } = await DocumentsService.create({
         ...input,
         uploadedBy: ctx.session.user.id,
       });
+
+      // saving to pinecone db + attachmentId acts bridge between our db and pinecone
+      await LangchainService.ingestFile({
+        fileUrl: attachment?.fullPath,
+        attachmentId: attachment.id,
+      });
+
+      return document;
     }),
 
   // Update an existing document

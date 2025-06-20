@@ -106,7 +106,8 @@ export function UploadResumeDialog({
       // Upload file to S3
       const uploadResponse = await attachmentMutation.mutateAsync({
         fileName: selectedFile.name,
-        fileType: selectedFile.type,
+        mimeType: selectedFile.type,
+        type: "document",
       });
 
       await uploadFileToS3({

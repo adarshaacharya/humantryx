@@ -20,9 +20,9 @@ export async function POST(req: Request) {
       return new Response("No message content found", { status: 400 });
     }
 
-    const history = messages.slice(0, messages.length - 1)
+    const history = messages.slice(0, messages.length - 1);
 
-    return LangchainService.chat({
+    return LangchainService.chatDocs({
       question: currentMessageContent,
       chatHistory: history,
     });

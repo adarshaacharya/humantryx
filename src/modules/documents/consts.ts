@@ -22,28 +22,19 @@ export const FILE_UPLOAD = {
   ALLOWED_TYPES: [
     "application/pdf",
     "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "text/plain",
-    "text/csv",
-    "image/jpeg",
-    "image/png",
-    "image/gif",
-    "image/webp",
+    // pptx
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    // docx
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   ] as const,
+
   ALLOWED_EXTENSIONS: [
     ".pdf",
     ".doc",
     ".docx",
-    ".xls",
-    ".xlsx",
+    ".pptx",
     ".txt",
-    ".csv",
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".gif",
-    ".webp",
+    ".md",
   ] as const,
 } as const;

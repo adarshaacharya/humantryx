@@ -32,6 +32,7 @@ import type { DocumentFilters } from "../types";
 import { formatDistanceToNow } from "date-fns";
 import { Can } from "@/components/can";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getFileAbsoluteURI } from "@/lib/r2-absolute-uri";
 
 const DEFAULT_FILTERS: DocumentFilters = {
   search: "",
@@ -324,7 +325,12 @@ export function DocumentsPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => window.open(document.url, "_blank")}
+                    onClick={() =>
+                      window.open(
+                        getFileAbsoluteURI(document.attachment?.fullPath),
+                        "_blank",
+                      )
+                    }
                     className="flex-1"
                   >
                     <Eye className="mr-1 h-4 w-4" />
@@ -334,7 +340,12 @@ export function DocumentsPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => handleDownload(document.url, document.title)}
+                    onClick={() =>
+                      handleDownload(
+                        getFileAbsoluteURI(document.attachment?.fullPath),
+                        document.title,
+                      )
+                    }
                   >
                     <Download className="h-4 w-4" />
                   </Button>

@@ -74,7 +74,7 @@ export function DocumentUploadDialog({
       type: "other",
       visibility: "employees",
       employeeId: undefined,
-      url: "",
+      attachmentId: undefined,
     },
   });
 
@@ -117,7 +117,8 @@ export function DocumentUploadDialog({
       // Get presigned URL
       const uploadResponse = await attachmentMutation.mutateAsync({
         fileName: file.name,
-        fileType: file.type,
+        mimeType: file.type,
+        type: "document",
       });
 
       // Upload to S3 - simulate progress since actual progress isn't available
@@ -128,7 +129,7 @@ export function DocumentUploadDialog({
         presignedUrl: uploadResponse.uploadUrl,
       });
 
-      form.setValue("url", uploadResponse.publicUrl);
+      form.setValue("attachmentId", uploadResponse.attachmentId);
 
       options.onProgress(file, 100);
       options.onSuccess(file);
@@ -147,7 +148,7 @@ export function DocumentUploadDialog({
     }
 
     // Check if the file URL has been set (meaning upload is complete)
-    if (!data.url) {
+    if (!data.attachmentId) {
       toast.error("Please wait for the file to finish uploading");
       return;
     }
@@ -160,7 +161,7 @@ export function DocumentUploadDialog({
         description: data.description,
         type: data.type,
         visibility: data.visibility,
-        url: data.url, // This should already be set from the upload
+        attachmentId: data.attachmentId,
         employeeId: data.employeeId,
       });
 
@@ -368,7 +369,7 @@ export function DocumentUploadDialog({
               <Button
                 type="submit"
                 disabled={
-                  isUploading || uploadFiles.length === 0 || !form.watch("url")
+                  isUploading || uploadFiles.length === 0 || !form.watch("attachmentId")
                 }
               >
                 {isUploading ? (

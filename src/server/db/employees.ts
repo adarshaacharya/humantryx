@@ -2,7 +2,7 @@ import { pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { exists, relations } from "drizzle-orm";
 import { users } from "./users";
 import { organizations, members, invitations } from "./organizations";
-import { timestamps } from "./timestamps";
+import { timestamps } from "./columns";
 
 export const employeeStatusEnum = pgEnum("employee_status", [
   "active",

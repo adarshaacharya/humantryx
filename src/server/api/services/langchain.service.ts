@@ -53,7 +53,23 @@ export class LangchainService {
     return this.textSplitter.splitDocuments(docs);
   }
 
-  static async ingestFile(fileUrl: string) {
+  static convertToLangChainMessage(messages: VercelChatMessage[]): AIMessage[] {
+    return messages.map((msg) => {
+      if (msg.role === "user") {
+        return new HumanMessage(msg.content);
+      } else {
+        return new AIMessage(msg.content);
+      }
+    });
+  }
+
+  static async ingestFile({
+    fileUrl,
+    attachmentId,
+  }: {
+    fileUrl: string;
+    attachmentId: string;
+  }) {
     const response = await fetch(fileUrl);
 
     if (!response.ok) {
@@ -63,20 +79,30 @@ export class LangchainService {
       });
     }
 
-    const supportedFileExtensions = [".pdf", ".pptx", ".docx"];
+    const supportedFileExtensions = [".pdf", ".pptx", ".docx", ".doc"];
     const fileExtension = fileUrl.split(".").pop()?.toLowerCase();
 
     if (!supportedFileExtensions.includes(`.${fileExtension}`)) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Unsupported file type. Only PDF, PPTX, and DOCX are allowed.",
+        message:
+          "Unsupported file type. Only PDF, PPTX, DOCX, and DOC are allowed.",
       });
     }
 
     const arrayBuffer = await response.arrayBuffer();
 
-    // TODO: we need mime type detection for better handling, create separate table to store file metadata
-    const blob = new Blob([arrayBuffer], { type: "application/pdf" });
+    const mimeType = response.headers.get("content-type");
+
+    if (!mimeType?.startsWith("application/")) {
+      throw new TRPCError({
+        code: "UNSUPPORTED_MEDIA_TYPE",
+        message: "Unsupported file type. Only application/* types are allowed.",
+      });
+    }
+
+    // TODO: create separate table to store file metadata
+    const blob = new Blob([arrayBuffer], { type: mimeType });
 
     const splittedDocs: Document[] = [];
 
@@ -88,8 +114,15 @@ export class LangchainService {
         splittedDocs.push(...(await this.ingestPPTX(blob)));
         break;
       case "docx":
+      case "doc":
         splittedDocs.push(...(await this.ingestDOCX(blob)));
         break;
+      default:
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "Unsupported file type. Only PDF, PPTX, and DOCX are allowed.",
+        });
     }
 
     // fuel with metadata
@@ -98,8 +131,8 @@ export class LangchainService {
         pageContent: doc.pageContent,
         metadata: {
           ...doc.metadata,
-          id: cuid2.createId(),
-          createdAt: new Date(),
+          docId: cuid2.createId(),
+          attachmentId: attachmentId, // attachmentId acts bridge between our db and pinecone for crud operations
           fileName: fileUrl.split("/").pop() || "unknown",
           source: fileUrl,
           fileType: fileExtension,
@@ -136,7 +169,7 @@ export class LangchainService {
       },
     );
 
-    console.log("Documents embedded successfully:", documents.length);
+    console.log(`Successfully embedded ${documents.length} documents.`);
 
     return vectorStore;
   }
@@ -160,7 +193,7 @@ export class LangchainService {
     return retriever;
   }
 
-  static async chat({
+  static async chatDocs({
     question,
     chatHistory = [],
   }: {
@@ -209,15 +242,5 @@ export class LangchainService {
     });
 
     return LangChainAdapter.toDataStreamResponse(response);
-  }
-
-  static convertToLangChainMessage(messages: VercelChatMessage[]): AIMessage[] {
-    return messages.map((msg) => {
-      if (msg.role === "user") {
-        return new HumanMessage(msg.content);
-      } else {
-        return new AIMessage(msg.content);
-      }
-    });
   }
 }
