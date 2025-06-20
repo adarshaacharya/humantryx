@@ -32,8 +32,8 @@ export function PersonalDetails() {
       <Card>
         <CardContent className="pt-6">
           <div className="text-center">
-            <Building2 className="mx-auto h-12 w-12 animate-pulse text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
+            <Building2 className="mx-auto h-12 w-12 animate-pulse text-muted-foreground" />
+            <h3 className="mt-2 text-sm font-medium text-foreground">
               Loading organization data...
             </h3>
           </div>
@@ -47,9 +47,9 @@ export function PersonalDetails() {
       <Card>
         <CardContent className="pt-6">
           <div className="text-center">
-            <Building2 className="mx-auto h-12 w-12 text-red-400" />
-            <h3 className="mt-2 text-sm font-medium text-red-900">Error</h3>
-            <p className="mt-1 text-sm text-red-500">
+            <Building2 className="mx-auto h-12 w-12 text-muted-foreground" />
+            <h3 className="mt-2 text-sm font-medium text-foreground">Error</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
               {currentOrg.error?.message}
             </p>
           </div>
@@ -63,11 +63,11 @@ export function PersonalDetails() {
       <Card>
         <CardContent className="pt-6">
           <div className="text-center">
-            <Building2 className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
+            <Building2 className="mx-auto h-12 w-12 text-muted-foreground" />
+            <h3 className="mt-2 text-sm font-medium text-foreground">
               No organization found
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-muted-foreground">
               You don&apos;t seem to be part of any organization.
             </p>
           </div>
@@ -97,13 +97,13 @@ export function PersonalDetails() {
                   {session?.user?.image ? (
                     <Avatar className="h-12 w-12">
                       <AvatarImage src={session?.user?.image} />
-                      <AvatarFallback className="bg-primary/20 text-primary font-semibold">
+                      <AvatarFallback className="bg-muted text-muted-foreground font-semibold">
                         {session?.user?.name?.charAt(0) ?? "-"}
                       </AvatarFallback>
                     </Avatar>
                   ) : (
                     <Avatar className="h-12 w-12">
-                      <AvatarFallback className="bg-primary/20 text-primary">
+                      <AvatarFallback className="bg-muted text-muted-foreground">
                         <User className="h-6 w-6" />
                       </AvatarFallback>
                     </Avatar>
@@ -117,16 +117,8 @@ export function PersonalDetails() {
                     </p>
                     <div className="mb-3 flex items-center space-x-2">
                       <Badge
-                        variant="outline"
-                        className={`text-xs ${
-                          employee.designation === "founder"
-                            ? "border-purple-200 bg-purple-100 text-purple-800"
-                            : employee.designation === "hr"
-                              ? "border-blue-200 bg-blue-100 text-blue-800"
-                              : employee.designation === "project_manager"
-                                ? "border-green-200 bg-green-100 text-green-800"
-                                : "border-gray-200 bg-gray-100 text-gray-800"
-                        }`}
+                        variant="secondary"
+                        className="text-xs"
                       >
                         {employee.designation === "founder" && (
                           <Crown className="mr-1 h-3 w-3" />
@@ -157,7 +149,7 @@ export function PersonalDetails() {
                       </Badge>
                     </div>
                     <div className="space-y-2">
-                      <div className="flex items-center space-x-1 text-xs text-gray-500">
+                      <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                         <Calendar className="h-3 w-3" />
                         <span>
                           Joined{" "}
@@ -167,7 +159,7 @@ export function PersonalDetails() {
                         </span>
                       </div>
                       {employee.department && (
-                        <div className="flex items-center space-x-1 text-xs text-gray-500">
+                        <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                           <User className="h-3 w-3" />
                           <span className="truncate">
                             Department: {employee.department}
@@ -182,12 +174,12 @@ export function PersonalDetails() {
 
             {/* Personal Stats */}
             <div className="space-y-3">
-              <h4 className="text-sm font-medium text-gray-900">
+              <h4 className="text-sm font-medium text-foreground">
                 Your Journey
               </h4>
               <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-center">
-                  <div className="text-xl font-bold text-green-600">
+                <div className="rounded-lg border bg-muted/50 p-3 text-center">
+                  <div className="text-xl font-bold text-foreground">
                     {employee?.createdAt
                       ? Math.floor(
                           (Date.now() -
@@ -196,12 +188,12 @@ export function PersonalDetails() {
                         )
                       : 0}
                   </div>
-                  <div className="text-xs font-medium text-gray-600">
+                  <div className="text-xs font-medium text-muted-foreground">
                     Months Here
                   </div>
                 </div>
-                <div className="rounded-lg border border-purple-200 bg-purple-50 p-3 text-center">
-                  <div className="truncate text-sm font-bold text-purple-600">
+                <div className="rounded-lg border bg-muted/50 p-3 text-center">
+                  <div className="truncate text-sm font-bold text-foreground">
                     {employee?.department
                       ? employee.department
                           .split("_")
@@ -212,7 +204,7 @@ export function PersonalDetails() {
                           .join(" ")
                       : "-"}
                   </div>
-                  <div className="text-xs font-medium text-gray-600">
+                  <div className="text-xs font-medium text-muted-foreground">
                     Your Department
                   </div>
                 </div>
@@ -233,21 +225,21 @@ export function PersonalDetails() {
             {/* Organization Header */}
             <div className="rounded-lg border bg-gradient-to-r from-blue-50 to-indigo-50 p-4">
               <div className="flex items-start space-x-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-blue-200 bg-blue-100">
-                  <Building2 className="h-6 w-6 text-blue-600" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full border bg-muted">
+                  <Building2 className="h-6 w-6 text-muted-foreground" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-lg font-semibold text-foreground">
                     {currentOrg.data.name}
                   </h3>
                   {currentOrg.data.slug && (
-                    <p className="mt-1 inline-block rounded bg-gray-100 px-2 py-1 font-mono text-sm text-gray-600">
+                    <p className="mt-1 inline-block rounded bg-muted px-2 py-1 font-mono text-sm text-muted-foreground">
                       {currentOrg.data.slug}
                     </p>
                   )}
                   <div className="mt-2 flex items-center space-x-1">
-                    <Calendar className="h-3 w-3 text-gray-500" />
-                    <span className="text-xs text-gray-500">
+                    <Calendar className="h-3 w-3 text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">
                       Established{" "}
                       {format(new Date(currentOrg.data.createdAt), "MMMM yyyy")}
                     </span>
@@ -258,27 +250,27 @@ export function PersonalDetails() {
 
             {/* Organization Stats */}
             <div className="space-y-3">
-              <h4 className="text-sm font-medium text-gray-900">
+              <h4 className="text-sm font-medium text-foreground">
                 Company Overview
               </h4>
               <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-center">
-                  <div className="text-2xl font-bold text-blue-600">
+                <div className="rounded-lg border bg-muted/50 p-3 text-center">
+                  <div className="text-2xl font-bold text-foreground">
                     {members.length}
                   </div>
-                  <div className="text-xs font-medium text-gray-600">
+                  <div className="text-xs font-medium text-muted-foreground">
                     Total Members
                   </div>
                 </div>
-                <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-center">
-                  <div className="text-2xl font-bold text-green-600">
+                <div className="rounded-lg border bg-muted/50 p-3 text-center">
+                  <div className="text-2xl font-bold text-foreground">
                     {Math.ceil(
                       (Date.now() -
                         new Date(currentOrg.data.createdAt).getTime()) /
                         (1000 * 60 * 60 * 24 * 30),
                     )}
                   </div>
-                  <div className="text-xs font-medium text-gray-600">
+                  <div className="text-xs font-medium text-muted-foreground">
                     Months Active
                   </div>
                 </div>
@@ -288,37 +280,37 @@ export function PersonalDetails() {
             {/* Team Composition (for admins) or Access Level (for employees) */}
             {canManageMember ? (
               <div className="space-y-3">
-                <h4 className="text-sm font-medium text-gray-900">
+                <h4 className="text-sm font-medium text-foreground">
                   Team Composition
                 </h4>
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="rounded-lg border border-blue-200 bg-blue-50 p-2 text-center">
-                    <div className="text-lg font-bold text-blue-600">
+                  <div className="rounded-lg border bg-muted/50 p-2 text-center">
+                    <div className="text-lg font-bold text-foreground">
                       {members.filter((m) => m.role === "admin").length}
                     </div>
-                    <div className="text-xs text-gray-600">
+                    <div className="text-xs text-muted-foreground">
                       Admin
                       {members.filter((m) => m.role === "admin").length !== 1
                         ? "s"
                         : ""}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-green-200 bg-green-50 p-2 text-center">
-                    <div className="text-lg font-bold text-green-600">
+                  <div className="rounded-lg border bg-muted/50 p-2 text-center">
+                    <div className="text-lg font-bold text-foreground">
                       {members.filter((m) => m.role === "member").length}
                     </div>
-                    <div className="text-xs text-gray-600">
+                    <div className="text-xs text-muted-foreground">
                       Member
                       {members.filter((m) => m.role === "member").length !== 1
                         ? "s"
                         : ""}
                     </div>
                   </div>
-                  <div className="rounded-lg border border-amber-200 bg-amber-50 p-2 text-center">
-                    <div className="text-lg font-bold text-amber-600">
+                  <div className="rounded-lg border bg-muted/50 p-2 text-center">
+                    <div className="text-lg font-bold text-foreground">
                       {members.filter((m) => m.role === "owner").length}
                     </div>
-                    <div className="text-xs text-gray-600">
+                    <div className="text-xs text-muted-foreground">
                       Owner
                       {members.filter((m) => m.role === "owner").length !== 1
                         ? "s"
@@ -348,7 +340,7 @@ export function PersonalDetails() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <h4 className="flex items-center space-x-2 text-sm font-medium text-gray-900">
+              <h4 className="flex items-center space-x-2 text-sm font-medium text-foreground">
                 <UserCheck className="h-4 w-4" />
                 <span>Recent Members</span>
               </h4>
@@ -356,19 +348,19 @@ export function PersonalDetails() {
                 {members.slice(0, 6).map((member) => (
                   <div
                     key={member.id}
-                    className="flex items-center justify-between rounded-lg border bg-gray-50 p-3"
+                    className="flex items-center justify-between rounded-lg border bg-muted/30 p-3"
                   >
                     <div className="flex items-center space-x-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full border border-blue-200 bg-blue-100">
-                        <span className="text-xs font-semibold text-blue-600">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full border bg-muted">
+                        <span className="text-xs font-semibold text-muted-foreground">
                           {member.user.name?.charAt(0)?.toUpperCase() || "U"}
                         </span>
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-gray-900">
+                        <p className="truncate text-sm font-medium text-foreground">
                           {member.user.name}
                         </p>
-                        <p className="truncate text-xs text-gray-500">
+                        <p className="truncate text-xs text-muted-foreground">
                           {member.user.email}
                         </p>
                       </div>
@@ -393,7 +385,7 @@ export function PersonalDetails() {
 
               {members.length > 6 && (
                 <div className="text-center">
-                  <p className="rounded-lg bg-gray-100 py-2 text-xs text-gray-500">
+                  <p className="rounded-lg bg-muted py-2 text-xs text-muted-foreground">
                     +{members.length - 6} more member
                     {members.length - 6 !== 1 ? "s" : ""}
                   </p>
@@ -402,8 +394,8 @@ export function PersonalDetails() {
 
               {members.length === 0 && (
                 <div className="py-6 text-center">
-                  <Users className="mx-auto h-8 w-8 text-gray-400" />
-                  <p className="mt-2 text-sm text-gray-500">No members found</p>
+                  <Users className="mx-auto h-8 w-8 text-muted-foreground" />
+                  <p className="mt-2 text-sm text-muted-foreground">No members found</p>
                 </div>
               )}
             </div>

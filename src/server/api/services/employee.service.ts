@@ -570,6 +570,7 @@ export class EmployeeService {
             department: employees.department,
             createdAt: employees.createdAt,
             updatedAt: employees.updatedAt,
+            deletedAt: employees.deletedAt,
             organizationId: employees.organizationId,
             userId: employees.userId,
             memberId: employees.memberId,
