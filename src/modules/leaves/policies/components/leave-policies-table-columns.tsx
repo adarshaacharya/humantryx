@@ -21,8 +21,7 @@ type LeavePolicy = {
 
 interface LeavePolicyTableMeta {
   onEdit: (policy: LeavePolicy) => void;
-  onDelete: (policyId: string) => void;
-  isDeleting?: boolean;
+  onDelete: (policy: LeavePolicy) => void;
 }
 
 const getLeaveTypeInfo = (type: string) => {
@@ -99,8 +98,7 @@ export const leavePolicyColumns: ColumnDef<LeavePolicy>[] = [
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => meta?.onDelete?.(policy.id)}
-            disabled={meta?.isDeleting}
+            onClick={() => meta?.onDelete?.(policy)}
           >
             <Trash2 className="h-4 w-4" />
           </Button>

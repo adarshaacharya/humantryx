@@ -26,11 +26,11 @@ import {
   User,
 } from "lucide-react";
 import { DocumentUploadDialog } from "./document-upload-dialog";
+import { DocumentDeleteDialog } from "./document-delete-dialog";
 import { DOCUMENT_TYPES, VISIBILITY_LEVELS } from "../consts";
 import type { DocumentFilters } from "../types";
 import { formatDistanceToNow } from "date-fns";
 import { Can } from "@/components/can";
-import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const DEFAULT_FILTERS: DocumentFilters = {
@@ -42,14 +42,16 @@ const DEFAULT_FILTERS: DocumentFilters = {
 
 export function DocumentsPage() {
   const [filters, setFilters] = useState<DocumentFilters>(DEFAULT_FILTERS);
+  const [documentToDelete, setDocumentToDelete] = useState<
+    (typeof documents)[0] | null
+  >(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const documentsQuery = api.documents.list.useQuery({
     ...filters,
   });
 
   const statsQuery = api.documents.getStats.useQuery();
-  const deleteDocumentMutation = api.documents.delete.useMutation();
-  const utils = api.useUtils();
 
   const documents = documentsQuery.data?.documents ?? [];
   const stats = statsQuery.data;
@@ -65,19 +67,9 @@ export function DocumentsPage() {
     handleFilterChange("search", search);
   };
 
-  const handleDelete = async (documentId: string) => {
-    if (!window.confirm("Are you sure you want to delete this document?")) {
-      return;
-    }
-
-    try {
-      await deleteDocumentMutation.mutateAsync({ id: documentId });
-      toast.success("Document deleted successfully");
-      await utils.documents.list.invalidate();
-      await utils.documents.getStats.invalidate();
-    } catch {
-      toast.error("Failed to delete document");
-    }
+  const handleDelete = (document: (typeof documents)[0]) => {
+    setDocumentToDelete(document);
+    setIsDeleteDialogOpen(true);
   };
 
   const handleDownload = (url: string, title: string) => {
@@ -351,7 +343,7 @@ export function DocumentsPage() {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => handleDelete(document.id)}
+                      onClick={() => handleDelete(document)}
                       className="text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -363,6 +355,17 @@ export function DocumentsPage() {
           ))
         )}
       </div>
+
+      {/* Delete Dialog */}
+      <DocumentDeleteDialog
+        document={documentToDelete}
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onDocumentDeleted={() => {
+          void documentsQuery.refetch();
+          void statsQuery.refetch();
+        }}
+      />
     </div>
   );
 }

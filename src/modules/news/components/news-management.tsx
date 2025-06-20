@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { NewsCard } from "./news-card";
 import { NewsDialog } from "./news-dialog";
 import { NewsForm } from "./news-form";
+import { NewsDeleteDialog } from "./news-delete-dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Newspaper, RefreshCw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,10 @@ export function NewsManagement() {
   const [editingArticle, setEditingArticle] = useState<NewsWithAuthor | null>(
     null,
   );
+  const [articleToDelete, setArticleToDelete] = useState<NewsWithAuthor | null>(
+    null,
+  );
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const currentEmployee = useCurrentEmployee();
   const utils = api.useUtils();
@@ -47,6 +52,8 @@ export function NewsManagement() {
   const deleteNewsMutation = api.news.deleteNews.useMutation({
     onSuccess: async () => {
       await utils.news.getNews.invalidate();
+      setArticleToDelete(null);
+      setIsDeleteDialogOpen(false);
       toast.success("News article deleted successfully!");
     },
     onError: (error) => {
@@ -83,16 +90,10 @@ export function NewsManagement() {
     setEditingArticle(null);
   }, []);
 
-  const handleDeleteNews = useCallback(
-    async (articleId: string) => {
-      if (
-        window.confirm("Are you sure you want to delete this news article?")
-      ) {
-        await deleteNewsMutation.mutateAsync({ id: articleId });
-      }
-    },
-    [deleteNewsMutation],
-  );
+  const handleDeleteNews = useCallback((article: NewsWithAuthor) => {
+    setArticleToDelete(article);
+    setIsDeleteDialogOpen(true);
+  }, []);
 
   const handleRefresh = useCallback(() => {
     void newsQuery.refetch();
@@ -224,6 +225,17 @@ export function NewsManagement() {
           </div>
         )}
       </div>
+
+      {/* Delete Dialog */}
+      <NewsDeleteDialog
+        article={articleToDelete}
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onArticleDeleted={() => {
+          setArticleToDelete(null);
+          setIsDeleteDialogOpen(false);
+        }}
+      />
     </div>
   );
 }

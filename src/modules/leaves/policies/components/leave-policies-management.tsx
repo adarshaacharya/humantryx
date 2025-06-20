@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { type LeaveType } from "../../constants";
 import { LeavePoliciesTable } from "./leave-policies-table";
 import { LeavePolicyFormDialog } from "./leave-policy-form-dialog";
+import { LeavePolicyDeleteDialog } from "./leave-policy-delete-dialog";
 import { useAbility } from "@/providers/ability-context";
 
 type PolicyFormData = {
@@ -42,6 +43,10 @@ export function LeavePoliciesManagement() {
   const [selectedPolicy, setSelectedPolicy] = useState<LeavePolicy | null>(
     null,
   );
+  const [policyToDelete, setPolicyToDelete] = useState<LeavePolicy | null>(
+    null,
+  );
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const policiesQuery = api.leave.getLeavePolicies.useQuery();
   const ability = useAbility();
@@ -76,16 +81,6 @@ export function LeavePoliciesManagement() {
     },
   });
 
-  const deletePolicyMutation = api.leave.deleteLeavePolicy.useMutation({
-    onSuccess: () => {
-      toast.success("Leave policy deleted successfully");
-      void policiesQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
   const handleCreatePolicy = (data: PolicyFormData) => {
     if (selectedPolicy) {
       updatePolicyMutation.mutate({
@@ -109,10 +104,9 @@ export function LeavePoliciesManagement() {
     setEditDialogOpen(true);
   };
 
-  const handleDeletePolicy = (policyId: string) => {
-    if (confirm("Are you sure you want to delete this leave policy?")) {
-      deletePolicyMutation.mutate({ id: policyId });
-    }
+  const handleDeletePolicy = (policy: LeavePolicy) => {
+    setPolicyToDelete(policy);
+    setIsDeleteDialogOpen(true);
   };
 
   const handleFormCancel = () => {
@@ -165,10 +159,19 @@ export function LeavePoliciesManagement() {
             onEdit={handleEditPolicy}
             onDelete={handleDeletePolicy}
             onCreateNew={() => setEditDialogOpen(true)}
-            isDeleting={deletePolicyMutation.isPending}
           />
         </CardContent>
       </Card>
+
+      {/* Delete Dialog */}
+      <LeavePolicyDeleteDialog
+        policy={policyToDelete}
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onPolicyDeleted={() => {
+          void policiesQuery.refetch();
+        }}
+      />
     </div>
   );
 }

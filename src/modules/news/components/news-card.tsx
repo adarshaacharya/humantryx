@@ -18,7 +18,7 @@ import type { NewsWithAuthor } from "../types";
 interface NewsCardProps {
   article: NewsWithAuthor;
   onEdit: (article: NewsWithAuthor) => void;
-  onDelete: (articleId: string) => void;
+  onDelete: (article: NewsWithAuthor) => void;
   currentUserId?: string;
   isDeleting?: boolean;
 }
@@ -109,7 +109,7 @@ export function NewsCard({
                   Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => onDelete(article.id)}
+                  onClick={() => onDelete(article)}
                   className="text-destructive focus:text-destructive"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />

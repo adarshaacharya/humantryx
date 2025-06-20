@@ -24,9 +24,8 @@ type LeavePoliciesTableProps = {
   policies: LeavePolicy[];
   isLoading: boolean;
   onEdit: (policy: LeavePolicy) => void;
-  onDelete: (policyId: string) => void;
+  onDelete: (policy: LeavePolicy) => void;
   onCreateNew: () => void;
-  isDeleting: boolean;
 };
 
 export function LeavePoliciesTable({
@@ -35,7 +34,6 @@ export function LeavePoliciesTable({
   onEdit,
   onDelete,
   onCreateNew,
-  isDeleting,
 }: LeavePoliciesTableProps) {
   const ability = useAbility();
 
@@ -75,7 +73,6 @@ export function LeavePoliciesTable({
       meta={{
         onEdit,
         onDelete,
-        isDeleting,
       }}
     />
   );
