@@ -124,7 +124,7 @@ export function HeroSection() {
             className="mx-auto grid max-w-4xl grid-cols-2 gap-8 lg:grid-cols-4"
           >
             {[
-              { icon: Users, stat: "90%", label: "Fast Onboarding" },
+              { icon: Users, stat: "3x", label: "Faster Onboarding" },
               { icon: TrendingUp, stat: "80%", label: "Workload Reduction" },
               { icon: Brain, stat: "24/7", label: "AI-Powered Support" },
               { icon: Shield, stat: "99.9%", label: "Uptime Guarantee" },

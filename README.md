@@ -1,6 +1,8 @@
+![Humantryx Logo](https://github.com/adarshaacharya/humantryx/blob/main/docs/banner.png?raw=true)
+
 # 🏢 Humantryx • AI-Powered HRMS
 
-[demo](https://humantryx.vercel.app) — [docs](https://docs.humantryx.com) — [github](https://github.com/your-org/humantryx)
+[demo](https://humantryx.vercel.app) — [docs](https://docs.humantryx.com) — [github](https://github.com/adarshacharya/humantryx)
 
 > **Humantryx** is an AI-powered Human Resource Management System built with Next.js and modern technologies. It streamlines HR processes including employee management, attendance tracking, leave management, and payroll processing, all enhanced with intelligent automation.
 
@@ -59,10 +61,8 @@
 ### 🤖 AI-Powered Features
 
 - **Resume Screening**: Automated candidate evaluation
-- **Sentiment Analysis**: Employee feedback analysis
-- **Predictive Analytics**: Workforce planning and insights
-- **Smart Leave Parsing**: Natural language leave request processing
-- **Intelligent Recommendations**: AI-driven HR suggestions
+- **Document Knowledge Base**: AI-driven document search and retrieval
+- **Smart Leave Parsing**: Natural language for leave requests
 
 ### 📰 News & Communication
 
