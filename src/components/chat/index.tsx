@@ -1,4 +1,3 @@
-export { Chat, type ChatProps } from "./chat";
 export {
   ChatBubble,
   ChatBubbleAvatar,

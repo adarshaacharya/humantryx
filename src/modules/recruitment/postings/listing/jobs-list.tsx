@@ -48,7 +48,7 @@ interface Job {
   updatedAt: Date;
   publishedAt: Date | null;
   createdByEmployee: {
-    id: string;
+    id: string | null;
     name: string | null;
   } | null;
   applicationCount: number;
@@ -313,6 +313,7 @@ export function JobsList() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem
                           onClick={() => {
+                            if (!job) return;
                             setEditingJob(job);
                           }}
                         >

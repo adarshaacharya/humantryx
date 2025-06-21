@@ -15,7 +15,6 @@ import {
 
 interface EmployeeInvitationEmailProps {
   email: string;
-  designation: EmployeeDesignation;
   organizationName: string;
   invitationId: string;
   invitationLink: string;
@@ -23,7 +22,6 @@ interface EmployeeInvitationEmailProps {
 
 export const EmployeeInvitationEmail = ({
   email,
-  designation,
   organizationName,
   invitationLink,
   invitationId,
@@ -36,7 +34,7 @@ export const EmployeeInvitationEmail = ({
       <Preview>{previewText}</Preview>
       <Tailwind>
         <Body className="mx-auto my-auto bg-white px-2 font-sans">
-          <Container className="mx-auto my-[40px] max-w-[600px] rounded border border-solid border-[#eaeaea] p-[20px]">
+          <Container className="mx-auto my-[40px] max-w-[900px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Section className="text-center">
               <Heading className="mx-0 my-[30px] p-0 text-[24px] font-semibold text-[#111827]">
                 Welcome to {organizationName}
@@ -46,8 +44,7 @@ export const EmployeeInvitationEmail = ({
             <Text className="text-base text-[#374151]">Dear {email},</Text>
 
             <Text className="text-base text-[#374151]">
-              We&apos;re excited to have you join {organizationName}, as a{" "}
-              {designation}.
+              We&apos;re excited to have you join {organizationName}.
             </Text>
 
             <Section className="text-center">

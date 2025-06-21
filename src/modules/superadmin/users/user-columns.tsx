@@ -34,7 +34,7 @@ export type User = {
   email: string;
   role: "user" | "super_admin";
   createdAt: Date;
-  banned?: boolean;
+  banned?: boolean | null
   banReason?: string | null;
   banExpires?: Date | null;
 };
@@ -116,7 +116,7 @@ export const columns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title="Joined" />
     ),
     cell: ({ row }) => {
-      const date = row.getValue("createdAt");
+      const date = row.getValue("createdAt") as Date;
       return date.toLocaleDateString(undefined, {
         year: "numeric",
         month: "short",

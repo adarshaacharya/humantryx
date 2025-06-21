@@ -40,7 +40,6 @@ export const auth = betterAuth({
         const { error } = await sendOrganizationInvitationEmail({
           email: data.email,
           inviteLink: inviteLink,
-          designation: data.email,
           orgName: data.organization.name,
           inviteId: data.id,
         });
@@ -72,6 +71,7 @@ export const auth = betterAuth({
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, token, url }, request) => {
       const verificationUrl = `${env.BETTER_AUTH_URL}/api/auth/verify-email?token=${token}&callbackURL=${encodeURIComponent(url)}`;
+
       const { error } = await sendVerificationEmail({
         email: user.email,
         verificationUrl: verificationUrl,
@@ -104,7 +104,6 @@ export const auth = betterAuth({
           };
         },
       },
-
     },
   },
 });

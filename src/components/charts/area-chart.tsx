@@ -10,9 +10,7 @@ import {
 } from "recharts";
 
 interface AreaChartProps {
-  data: Array<{
-    [key: string]: string | number;
-  }>;
+  data?: Array<Record<string, string | number>> | undefined;
   categories: string[];
   index: string;
   colors?: string[];
@@ -69,7 +67,7 @@ export function AreaChartComponent({
   const renderTooltipContent = (props: any) => {
     const { active, payload } = props;
 
-    if (active && payload && payload.length) {
+    if (active && payload?.length) {
       return (
         <div className="bg-background rounded-md border p-2 shadow-md">
           <div className="font-medium">{payload[0].payload[index]}</div>

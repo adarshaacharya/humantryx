@@ -234,13 +234,13 @@ export const FloatingDocumentChat = () => {
                   </Button>
                 </div>
               </div>
-
               {/* Messages */}
               <div className="min-h-0 flex-1 overflow-hidden">
                 <ChatMessageList className="h-full">
-                  <AnimatePresence mode="popLayout">
+                  <>
                     {visibleMessages.length === 0 ? (
                       <motion.div
+                        key="welcome"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
@@ -298,7 +298,7 @@ export const FloatingDocumentChat = () => {
                         )}
                       </>
                     )}
-                  </AnimatePresence>
+                  </>
                 </ChatMessageList>
               </div>
 

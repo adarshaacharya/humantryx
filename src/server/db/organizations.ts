@@ -2,6 +2,7 @@ import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { users } from "./users";
 
+// https://github.com/better-auth/better-auth/blob/2fe1be0e5f023be77b07206dd960f9fd38abba8c/packages/better-auth/src/plugins/organization/schema.ts#L51
 export const invitationStatus = pgEnum("invitation_status", [
   "pending",
   "accepted",

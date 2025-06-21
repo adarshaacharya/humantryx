@@ -216,7 +216,7 @@ export function CTASection() {
                 transition={{ delay: 0.4 }}
                 className="flex flex-col items-center justify-center gap-4 sm:flex-row"
               >
-                <Link href="/sign-in">
+                <Link href="/sign-up">
                   <Button size="lg" className="h-auto px-8 py-4 text-lg">
                     Start For Free
                     <ArrowRight className="ml-2 h-5 w-5" />

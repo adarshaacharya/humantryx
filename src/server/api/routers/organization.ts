@@ -142,6 +142,7 @@ export const organizationRouter = createTRPCRouter({
           organizationId: organization.id,
           designation: "founder",
           status: "active",
+          department: "founder_office", // first employee is the founder, so will be in founder office
           memberId: member?.id,
         });
 

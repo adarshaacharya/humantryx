@@ -102,6 +102,9 @@ export const toPayrollRecordWithEmployee = (
       ? {
           id: record.employee.id,
           designation: record.employee.designation,
+          organizationId: record.employee.organizationId || "",
+          userId: record.employee.user?.id || "",
+          status: record.employee.status || "active",
           user: record.employee.user
             ? {
                 id: record.employee.user.id,

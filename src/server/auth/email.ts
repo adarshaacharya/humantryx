@@ -59,13 +59,11 @@ export const sendOrganizationInvitationEmail = async ({
   email,
   inviteLink,
   orgName,
-  designation,
   inviteId,
 }: {
   email: string;
   inviteLink: string;
   orgName: string;
-  designation: string;
   inviteId?: string;
 }) => {
   return await resend.emails.send({
@@ -76,7 +74,6 @@ export const sendOrganizationInvitationEmail = async ({
       invitationLink: inviteLink,
       organizationName: orgName,
       email,
-      designation,
       invitationId: inviteId ?? "N/A",
     }),
   });

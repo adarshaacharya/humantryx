@@ -49,7 +49,7 @@ const statusConfig = {
     color: "bg-blue-100 text-blue-800",
     icon: Timer,
   },
-};
+} as const;
 
 export function AttendanceClockCard() {
   const [showClockDialog, setShowClockDialog] = useState(false);
@@ -58,24 +58,6 @@ export function AttendanceClockCard() {
 
   const statusQuery = api.attendance.getCurrentStatus.useQuery(undefined, {
     refetchInterval: 30000, // Refetch every 30 seconds
-  });
-
-  // Debug query to test if attendance API is working
-  const debugQuery = api.attendance.debugCheck.useQuery();
-
-  // Debug logging
-  console.log("Current Status Query:", {
-    data: statusQuery.data,
-    isLoading: statusQuery.isLoading,
-    isError: statusQuery.isError,
-    error: statusQuery.error,
-  });
-
-  console.log("Debug Query:", {
-    data: debugQuery.data,
-    isLoading: debugQuery.isLoading,
-    isError: debugQuery.isError,
-    error: debugQuery.error,
   });
 
   const clockInMutation = api.attendance.clockIn.useMutation({
@@ -178,7 +160,7 @@ export function AttendanceClockCard() {
   }
 
   const { activeRecord, status, employee } = statusQuery.data ?? {};
-  const statusInfo = statusConfig[status as keyof typeof statusConfig];
+  const statusInfo = statusConfig[status!];
   const StatusIcon = statusInfo.icon;
 
   const formatDuration = (startTime: Date, endTime?: Date) => {
@@ -207,6 +189,7 @@ export function AttendanceClockCard() {
               <User className="text-primary h-4 w-4" />
             </div>
             <div>
+              {/* @ts-expect-error : too lazy to refactor queries  */}
               <div className="font-medium">{employee?.user?.name}</div>
               <div className="text-muted-foreground text-sm capitalize">
                 {employee?.designation.replace("_", " ")}

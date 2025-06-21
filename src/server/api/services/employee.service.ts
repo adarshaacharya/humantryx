@@ -272,7 +272,7 @@ export class EmployeeService {
       sortDirection: params.sortDirection,
     });
     const cacheKey = this.CACHE_KEYS.EMPLOYEE_LIST(
-      params.organizationId,
+      params.organizationId || "all",
       paramsKey,
     );
 

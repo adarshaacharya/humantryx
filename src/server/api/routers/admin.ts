@@ -294,7 +294,7 @@ export const adminRouter = createTRPCRouter({
         sortBy: z.enum(["createdAt", "email", "status"]).default("createdAt"),
         sortDirection: z.enum(["asc", "desc"]).default("desc"),
         status: z
-          .enum(["pending", "accepted", "expired", "all"])
+          .enum(["pending", "accepted", "rejected", "canceled", "all"])
           .default("all"),
       }),
     )
@@ -302,7 +302,7 @@ export const adminRouter = createTRPCRouter({
       const { limit, offset, searchQuery, sortBy, sortDirection, status } =
         input;
 
-      let filters = [];
+      const filters = [];
 
       // Apply search filter
       if (searchQuery) {

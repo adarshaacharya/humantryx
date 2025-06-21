@@ -42,7 +42,7 @@ export function defineAbilitiesFor(
       ability.can("read", "LeavePolicies");
       ability.can("read", "Payroll", {
         employeeId: employee.id,
-      });
+      } as any);
       ability.can(["create", "read", "update", "delete"], "News");
       break;
 
@@ -50,20 +50,20 @@ export function defineAbilitiesFor(
     default:
       ability.can("read", "Organization", {
         id: employee.organizationId,
-      });
+      } as any);
       ability.can("read", "Employee");
       ability.can(["create"], "LeaveRequests");
       ability.can("read", "LeavePolicies", {
         organizationId: employee.organizationId,
-      });
+      } as any);
       ability.can("read", "LeaveRequests", {
         employeeId: employee.id,
-      });
+      } as any);
       ability.can("read", "Attendance", {
         employeeId: employee.id,
-      });
-      ability.can("read", "Payroll", { employeeId: employee.id });
-      ability.can("read", "SalarySettings", { employeeId: employee.id });
+      } as any);
+      ability.can("read", "Payroll", { employeeId: employee.id } as any);
+      ability.can("read", "SalarySettings", { employeeId: employee.id } as any);
       ability.can(["create", "read", "update", "delete"], "News");
       ability.can("read", "Documents"); // Regular employees can read documents
 

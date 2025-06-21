@@ -75,7 +75,7 @@ export function Navigation() {
                     Sign In
                   </Button>
                 </Link>
-                <Link href="/sign-in">
+                <Link href="/sign-up">
                   <Button
                     size="sm"
                     className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"

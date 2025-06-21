@@ -72,16 +72,4 @@ export const attendanceRouter = createTRPCRouter({
         input.year,
       );
     }),
-
-  // Debug endpoint to check if we can fetch records
-  debugCheck: protectedProcedure.query(async ({ ctx }) => {
-    const employee = await AttendanceService.validateEmployee(
-      ctx.session.user.id,
-    );
-    return {
-      employeeId: employee.id,
-      employeeName: employee.user?.name,
-      message: "Employee validation successful",
-    };
-  }),
 });

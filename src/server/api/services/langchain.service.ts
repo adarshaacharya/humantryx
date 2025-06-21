@@ -4,11 +4,8 @@ import { DocxLoader } from "@langchain/community/document_loaders/fs/docx";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { type Document } from "@langchain/core/documents";
-import { initPinecone } from "@/lib/server/pinecone";
-import { env } from "@/env";
-import { getOpenAIEmbeddings, groqModel } from "@/lib/server/ai-models";
+import { groqModel } from "@/lib/server/ai-models";
 import cuid2 from "@paralleldrive/cuid2";
-import { PineconeStore } from "@langchain/pinecone";
 import { LangChainAdapter } from "ai";
 import {
   ChatPromptTemplate,
@@ -17,10 +14,10 @@ import {
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { createRetrievalChain } from "langchain/chains/retrieval";
 import { type Message as VercelChatMessage } from "ai";
-import { z } from "zod";
 import AIPrompts from "@/server/ai/prompts";
 import { createHistoryAwareRetriever } from "langchain/chains/history_aware_retriever";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
+import { PineconeService } from "./pinecone.service";
 
 export class LangchainService {
   static textSplitter = new RecursiveCharacterTextSplitter({
@@ -141,57 +138,9 @@ export class LangchainService {
       };
     });
 
-    const docs = await this.embedFile(castedSplits);
+    const docs = await PineconeService.embedFile(castedSplits);
 
     return docs;
-  }
-
-  static async embedFile(documents: Document[]) {
-    const pinecone = initPinecone();
-
-    const openAIEmbeddings = getOpenAIEmbeddings();
-
-    const pineconeIndex = (await pinecone).Index(env.PINECONE_INDEX);
-
-    // todo: add namespace
-    const vectorStore = await PineconeStore.fromDocuments(
-      documents,
-      openAIEmbeddings,
-      {
-        onFailedAttempt: (error) => {
-          console.error("Failed to embed document:", error);
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to embed document",
-          });
-        },
-        maxConcurrency: 10,
-        pineconeIndex,
-      },
-    );
-
-    console.log(`Successfully embedded ${documents.length} documents.`);
-
-    return vectorStore;
-  }
-
-  static async retrieveDocumentChunks(topK = 5) {
-    const pinecone = initPinecone();
-
-    const openAIEmbeddings = getOpenAIEmbeddings();
-
-    const pineconeIndex = (await pinecone).Index(env.PINECONE_INDEX);
-
-    const vectorStore = await PineconeStore.fromExistingIndex(
-      openAIEmbeddings,
-      {
-        pineconeIndex,
-      },
-    );
-
-    const retriever = vectorStore.asRetriever(topK);
-
-    return retriever;
   }
 
   static async chatDocs({
@@ -201,7 +150,7 @@ export class LangchainService {
     question: string;
     chatHistory: VercelChatMessage[];
   }) {
-    const retriever = await this.retrieveDocumentChunks();
+    const retriever = await PineconeService.retrieveDocumentChunks();
 
     // make aware of chat history in case of follow-up questions
     const contextualizeQPrompt = ChatPromptTemplate.fromMessages([

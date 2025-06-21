@@ -22,7 +22,18 @@ export function InvitationLandingPage({
   const completeOnboardMutation =
     api.invitation.completeOnboarding.useMutation();
 
-  const invitationQuery = api.invitation.verify.useQuery({ id: invitationId });
+  const invitationQuery = api.invitation.verify.useQuery(
+    { id: invitationId },
+    {
+      retry(failureCount, error) {
+        // dont retry if error code is  BAD_REQUEST
+        if (error.data?.code === "BAD_REQUEST") {
+          return false;
+        }
+        return failureCount < 3; // Retry up to 3 times
+      },
+    },
+  );
 
   const { data: session } = authClient.useSession();
 
@@ -78,21 +89,6 @@ export function InvitationLandingPage({
     }
   }, [session?.user, invitationQuery.data, invitationId]);
 
-  if (invitationQuery.isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <Loader2 className="text-primary mx-auto mb-4 h-8 w-8 animate-spin" />
-              <p>Loading invitation...</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   if (invitationQuery.error) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -105,6 +101,21 @@ export function InvitationLandingPage({
                 This invitation has expired or is no longer valid.
               </p>
               <Button onClick={() => router.push("/")}>Go to Homepage</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (invitationQuery.isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <Loader2 className="text-primary mx-auto mb-4 h-8 w-8 animate-spin" />
+              <p>Loading invitation...</p>
             </div>
           </CardContent>
         </Card>

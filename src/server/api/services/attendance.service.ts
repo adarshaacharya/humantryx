@@ -1,5 +1,15 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, gte, lte, desc, sql, isNull, isNotNull } from "drizzle-orm";
+import {
+  and,
+  eq,
+  gte,
+  lte,
+  desc,
+  sql,
+  isNull,
+  isNotNull,
+  getTableColumns,
+} from "drizzle-orm";
 import { db } from "@/server/db";
 import { employees } from "@/server/db/schema";
 import { attendanceRecords } from "@/server/db/attendance";
@@ -199,6 +209,13 @@ export class AttendanceService {
         eq(attendanceRecords.employeeId, employee.id),
         isNull(attendanceRecords.clockOutTime),
       ),
+      with: {
+        employee: {
+          with: {
+            user: true,
+          },
+        },
+      },
       orderBy: [desc(attendanceRecords.clockInTime)],
     });
 

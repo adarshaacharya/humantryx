@@ -137,12 +137,12 @@ function AdminDashboardStats() {
           <CardContent>
             <div className="text-2xl font-bold">{stats?.totalEmployees}</div>
             <p className="text-muted-foreground flex items-center text-xs">
-              {stats?.employeeGrowthPercent > 0 ? (
+              {(stats?.employeeGrowthPercent || 0) > 0 ? (
                 <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
-              ) : stats?.employeeGrowthPercent < 0 ? (
+              ) : (stats?.employeeGrowthPercent || 0) < 0 ? (
                 <TrendingDown className="mr-1 h-3 w-3 text-red-500" />
               ) : null}
-              {stats?.employeeGrowthPercent > 0 ? "+" : ""}
+              {(stats?.employeeGrowthPercent || 0) > 0 ? "+" : ""}
               {stats?.employeeGrowthPercent.toFixed(1)}% from last month
             </p>
           </CardContent>
@@ -183,16 +183,16 @@ function AdminDashboardStats() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatter.format(stats?.monthlyPayroll)}
+              {formatter.format(stats?.monthlyPayroll || 0)}
             </div>
             <p className="text-muted-foreground flex items-center text-xs">
-              {stats?.payrollChangePercent > 0 ? (
+              {(stats?.payrollChangePercent || 0) > 0 ? (
                 <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
-              ) : stats?.payrollChangePercent < 0 ? (
+              ) : (stats?.payrollChangePercent || 0) < 0 ? (
                 <TrendingDown className="mr-1 h-3 w-3 text-red-500" />
               ) : null}
-              {stats?.payrollChangePercent > 0 ? "+" : ""}
-              {stats?.payrollChangePercent.toFixed(1)}% from last month
+              {(stats?.payrollChangePercent || 0) > 0 ? "+" : ""}
+              {(stats?.payrollChangePercent || 0).toFixed(1)}% from last month
             </p>
           </CardContent>
         </Card>
@@ -216,7 +216,7 @@ function AdminDashboardStats() {
               colors={["#4ade80"]}
               valueFormatter={(value) => `${value}%`}
               height={250}
-              startEndOnly={stats?.attendanceTrend?.length > 15}
+              startEndOnly={(stats?.attendanceTrend?.length || 0) > 15}
             />
           </CardContent>
         </Card>
@@ -273,7 +273,7 @@ function ManagerDashboardStats() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {attendanceData.totalTeamMembers}
+              {attendanceData?.totalTeamMembers}
             </div>
             <p className="text-muted-foreground text-xs">Direct reports</p>
           </CardContent>
@@ -286,10 +286,10 @@ function ManagerDashboardStats() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {attendanceData.presentToday}
+              {attendanceData?.presentToday}
             </div>
             <p className="text-muted-foreground text-xs">
-              {attendanceData.attendanceRate.toFixed(1)}% of team
+              {attendanceData?.attendanceRate.toFixed(1)}% of team
             </p>
           </CardContent>
         </Card>
@@ -301,10 +301,10 @@ function ManagerDashboardStats() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {attendanceData.onLeaveToday}
+              {attendanceData?.onLeaveToday}
             </div>
             <p className="text-muted-foreground text-xs">
-              {attendanceData.leaveRate.toFixed(1)}% of team
+              {attendanceData?.leaveRate.toFixed(1)}% of team
             </p>
           </CardContent>
         </Card>
@@ -318,7 +318,7 @@ function ManagerDashboardStats() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {leaveData.pendingRequests}
+              {leaveData?.pendingRequests}
             </div>
             <p className="text-muted-foreground text-xs">
               Require your approval
@@ -338,7 +338,7 @@ function ManagerDashboardStats() {
           </CardHeader>
           <CardContent>
             <AreaChartComponent
-              data={attendanceData.teamAttendanceTrend}
+              data={attendanceData?.teamAttendanceTrend}
               categories={["presentPercentage"]}
               index="date"
               colors={["#3b82f6"]}

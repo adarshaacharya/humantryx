@@ -9,7 +9,6 @@ export const jobFormSchema = z.object({
     .min(1, "Description is required")
     .refine(
       (val) => {
-        // For HTML content, check if it has meaningful content (not just empty tags)
         const textContent = val.replace(/<[^>]*>/g, "").trim();
         return textContent.length >= 10;
       },
@@ -19,11 +18,11 @@ export const jobFormSchema = z.object({
   location: z.string().optional(),
   salaryRangeMin: z.coerce.number().positive().optional(),
   salaryRangeMax: z.coerce.number().positive().optional(),
-  salaryCurrency: z.string().default("USD"),
+  salaryCurrency: z.string(),
   experienceRequired: z.string().optional(),
-  skills: z.array(z.string()).default([]),
+  skills: z.array(z.string()),
   requirements: z.string().optional(),
-  status: z.enum(jobStatusEnum.enumValues).default("draft"),
+  status: z.enum(jobStatusEnum.enumValues),
 });
 
 export type JobFormData = z.infer<typeof jobFormSchema>;

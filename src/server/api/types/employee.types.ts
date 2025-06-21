@@ -20,7 +20,7 @@ export interface EmployeeListParams
   extends PaginationOptions,
     SortOptions,
     FilterOptions {
-  organizationId: string;
+  organizationId?: string | null;
 }
 
 export interface EmployeeWithUser {

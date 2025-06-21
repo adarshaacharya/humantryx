@@ -51,6 +51,7 @@ interface CreateJobDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+
 export function CreateJobDialog({ open, onOpenChange }: CreateJobDialogProps) {
   const [skillInput, setSkillInput] = useState("");
   const utils = api.useUtils();

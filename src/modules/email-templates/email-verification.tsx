@@ -21,7 +21,7 @@ export const VerificationEmailTemplate = ({
   inviteLink,
   companyName = "Humantryx",
 }: VerificationEmailTemplateProps) => {
-  const previewText = `Verify your email address for ${companyName}`;
+  const previewText = `Verify your email address for ${companyName} platform.`;
 
   return (
     <Html>
@@ -37,8 +37,9 @@ export const VerificationEmailTemplate = ({
             </Section>
 
             <Text className="text-base text-[#374151]">
-              Thank you for creating your account with {companyName}! We&apos;re excited to have you join us.
-              Please verify your email address to complete your registration.
+              Thank you for creating your account with {companyName}! We&apos;re
+              excited to have you join us. Please verify your email address to
+              complete your registration.
             </Text>
 
             <Section className="text-center">
@@ -52,7 +53,8 @@ export const VerificationEmailTemplate = ({
 
             <Section className="my-[32px] text-center">
               <Text className="text-sm text-[#6b7280]">
-                Please click the button above to verify your email address and activate your account.
+                Please click the button above to verify your email address and
+                activate your account.
               </Text>
             </Section>
 
@@ -63,7 +65,7 @@ export const VerificationEmailTemplate = ({
               <Text className="m-2 text-sm text-[#374151]">
                 Copy and paste this URL into your browser:
               </Text>
-              <Text className="m-4 rounded-md bg-white p-4 font-mono text-sm text-[#111827] break-all">
+              <Text className="m-4 rounded-md bg-white p-4 font-mono text-sm break-all text-[#111827]">
                 {inviteLink}
               </Text>
             </Section>
@@ -87,7 +89,8 @@ export const VerificationEmailTemplate = ({
             </Section>
 
             <Text className="text-base text-[#374151]">
-              If you have any questions, please don&apos;t hesitate to contact our support team.
+              If you have any questions, please don&apos;t hesitate to contact
+              our support team.
             </Text>
 
             <Hr className="my-[32px] w-full border border-solid border-[#eaeaea]" />
@@ -110,4 +113,3 @@ VerificationEmailTemplate.PreviewProps = {
   inviteLink: "http://localhost:3000/verify-email?token=sample-token",
   companyName: "Humantryx",
 };
-
