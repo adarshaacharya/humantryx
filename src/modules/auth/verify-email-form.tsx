@@ -85,7 +85,7 @@ export function VerifyEmailForm() {
               Email Verification Required
             </CardTitle>
             <CardDescription className="text-gray-600 dark:text-gray-400">
-              Please verify your email address to continue using Human Loop
+              Please verify your email address to continue using Humantryx
             </CardDescription>
           </div>
         </CardHeader>

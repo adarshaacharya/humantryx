@@ -24,7 +24,7 @@ Current HR management systems are often complex, difficult to use, and lack mode
 
 ## Solution Overview
 
-The solution is a modern HR management system called "Human Loop" that leverages AI to automate and streamline HR processes. It provides a user-friendly interface for both HR managers and employees, ensuring efficient management of employee records, attendance, leave requests, and payroll processing.
+The solution is a modern HR management system called "Humantryx" that leverages AI to automate and streamline HR processes. It provides a user-friendly interface for both HR managers and employees, ensuring efficient management of employee records, attendance, leave requests, and payroll processing.
 
 - Server first architecture with Next.js and TRPC for type-safe APIs
 - TypeScript for type safety and better developer experience
@@ -36,7 +36,7 @@ The solution is a modern HR management system called "Human Loop" that leverages
 
 ## User Workflows
 
-# 🧠 HumanLoop – AI-Powered HRMS User Workflow Specification
+# 🧠 humantryx – AI-Powered HRMS User Workflow Specification
 
 ---
 
@@ -48,7 +48,7 @@ The solution is a modern HR management system called "Human Loop" that leverages
 
 ### Flow:
 
-1. Visit HumanLoop signup page.
+1. Visit humantryx signup page.
 2. Input:
    - Company name
    - Work email (e.g., hr@company.com)

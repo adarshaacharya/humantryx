@@ -36,7 +36,7 @@ export class PayslipPDF {
     this.doc.setTextColor(0, 0, 0);
     this.doc.setFont("helvetica", "bold");
     this.doc.setFontSize(18);
-    const orgName = "Human Loop HRMS";
+    const orgName = "Humantryx HRMS";
     this.doc.text(orgName, this.margin + 35, this.margin + 15);
 
     this.doc.setFont("helvetica", "normal");
@@ -371,7 +371,7 @@ export class PayslipPDF {
     this.doc.text(payslipId, this.pageWidth - this.margin - 50, footerY);
 
     this.doc.text(
-      "Human Loop - Payroll Management System",
+      "Humantryx - Payroll Management System",
       this.pageWidth - this.margin - 80,
       footerY + 8,
     );

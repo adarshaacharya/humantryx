@@ -29,7 +29,7 @@ export function CTASection() {
       company: "TechFlow Inc",
       avatar: "SC",
       content:
-        "Human Loop reduced our HR workload by 75%. The AI features are game-changing for modern HR operations.",
+        "Humantryx reduced our HR workload by 75%. The AI features are game-changing for modern HR operations.",
       rating: 5,
     },
     {
@@ -263,7 +263,7 @@ export function CTASection() {
           <div className="flex items-center justify-center gap-6">
             <div className="text-muted-foreground flex items-center text-sm">
               <Mail className="mr-2 h-4 w-4" />
-              hello@humanloop.com
+              hello@humantryx.com
             </div>
             <div className="text-muted-foreground flex items-center text-sm">
               <Phone className="mr-2 h-4 w-4" />

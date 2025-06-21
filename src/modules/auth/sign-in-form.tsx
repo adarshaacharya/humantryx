@@ -132,7 +132,7 @@ export function SignInForm() {
             <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400" />
           </div>
           <span className="text-foreground ml-2 text-xl font-bold">
-            Human Loop
+            Humantryx
           </span>
         </Link>
       </motion.div>

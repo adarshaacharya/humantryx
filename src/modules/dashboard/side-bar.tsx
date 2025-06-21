@@ -72,9 +72,7 @@ export function DashboardSideBar() {
               <Brain className="text-primary h-8 w-8" />
               <div className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-400" />
             </div>
-            <span className="text-foreground text-xl font-bold">
-              Human Loop
-            </span>
+            <span className="text-foreground text-xl font-bold">Humantryx</span>
           </Link>
         </div>
       </SidebarHeader>

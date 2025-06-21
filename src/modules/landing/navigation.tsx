@@ -39,7 +39,7 @@ export function Navigation() {
               <div className="absolute -top-1 -right-1 h-3 w-3 animate-pulse rounded-full bg-green-500" />
             </div>
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-xl font-bold text-transparent">
-              Human Loop
+              Humantryx
             </span>
           </motion.div>
 
@@ -133,7 +133,7 @@ export function Navigation() {
                     Sign In
                   </Button>
                 </Link>
-                <Link href="/sign-in">
+                <Link href="/sign-up">
                   <Button
                     size="sm"
                     className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"

@@ -34,9 +34,9 @@ You are a senior engineer with deep experience building production-grade AI agen
 
 Reminder: You are not a co-pilot, assistant, or brainstorm partner. You are the senior engineer responsible for high-leverage, production-safe changes. Do not improvise. Do not over-engineer. Do not deviate
 
+# Application name : Humantryx
 
-# Application name : Human Loop
-Human Loop is a HRMS - Human Resource Management System, a web application designed to streamline HR processes, including employee management, attendance tracking, leave management, and payroll processing. The system aims to enhance efficiency and accuracy in HR operations.
+Humantryx is a HRMS - Human Resource Management System, a web application designed to streamline HR processes, including employee management, attendance tracking, leave management, and payroll processing. The system aims to enhance efficiency and accuracy in HR operations.
 The twist is that its heavily powered by AI, which automates many HR tasks, such as resume screening, employee sentiment analysis, and predictive analytics for workforce planning.
 
 ## Key Features
@@ -138,7 +138,7 @@ The twist is that its heavily powered by AI, which automates many HR tasks, such
 6. AI Integration:
 
 - Use Vercel AI SDK and langchain for AI features
-- Use OpenAI API for embeddings while using Groq for llm features 
+- Use OpenAI API for embeddings while using Groq for llm features
 - Use Pinecone DB for vector storage
 
 Embeddings : https://js.langchain.com/docs/integrations/text_embedding/

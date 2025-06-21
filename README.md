@@ -1,8 +1,8 @@
-# 🏢 Human Loop • AI-Powered HRMS
+# 🏢 Humantryx • AI-Powered HRMS
 
-[demo](https://human-loop.vercel.app) — [docs](https://docs.human-loop.com) — [github](https://github.com/your-org/human-loop)
+[demo](https://humantryx.vercel.app) — [docs](https://docs.humantryx.com) — [github](https://github.com/your-org/humantryx)
 
-> **Human Loop** is an AI-powered Human Resource Management System built with Next.js and modern technologies. It streamlines HR processes including employee management, attendance tracking, leave management, and payroll processing, all enhanced with intelligent automation.
+> **Humantryx** is an AI-powered Human Resource Management System built with Next.js and modern technologies. It streamlines HR processes including employee management, attendance tracking, leave management, and payroll processing, all enhanced with intelligent automation.
 
 ## Stack
 
@@ -76,8 +76,8 @@
 2. Run:
 
    ```bash
-   git clone https://github.com/your-org/human-loop.git
-   cd human-loop
+   git clone https://github.com/your-org/humantryx.git
+   cd humantryx
    pnpm install
    cp .env.example .env
    ```
@@ -182,7 +182,7 @@ vercel --prod
 
 ```bash
 # Build Docker image
-docker build -t human-loop .
+docker build -t humantryx .
 
 # Run with Docker Compose
 docker-compose up -d
@@ -202,7 +202,7 @@ We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) 
 
 ## License
 
-MIT © 2025 Human Loop Team
+MIT © 2025 Humantryx Team
 
 ---
 

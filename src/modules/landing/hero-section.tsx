@@ -63,7 +63,7 @@ export function HeroSection() {
             transition={{ delay: 0.2 }}
             className="text-muted-foreground mx-auto mb-8 max-w-3xl text-xl leading-relaxed"
           >
-            Replace traditional HR systems with Human Loop&apos;s intelligent
+            Replace traditional HR systems with Humantryx&apos;s intelligent
             automation. Cut administrative workload by 80% while delivering
             exceptional employee experiences through AI-powered decision making.
           </motion.p>
@@ -95,7 +95,7 @@ export function HeroSection() {
             transition={{ delay: 0.4 }}
             className="mb-16 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
-            <Link href="/sign-in">
+            <Link href="/sign-up">
               <Button size="lg" className="h-auto px-8 py-6 text-lg">
                 Get Started Today
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -105,6 +105,12 @@ export function HeroSection() {
               variant="outline"
               size="lg"
               className="h-auto px-8 py-6 text-lg"
+              onClick={() =>
+                window.open(
+                  "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                  "_blank",
+                )
+              }
             >
               Watch Demo
             </Button>
@@ -118,7 +124,7 @@ export function HeroSection() {
             className="mx-auto grid max-w-4xl grid-cols-2 gap-8 lg:grid-cols-4"
           >
             {[
-              { icon: Users, stat: "500+", label: "Companies Trust Us" },
+              { icon: Users, stat: "90%", label: "Fast Onboarding" },
               { icon: TrendingUp, stat: "80%", label: "Workload Reduction" },
               { icon: Brain, stat: "24/7", label: "AI-Powered Support" },
               { icon: Shield, stat: "99.9%", label: "Uptime Guarantee" },

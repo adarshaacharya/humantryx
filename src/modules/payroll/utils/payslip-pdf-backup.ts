@@ -80,7 +80,7 @@ export class PayslipPDF {
     this.doc.setFont("helvetica", "bold");
     this.doc.setFontSize(18);
     // Get organization name dynamically (for now using a placeholder)
-    const orgName = "Human Loop HRMS"; // Can be made dynamic later
+    const orgName = "Humantryx HRMS"; // Can be made dynamic later
     this.doc.text(orgName, this.margin + 35, this.margin + 15);
 
     this.doc.setFont("helvetica", "normal");
@@ -548,7 +548,7 @@ export class PayslipPDF {
     this.doc.text(payslipId, this.pageWidth - this.margin - 50, footerY);
 
     this.doc.text(
-      "Human Loop - Payroll Management System",
+      "Humantryx - Payroll Management System",
       this.pageWidth - this.margin - 80,
       footerY + 8,
     );

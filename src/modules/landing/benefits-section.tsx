@@ -179,7 +179,7 @@ export function BenefitsSection() {
                       variant="default"
                       className="bg-green-600 text-xs text-white hover:bg-green-700"
                     >
-                      Human Loop Way
+                      Humantryx Way
                     </Badge>
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
                       <comparison.modern.icon className="h-4 w-4 text-green-600 dark:text-green-400" />

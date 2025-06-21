@@ -96,7 +96,7 @@ export function PayslipPreviewDialog({
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-xl text-blue-600">
-                    Human Loop
+                    Humantryx
                   </CardTitle>
                   <p className="text-muted-foreground text-sm">
                     Human Resource Management System

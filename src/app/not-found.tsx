@@ -98,7 +98,7 @@ export default function NotFound() {
                   AI-Powered
                 </Badge>
                 <h2 className="text-2xl font-semibold text-slate-700 md:text-4xl">
-                  Human Loop
+                  Humantryx
                 </h2>
               </motion.div>
             </div>
@@ -157,7 +157,7 @@ export default function NotFound() {
               <span>Streamlining HR with AI since 2024</span>
             </div>
             <p className="text-xs text-slate-400">
-              Human Loop - Where Technology Meets Human Resources
+              Humantryx - Where Technology Meets Human Resources
             </p>
           </motion.div>
         </motion.div>

@@ -13,7 +13,7 @@ import {
 } from "@c15t/nextjs";
 
 export const metadata: Metadata = {
-  title: "Human Loop | AI Powered Human Resource Management System",
+  title: "Humantryx | AI Powered Human Resource Management System",
   description:
     "A comprehensive HRMS solution leveraging AI for enhanced efficiency.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
@@ -35,7 +35,7 @@ export default function RootLayout({
             <ConsentManagerProvider
               options={{
                 mode: "c15t",
-                backendURL: "/api/c15t"
+                backendURL: "/api/c15t",
               }}
             >
               {children}
