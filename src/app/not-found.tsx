@@ -115,8 +115,8 @@ export default function NotFound() {
               Oops! This page seems to be on a coffee break ☕
             </h3>
             <p className="mx-auto max-w-md text-slate-500">
-              Our AI is working hard to find what you're looking for. In the
-              meantime, let's get you back to managing your workforce
+              Our AI is working hard to find what you&apos;re looking for. In the
+              meantime, let&apos;s get you back to managing your workforce
               efficiently!
             </p>
           </motion.div>

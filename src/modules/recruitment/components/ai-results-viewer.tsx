@@ -79,7 +79,7 @@ export function AIResultsViewer({
             AI Screening Results for {application.candidateName}
           </DialogTitle>
           <p className="text-muted-foreground text-sm">
-            Comprehensive analysis of candidate's qualifications and fit for the
+            Comprehensive analysis of candidate&apos;s qualifications and fit for the
             role
           </p>
         </DialogHeader>

@@ -135,7 +135,7 @@ export function AISection() {
             transition={{ delay: 0.2 }}
             className="text-muted-foreground mx-auto max-w-3xl text-lg"
           >
-            Our AI doesn't just automate tasks—it makes intelligent decisions,
+            Our AI doesn&apos;t just automate tasks—it makes intelligent decisions,
             learns from patterns, and continuously improves your HR processes.
             Experience the future of workforce management.
           </motion.p>

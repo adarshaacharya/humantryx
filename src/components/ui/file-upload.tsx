@@ -483,7 +483,7 @@ function FileUploadRoot(props: FileUploadRootProps) {
 
         if (onUpload) {
           requestAnimationFrame(() => {
-            onFilesUpload(acceptedFiles);
+            void onFilesUpload(acceptedFiles);
           });
         }
       }
@@ -729,6 +729,7 @@ function FileUploadDropzone(props: FileUploadDropzoneProps) {
       if (!items) return;
 
       const files: File[] = [];
+      // eslint-disable-next-line @typescript-eslint/prefer-for-of
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
         if (item?.kind === "file") {
