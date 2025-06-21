@@ -6,7 +6,6 @@ import {
   Heading,
   Hr,
   Html,
-  Link,
   Preview,
   Section,
   Tailwind,
@@ -15,12 +14,14 @@ import {
 
 interface VerificationEmailTemplateProps {
   inviteLink: string;
+  companyName?: string;
 }
 
 export const VerificationEmailTemplate = ({
   inviteLink,
+  companyName = "Humantryx",
 }: VerificationEmailTemplateProps) => {
-  const previewText = `Verify Your Email Address.`;
+  const previewText = `Verify your email address for ${companyName}`;
 
   return (
     <Html>
@@ -28,25 +29,76 @@ export const VerificationEmailTemplate = ({
       <Preview>{previewText}</Preview>
       <Tailwind>
         <Body className="mx-auto my-auto bg-white px-2 font-sans">
-          <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
-            <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-              <strong>Verify Your Email Address</strong>
-            </Heading>
-            <Section className="mt-[32px] mb-[32px] text-center">
+          <Container className="mx-auto my-[40px] max-w-[900px] rounded border border-solid border-[#eaeaea] p-[40px]">
+            <Section className="text-center">
+              <Heading className="mx-0 my-[30px] p-0 text-[24px] font-semibold text-[#111827]">
+                Welcome to {companyName}
+              </Heading>
+            </Section>
+
+            <Text className="text-base text-[#374151]">
+              Thank you for creating your account with {companyName}! We&apos;re excited to have you join us.
+              Please verify your email address to complete your registration.
+            </Text>
+
+            <Section className="text-center">
               <Button
-                className="rounded-lg bg-[#000000] px-5 py-3 text-center text-[12px] font-semibold text-white no-underline"
                 href={inviteLink}
+                className="rounded-lg bg-[#4f46e5] px-6 py-3 text-base font-semibold text-white no-underline"
               >
-                Verify Now
+                Verify Email Address
               </Button>
             </Section>
-            <Text className="text-[14px] leading-[24px] text-black">
-              or copy and paste this URL into your browser:{" "}
-              <Link href={inviteLink} className="text-blue-600 no-underline">
+
+            <Section className="my-[32px] text-center">
+              <Text className="text-sm text-[#6b7280]">
+                Please click the button above to verify your email address and activate your account.
+              </Text>
+            </Section>
+
+            <Section className="my-[32px] rounded-lg bg-[#f3f4f6] p-[24px]">
+              <Text className="m-0 font-semibold text-[#111827]">
+                Can&apos;t click the button?
+              </Text>
+              <Text className="m-2 text-sm text-[#374151]">
+                Copy and paste this URL into your browser:
+              </Text>
+              <Text className="m-4 rounded-md bg-white p-4 font-mono text-sm text-[#111827] break-all">
                 {inviteLink}
-              </Link>
+              </Text>
+            </Section>
+
+            <Section className="my-[32px]">
+              <Text className="font-semibold text-[#111827]">
+                Once verified, you&apos;ll have access to:
+              </Text>
+              <Text className="ml-4 text-[#374151]">
+                • Your personal dashboard and profile
+              </Text>
+              <Text className="ml-4 text-[#374151]">
+                • Secure account management features
+              </Text>
+              <Text className="ml-4 text-[#374151]">
+                • Important notifications and updates
+              </Text>
+              <Text className="ml-4 text-[#374151]">
+                • Full access to {companyName} services
+              </Text>
+            </Section>
+
+            <Text className="text-base text-[#374151]">
+              If you have any questions, please don&apos;t hesitate to contact our support team.
             </Text>
-            <Hr className="mx-0 my-[26px] w-full border border-solid border-[#eaeaea]" />
+
+            <Hr className="my-[32px] w-full border border-solid border-[#eaeaea]" />
+
+            <Section className="text-center">
+              <Text className="text-sm text-[#6b7280]">
+                Best regards,
+                <br />
+                The {companyName} Team
+              </Text>
+            </Section>
           </Container>
         </Body>
       </Tailwind>
@@ -55,6 +107,7 @@ export const VerificationEmailTemplate = ({
 };
 
 VerificationEmailTemplate.PreviewProps = {
-  inviteLink: "http://localhost:3000",
+  inviteLink: "http://localhost:3000/verify-email?token=sample-token",
+  companyName: "Humantryx",
 };
 
