@@ -17,6 +17,7 @@ import {
   ArrowLeft,
   Building2,
   GraduationCap,
+  Share2,
 } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
 import { toast } from "sonner";
@@ -31,18 +32,34 @@ import {
 import { useState } from "react";
 import { EditJobDialog } from "../upsert-job/edit-job-dialog";
 import { JobDescriptionRenderer } from "../../components/job-description-renderer";
+import { UploadResumeDialog } from "./upload-resume-dialog";
+import { generateJobShareableUrl } from "@/lib/urls";
 import { startCase } from "lodash-es";
 
 interface JobDetailProps {
   jobId: string;
+  organizationId?: string;
+  isPublic?: boolean;
 }
 
-export function JobDetail({ jobId }: JobDetailProps) {
+export function JobDetail({
+  jobId,
+  organizationId,
+  isPublic = false,
+}: JobDetailProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
   const router = useRouter();
   const utils = api.useUtils();
 
-  const jobQuery = api.recruitment.getById.useQuery({ id: jobId });
+  // Use different query based on public mode
+  const jobQuery =
+    isPublic && organizationId
+      ? api.recruitment.getByOrgAndJobId.useQuery({
+          organizationId,
+          jobId,
+        })
+      : api.recruitment.getById.useQuery({ id: jobId });
 
   const publishJobMutation = api.recruitment.publish.useMutation({
     onSuccess: () => {
@@ -99,22 +116,50 @@ export function JobDetail({ jobId }: JobDetailProps) {
     closeJobMutation.mutate({ id: jobId });
   };
 
+  const handleShareJob = async () => {
+    if (!job?.organizationId) {
+      toast.error("Unable to generate shareable URL");
+      return;
+    }
+
+    const shareableUrl = generateJobShareableUrl(job.organizationId, jobId);
+
+    try {
+      await navigator.clipboard.writeText(shareableUrl);
+      toast.success("Job URL copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy URL to clipboard");
+    }
+  };
+
   return (
     <>
       <Card>
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="space-y-4">
-              {/* Back Button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => router.back()}
-                className="mb-2"
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Jobs
-              </Button>
+              {/* Back Button - Different behavior for public vs private */}
+              {!isPublic ? (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => router.back()}
+                  className="mb-2"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Jobs
+                </Button>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => router.push("/")}
+                  className="mb-2"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Home
+                </Button>
+              )}
 
               {/* Job Title and Status */}
               <div className="space-y-2">
@@ -165,36 +210,77 @@ export function JobDetail({ jobId }: JobDetailProps) {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setIsEditDialogOpen(true)}
-              >
-                <Edit className="mr-2 h-4 w-4" />
-                Edit
-              </Button>
-
-              {job.status === "draft" && (
-                <Button
-                  onClick={handlePublishJob}
-                  disabled={publishJobMutation.isPending}
-                >
-                  <Play className="mr-2 h-4 w-4" />
-                  {publishJobMutation.isPending ? "Publishing..." : "Publish"}
-                </Button>
-              )}
-
-              {job.status === "open" && (
+            {!isPublic && (
+              <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
-                  onClick={handleCloseJob}
-                  disabled={closeJobMutation.isPending}
+                  onClick={() => setIsEditDialogOpen(true)}
                 >
-                  <Square className="mr-2 h-4 w-4" />
-                  {closeJobMutation.isPending ? "Closing..." : "Close"}
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit
                 </Button>
-              )}
-            </div>
+
+                {job.status === "draft" && (
+                  <Button
+                    onClick={handlePublishJob}
+                    disabled={publishJobMutation.isPending}
+                  >
+                    <Play className="mr-2 h-4 w-4" />
+                    {publishJobMutation.isPending ? "Publishing..." : "Publish"}
+                  </Button>
+                )}
+
+                {job.status === "open" && (
+                  <Button
+                    variant="outline"
+                    onClick={handleCloseJob}
+                    disabled={closeJobMutation.isPending}
+                  >
+                    <Square className="mr-2 h-4 w-4" />
+                    {closeJobMutation.isPending ? "Closing..." : "Close"}
+                  </Button>
+                )}
+
+                {/* Share Button - Only show for open jobs */}
+                {job.status === "open" && (
+                  <Button variant="outline" onClick={handleShareJob}>
+                    <Share2 className="mr-2 h-4 w-4" />
+                    Share Job
+                  </Button>
+                )}
+              </div>
+            )}
+
+            {/* Apply Button for Public Users */}
+            {isPublic && job.status === "open" && (
+              <div className="flex items-center gap-2">
+                <UploadResumeDialog
+                  jobId={jobId}
+                  trigger={
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    >
+                      <Users className="mr-2 h-4 w-4" />
+                      Apply Now
+                    </Button>
+                  }
+                />
+              </div>
+            )}
+
+            {/* Status message for non-open jobs in public mode */}
+            {isPublic && job.status !== "open" && (
+              <div className="flex items-center gap-2">
+                <div className="bg-muted rounded-lg p-4 text-center">
+                  <p className="text-muted-foreground">
+                    {job.status === "draft"
+                      ? "This position is not yet open for applications."
+                      : "This position is no longer accepting applications."}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </CardHeader>
 
@@ -316,11 +402,13 @@ export function JobDetail({ jobId }: JobDetailProps) {
         </CardContent>
       </Card>
 
-      <EditJobDialog
-        job={job}
-        open={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
-      />
+      {!isPublic && (
+        <EditJobDialog
+          job={job}
+          open={isEditDialogOpen}
+          onOpenChange={setIsEditDialogOpen}
+        />
+      )}
     </>
   );
 }

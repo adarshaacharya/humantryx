@@ -2,7 +2,7 @@
 
 # 🏢 Humantryx • AI-Powered HRMS
 
-[demo](https://humantryx.vercel.app) — [docs](https://docs.humantryx.com) — [github](https://github.com/adarshacharya/humantryx)
+[demo](https://humantryx.vercel.app) — [github](https://github.com/adarshacharya/humantryx)
 
 > **Humantryx** is an AI-powered Human Resource Management System built with Next.js and modern technologies. It streamlines HR processes including employee management, attendance tracking, leave management, and payroll processing, all enhanced with intelligent automation.
 
@@ -82,31 +82,13 @@
    cp .env.example .env
    ```
 
-3. Fill in the required environment variables in the `.env` file:
-
-   ```env
-   # Database
-   DATABASE_URL="postgresql://..."
-
-   # Authentication
-   BETTER_AUTH_SECRET="..."
-   BETTER_AUTH_URL="http://localhost:3000"
-
-   # AI Services
-   OPENAI_API_KEY="..."
-   GROQ_API_KEY="..."
-   PINECONE_API_KEY="..."
-
-   # Redis
-   UPSTASH_REDIS_REST_URL="..."
-   UPSTASH_REDIS_REST_TOKEN="..."
-   ```
+3. Copy `.env.example` to `.env` and configure your environment variables.
 
 4. Set up the database:
 
    ```bash
-   pnpm db:push    # Apply database schema
-   pnpm db:seed    # Seed with initial data (optional)
+   pnpm db:migrate    # Apply database schema
+   pnpm db:seed    # Seed with initial data (currently not implemented)
    ```
 
 5. Run the development server:
@@ -206,4 +188,4 @@ MIT © 2025 Humantryx Team
 
 ---
 
-> Built with ❤️ using modern web technologies for the future of HR management.
+> Built with ❤️ by  [Adarsha Acharya](https://adarsha.dev) using modern web technologies for the future of HR management.

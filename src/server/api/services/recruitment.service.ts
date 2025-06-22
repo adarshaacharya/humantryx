@@ -540,4 +540,58 @@ export class RecruitmentService {
 
     return result[0] || null;
   }
+
+  static async getJobPostingByOrgAndJobId(
+    organizationId: string,
+    jobId: string,
+  ) {
+    const result = await db
+      .select({
+        id: jobPostings.id,
+        organizationId: jobPostings.organizationId,
+        title: jobPostings.title,
+        department: jobPostings.department,
+        description: jobPostings.description,
+        locationType: jobPostings.locationType,
+        location: jobPostings.location,
+        status: jobPostings.status,
+        salaryRangeMin: jobPostings.salaryRangeMin,
+        salaryRangeMax: jobPostings.salaryRangeMax,
+        salaryCurrency: jobPostings.salaryCurrency,
+        experienceRequired: jobPostings.experienceRequired,
+        skills: jobPostings.skills,
+        requirements: jobPostings.requirements,
+        isActive: jobPostings.isActive,
+        createdAt: jobPostings.createdAt,
+        updatedAt: jobPostings.updatedAt,
+        publishedAt: jobPostings.publishedAt,
+        closedAt: jobPostings.closedAt,
+        createdByEmployee: {
+          id: employees.id,
+          name: users.name,
+          email: users.email,
+        },
+      })
+      .from(jobPostings)
+      .leftJoin(employees, eq(jobPostings.createdByEmployeeId, employees.id))
+      .leftJoin(users, eq(employees.userId, users.id))
+      .where(
+        and(
+          eq(jobPostings.id, jobId),
+          eq(jobPostings.organizationId, organizationId),
+          eq(jobPostings.status, "open"), // Only return open job postings for public access
+          eq(jobPostings.isActive, true),
+        ),
+      )
+      .limit(1);
+
+    if (result.length === 0) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Job posting not found or not available",
+      });
+    }
+
+    return result[0]!;
+  }
 }

@@ -15,14 +15,24 @@ import {
 
 interface JobDetailWithTabsProps {
   jobId: string;
+  organizationId?: string;
+  isPublic?: boolean;
 }
 
-export function JobDetailWithTabs({ jobId }: JobDetailWithTabsProps) {
+export function JobDetailWithTabs({
+  jobId,
+  organizationId,
+  isPublic = false,
+}: JobDetailWithTabsProps) {
   const [activeTab, setActiveTab] = useState<"details" | "applications">(
     "details",
   );
 
-  const applicationsQuery = api.recruitment.getApplications.useQuery({ jobId });
+  // Only fetch applications if not in public mode
+  const applicationsQuery = api.recruitment.getApplications.useQuery(
+    { jobId },
+    { enabled: !isPublic },
+  );
   const applicationCount = applicationsQuery.data?.length ?? 0;
 
   return (
@@ -35,38 +45,54 @@ export function JobDetailWithTabs({ jobId }: JobDetailWithTabsProps) {
       >
         <Card>
           <CardHeader className="pb-3">
-            <TabsList className="grid w-full max-w-md grid-cols-2">
-              <TabsTrigger value="details" className="flex items-center gap-2">
-                <FileText className="h-4 w-4" />
+            {!isPublic ? (
+              <TabsList className="grid w-full max-w-md grid-cols-2">
+                <TabsTrigger
+                  value="details"
+                  className="flex items-center gap-2"
+                >
+                  <FileText className="h-4 w-4" />
+                  Job Details
+                </TabsTrigger>
+                <TabsTrigger
+                  value="applications"
+                  className="flex items-center gap-2"
+                >
+                  <Users className="h-4 w-4" />
+                  Applications
+                  {applicationCount > 0 && (
+                    <Badge variant="secondary" className="ml-1">
+                      {applicationCount}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+              </TabsList>
+            ) : (
+              <div className="flex items-center gap-2 text-lg font-semibold">
+                <FileText className="h-5 w-5" />
                 Job Details
-              </TabsTrigger>
-              <TabsTrigger
-                value="applications"
-                className="flex items-center gap-2"
-              >
-                <Users className="h-4 w-4" />
-                Applications
-                {applicationCount > 0 && (
-                  <Badge variant="secondary" className="ml-1">
-                    {applicationCount}
-                  </Badge>
-                )}
-              </TabsTrigger>
-            </TabsList>
+              </div>
+            )}
           </CardHeader>
         </Card>
 
         <TabsContent value="details" className="mt-0">
           <Suspense fallback={<JobDetailSkeleton />}>
-            <JobDetail jobId={jobId} />
+            <JobDetail
+              jobId={jobId}
+              organizationId={organizationId}
+              isPublic={isPublic}
+            />
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="applications" className="mt-0">
-          <Suspense fallback={<ApplicationsSkeleton />}>
-            <JobApplicationsTabbed jobId={jobId} />
-          </Suspense>
-        </TabsContent>
+        {!isPublic && (
+          <TabsContent value="applications" className="mt-0">
+            <Suspense fallback={<ApplicationsSkeleton />}>
+              <JobApplicationsTabbed jobId={jobId} />
+            </Suspense>
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

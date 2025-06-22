@@ -16,6 +16,7 @@ import {
   Play,
   Square,
   Briefcase,
+  Share2,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -27,8 +28,10 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/server/auth/auth-client";
 import { JOB_STATUSES, JOB_LOCATION_TYPES } from "../../consts";
 import type { JobStatus } from "../../consts";
+import { generateJobShareableUrl } from "@/lib/urls";
 import { startCase } from "lodash-es";
 import { JobDescriptionRenderer } from "../../components/job-description-renderer";
 
@@ -62,6 +65,7 @@ export function JobsList() {
 
   const router = useRouter();
   const utils = api.useUtils();
+  const { data: session } = authClient.useSession();
 
   const jobsQuery = api.recruitment.list.useQuery({
     limit: 20,
@@ -99,6 +103,25 @@ export function JobsList() {
 
   const handleViewJob = (jobId: string) => {
     router.push(`/dashboard/recruitment/jobs/${jobId}`);
+  };
+
+  const handleShareJob = async (jobId: string) => {
+    if (!session?.session?.activeOrganizationId) {
+      toast.error("Organization not found");
+      return;
+    }
+
+    const shareableUrl = generateJobShareableUrl(
+      session.session.activeOrganizationId,
+      jobId,
+    );
+
+    try {
+      await navigator.clipboard.writeText(shareableUrl);
+      toast.success("Job URL copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy URL to clipboard");
+    }
   };
 
   const getStatusVariant = (status: string) => {
@@ -343,6 +366,15 @@ export function JobsList() {
                           </DropdownMenuItem>
                         )}
 
+                        {job.status === "open" && (
+                          <DropdownMenuItem
+                            onClick={() => handleShareJob(job.id)}
+                          >
+                            <Share2 className="mr-2 h-4 w-4" />
+                            Share Job
+                          </DropdownMenuItem>
+                        )}
+
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => setDeletingJobId(job.id)}
@@ -350,6 +382,12 @@ export function JobsList() {
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Delete
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleShareJob(job.id)}
+                        >
+                          <Share2 className="mr-2 h-4 w-4" />
+                          Share
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

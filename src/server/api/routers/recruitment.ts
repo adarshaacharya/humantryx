@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 import { RecruitmentService } from "@/server/api/services/recruitment.service";
 import {
   jobStatusEnum,
@@ -93,6 +97,21 @@ export const recruitmentRouter = createTRPCRouter({
     .input(z.object({ id: z.string().uuid() }))
     .query(async ({ input }) => {
       return RecruitmentService.getJobPostingById(input.id);
+    }),
+
+  // Get job posting by organization ID and job ID (public route for shareable URLs)
+  getByOrgAndJobId: publicProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+        jobId: z.string().uuid(),
+      }),
+    )
+    .query(async ({ input }) => {
+      return RecruitmentService.getJobPostingByOrgAndJobId(
+        input.organizationId,
+        input.jobId,
+      );
     }),
 
   // List job postings
