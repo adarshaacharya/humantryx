@@ -9,14 +9,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Settings } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Plus, Settings, RefreshCw } from "lucide-react";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { type LeaveType } from "../../constants";
 import { LeavePoliciesTable } from "./leave-policies-table";
 import { LeavePolicyFormDialog } from "./leave-policy-form-dialog";
 import { LeavePolicyDeleteDialog } from "./leave-policy-delete-dialog";
-import { useAbility } from "@/providers/ability-context";
+import { authClient } from "@/server/auth/auth-client";
+import { Can } from "@/components/can";
 
 type PolicyFormData = {
   leaveType: LeaveType;
@@ -49,9 +56,7 @@ export function LeavePoliciesManagement() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const policiesQuery = api.leave.getLeavePolicies.useQuery();
-  const ability = useAbility();
-
-  const canCreatePolicy = ability.can("create", "LeavePolicies");
+  const { data: session } = authClient.useSession();
 
   const createPolicyMutation = api.leave.createLeavePolicy.useMutation({
     onSuccess: () => {
@@ -80,6 +85,16 @@ export function LeavePoliciesManagement() {
       toast.error(error.message);
     },
   });
+
+  const syncBalancesMutation =
+    api.leave.syncAllEmployeeLeaveBalances.useMutation({
+      onSuccess: (result) => {
+        toast.success(result.message);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
 
   const handleCreatePolicy = (data: PolicyFormData) => {
     if (selectedPolicy) {
@@ -114,6 +129,17 @@ export function LeavePoliciesManagement() {
     setSelectedPolicy(null);
   };
 
+  const handleSyncBalances = () => {
+    if (!session?.session?.activeOrganizationId) {
+      toast.error("Organization not found");
+      return;
+    }
+
+    syncBalancesMutation.mutate({
+      organizationId: session.session.activeOrganizationId,
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -123,12 +149,42 @@ export function LeavePoliciesManagement() {
             Manage leave policies and entitlements for your organization
           </p>
         </div>
-        {canCreatePolicy ? (
-          <Button onClick={() => setEditDialogOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Policy
-          </Button>
-        ) : null}
+        <div className="flex items-center gap-2">
+          <Can I="manage" a="LeavePolicies">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    onClick={handleSyncBalances}
+                    disabled={syncBalancesMutation.isPending}
+                  >
+                    <RefreshCw
+                      className={`mr-2 h-4 w-4 ${syncBalancesMutation.isPending ? "animate-spin" : ""}`}
+                    />
+                    {syncBalancesMutation.isPending
+                      ? "Syncing..."
+                      : "Sync Balances"}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    Sync leave balances for all employees based on current
+                    policies.
+                    <br />
+                    This ensures all employees have correct leave balances.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </Can>
+          <Can I="create" a="LeavePolicies">
+            <Button onClick={() => setEditDialogOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Policy
+            </Button>
+          </Can>
+        </div>
       </div>
 
       <LeavePolicyFormDialog

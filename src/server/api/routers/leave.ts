@@ -109,7 +109,7 @@ export const leaveRouter = createTRPCRouter({
         year: z.number().optional(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       return LeaveService.initializeEmployeeLeaveBalances(
         input.employeeId,
         input.organizationId,
@@ -124,10 +124,23 @@ export const leaveRouter = createTRPCRouter({
         year: z.number().optional(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       return LeaveService.initializeAllEmployeesLeaveBalances(
         input.organizationId,
         input.year,
+      );
+    }),
+
+  syncAllEmployeeLeaveBalances: protectedProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return LeaveService.syncAllEmployeeLeaveBalances(
+        input.organizationId,
+        ctx.session,
       );
     }),
 });

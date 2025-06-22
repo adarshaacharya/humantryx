@@ -61,7 +61,10 @@ const videoFeatures = [
 
 export function VideoShowcaseSection() {
   return (
-    <section className="from-background to-muted/20 bg-gradient-to-b py-24">
+    <section
+      id="showcase"
+      className="from-background to-muted/20 bg-gradient-to-b py-24"
+    >
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <motion.div

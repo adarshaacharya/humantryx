@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Users, BarChart3, Shield, Brain } from "lucide-react";
+import { Menu, X, Users, BarChart3, Brain, Github } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "@/server/auth/auth-client";
 import { UserMenu } from "../../components/user-menu";
@@ -15,9 +15,14 @@ export function Navigation() {
 
   const navItems = [
     { name: "Features", href: "#features", icon: Users },
-    { name: "AI-Powered", href: "#ai", icon: Brain },
+    { name: "Demo", href: "#showcase", icon: Brain },
     { name: "Benefits", href: "#benefits", icon: BarChart3 },
-    { name: "About", href: "#stats", icon: Shield },
+    {
+      name: "GitHub",
+      href: "https://github.com/adarshaacharya/humantryx",
+      icon: Github,
+      external: true,
+    },
   ];
 
   return (
@@ -33,6 +38,8 @@ export function Navigation() {
               <motion.a
                 key={item.name}
                 href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -100,6 +107,8 @@ export function Navigation() {
                 <a
                   key={item.name}
                   href={item.href}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noopener noreferrer" : undefined}
                   className="flex items-center space-x-2 text-slate-600 transition-colors duration-200 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
                   onClick={() => setIsOpen(false)}
                 >
@@ -107,6 +116,7 @@ export function Navigation() {
                   <span>{item.name}</span>
                 </a>
               ))}
+
               <div className="flex flex-col space-y-2 border-t border-slate-200 pt-4 dark:border-slate-800">
                 <Link href="/sign-in">
                   <Button

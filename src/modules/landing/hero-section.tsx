@@ -22,7 +22,10 @@ const features = [
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden px-4 pt-32 pb-20 sm:px-6 lg:px-8">
+    <section
+      id="home"
+      className="relative overflow-hidden px-4 pt-32 pb-20 sm:px-6 lg:px-8"
+    >
       {/* Background Elements */}
       <div className="from-background via-background to-muted/20 absolute inset-0 bg-gradient-to-br" />
       <div className="bg-primary/5 absolute top-1/4 left-1/4 h-72 w-72 rounded-full blur-3xl" />
