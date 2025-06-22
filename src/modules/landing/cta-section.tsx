@@ -10,14 +10,10 @@ import {
   Star,
   Users,
   Brain,
-  Shield,
-  Zap,
   Calendar,
   Mail,
-  Phone,
-  Building2,
-  Clock,
   Sparkles,
+  LinkedinIcon,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -258,20 +254,41 @@ export function CTASection() {
           className="mt-16 text-center"
         >
           <p className="text-muted-foreground mb-4 text-sm">
-            Questions? Our team is here to help.
+            For further inquiries or project collaborations, feel free to reach
+            out.
           </p>
           <div className="flex items-center justify-center gap-6">
             <div className="text-muted-foreground flex items-center text-sm">
               <Mail className="mr-2 h-4 w-4" />
-              hello@humantryx.com
+              <a
+                href="mailto:hi@adarsha.dev"
+                className="text-muted-foreground hover:text-primary hover:underline"
+              >
+                hi@adarsha.dev
+              </a>
             </div>
             <div className="text-muted-foreground flex items-center text-sm">
-              <Phone className="mr-2 h-4 w-4" />
-              +1 (555) 123-4567
+              <LinkedinIcon className="mr-2 h-4 w-4" />
+              <a
+                href="https://www.linkedin.com/in/adarshaacharya/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary hover:underline"
+              >
+                /adarshaacharya
+              </a>
             </div>
           </div>
         </motion.div>
       </div>
+
+      <p className="text-muted-foreground absolute bottom-4 left-1/2 -translate-x-1/2 transform text-xs">
+        © {new Date().getFullYear()} Built by{" "}
+        <a href="https://adarsha.dev" className="text-primary">
+          Adarsha Acharya
+        </a>
+        . All rights reserved.
+      </p>
     </section>
   );
 }

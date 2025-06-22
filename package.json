@@ -85,7 +85,6 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.41.0",
-    "drizzle-zod": "^0.8.2",
     "html2canvas": "^1.4.1",
     "isomorphic-dompurify": "^2.25.0",
     "jspdf": "^3.0.1",
