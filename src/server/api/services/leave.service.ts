@@ -739,4 +739,30 @@ export class LeaveService {
       allowanceDifference,
     };
   }
+
+  /**
+   * Utility method to ensure all employees in an organization have leave balances
+   * for all active leave policies. This can be used to fix any gaps.
+   */
+  static async syncAllEmployeeLeaveBalances(
+    organizationId: string,
+    session: Session,
+  ) {
+    const { activeOrgId } = await this.validateHRAccess(session);
+
+    if (activeOrgId !== organizationId) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Invalid organization access",
+      });
+    }
+
+    const result =
+      await this.initializeAllEmployeesLeaveBalances(organizationId);
+
+    return {
+      message: `Successfully synced leave balances for ${result.employeesProcessed} employees`,
+      ...result,
+    };
+  }
 }

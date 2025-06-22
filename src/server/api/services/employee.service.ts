@@ -69,6 +69,24 @@ export class EmployeeService {
         })
         .returning();
 
+      // Initialize leave balances for the new employee
+      if (employee[0]) {
+        try {
+          // Import LeaveService dynamically to avoid circular dependency
+          const { LeaveService } = await import("./leave.service");
+          await LeaveService.initializeEmployeeLeaveBalances(
+            employee[0].id,
+            data.organizationId,
+          );
+        } catch (leaveError) {
+          console.error(
+            "Failed to initialize leave balances for new employee:",
+            leaveError,
+          );
+          // Don't throw here - employee creation should succeed even if leave initialization fails
+        }
+      }
+
       await invalidatePattern(
         this.CACHE_KEYS.ORG_EMPLOYEES(data.organizationId),
       );
@@ -527,6 +545,24 @@ export class EmployeeService {
           ),
         )
         .returning();
+
+      // Initialize leave balances when invitation is accepted (if not already done)
+      if (employee[0]) {
+        try {
+          // Import LeaveService dynamically to avoid circular dependency
+          const { LeaveService } = await import("./leave.service");
+          await LeaveService.initializeEmployeeLeaveBalances(
+            employee[0].id,
+            organizationId,
+          );
+        } catch (leaveError) {
+          console.error(
+            "Failed to initialize leave balances for accepted invitation:",
+            leaveError,
+          );
+          // Don't throw here - employee update should succeed even if leave initialization fails
+        }
+      }
 
       // Invalidate related caches after updating employee
       if (employee[0]) {
