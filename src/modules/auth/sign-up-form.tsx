@@ -38,6 +38,7 @@ import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { signUpSchema, type SignUpSchemaType } from "./schemas/auth";
 import { Logo } from "@/components/logo";
+import { env } from "@/env";
 
 const passwordStrength = (password: string) => {
   let strength = 0;
@@ -99,9 +100,9 @@ export function SignUpForm() {
 
     try {
       // Build custom callback URL with invitation parameter if present
-      let customCallbackURL = "http://localhost:3000/auth-callback";
+      let customCallbackURL = `${env.NEXT_PUBLIC_APP_URL}/auth-callback`;
       if (invitationId) {
-        customCallbackURL = `http://localhost:3000/auth-callback?invitation=${invitationId}`;
+        customCallbackURL = `${env.NEXT_PUBLIC_APP_URL}/auth-callback?invitation=${invitationId}`;
       }
 
       const { data, error } = await authClient.signUp.email({
