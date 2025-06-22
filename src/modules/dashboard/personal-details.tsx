@@ -17,6 +17,7 @@ import { useAbility } from "@/providers/ability-context";
 import { useCurrentEmployee } from "@/hooks/use-current-employee";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { startCase } from "lodash-es";
 
 export function PersonalDetails() {
   const currentOrg = authClient.useActiveOrganization();
@@ -162,7 +163,7 @@ export function PersonalDetails() {
                         <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                           <User className="h-3 w-3" />
                           <span className="truncate">
-                            Department: {employee.department}
+                            Department: {startCase(employee.department)}
                           </span>
                         </div>
                       )}

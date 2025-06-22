@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { JOB_STATUSES, JOB_LOCATION_TYPES } from "../../consts";
 import type { JobStatus } from "../../consts";
+import { startCase } from "lodash-es";
 
 interface Job {
   id: string;
@@ -206,7 +207,9 @@ export function JobsList() {
                     {/* Job Details */}
                     <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
                       <div className="flex items-center gap-1">
-                        <span className="font-medium">{job.department}</span>
+                        <span className="font-medium">
+                          {startCase(job.department)}
+                        </span>
                       </div>
 
                       <div className="flex items-center gap-1">

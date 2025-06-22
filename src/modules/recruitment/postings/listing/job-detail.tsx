@@ -31,6 +31,7 @@ import {
 import { useState } from "react";
 import { EditJobDialog } from "../upsert-job/edit-job-dialog";
 import { JobDescriptionRenderer } from "../../components/job-description-renderer";
+import { startCase } from "lodash-es";
 
 interface JobDetailProps {
   jobId: string;
@@ -128,7 +129,7 @@ export function JobDetail({ jobId }: JobDetailProps) {
                 <div className="text-muted-foreground flex flex-wrap items-center gap-4">
                   <div className="flex items-center gap-1">
                     <Building2 className="h-4 w-4" />
-                    <span>{job.department}</span>
+                    <span>{startCase(job.department)}</span>
                   </div>
 
                   <div className="flex items-center gap-1">
