@@ -31,8 +31,8 @@ import {
 } from "./schemas/org";
 import { api } from "@/trpc/react";
 import { motion } from "motion/react";
-import { LogoHeader } from "@/components/logo-header";
 import slugify from "slugify";
+import { Logo } from "@/components/logo";
 
 export function OrganizationSetupForm() {
   const [selectedAction, setSelectedAction] = useState<
@@ -114,7 +114,7 @@ export function OrganizationSetupForm() {
     return (
       <div className="w-full max-w-2xl">
         <div className="mb-8 text-center">
-          <LogoHeader />
+          <Logo className="mx-auto h-16 w-16" />
           <h1 className="text-foreground mt-4 text-3xl font-bold">
             Checking your organization status...
           </h1>
@@ -130,9 +130,10 @@ export function OrganizationSetupForm() {
 
   return (
     <div className="w-full max-w-2xl">
-      {/* Header */}
       <div className="mb-8 text-center">
-        <LogoHeader />
+        <div className="mb-4 flex items-center justify-center">
+          <Logo size="md" />
+        </div>
         <h1 className="text-foreground mt-4 text-3xl font-bold">
           Set Up Your Organization
         </h1>

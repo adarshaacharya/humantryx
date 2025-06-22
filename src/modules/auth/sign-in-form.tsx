@@ -38,6 +38,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { signInSchema, type SignInSchemaType } from "./schemas/auth";
+import { Logo } from "@/components/logo";
 
 export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -124,17 +125,9 @@ export function SignInForm() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="mb-8 text-center"
+        className="mb-6 flex flex-col items-center space-y-2 text-center"
       >
-        <Link href="/" className="mb-8 inline-flex items-center">
-          <div className="relative">
-            <Brain className="text-primary h-8 w-8" />
-            <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400" />
-          </div>
-          <span className="text-foreground ml-2 text-xl font-bold">
-            Humantryx
-          </span>
-        </Link>
+        <Logo size="lg" />
       </motion.div>
 
       {/* Sign In Card */}

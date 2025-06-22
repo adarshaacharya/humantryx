@@ -3,16 +3,15 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Brain, Users, BarChart3, Shield } from "lucide-react";
+import { Menu, X, Users, BarChart3, Shield, Brain } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "@/server/auth/auth-client";
 import { UserMenu } from "../../components/user-menu";
-import { useRouter } from "next/navigation";
+import { Logo } from "@/components/logo";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
-  const router = useRouter();
 
   const navItems = [
     { name: "Features", href: "#features", icon: Users },
@@ -26,22 +25,7 @@ export function Navigation() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center space-x-2"
-            onClick={() => router.push("/")}
-          >
-            <div className="relative">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
-                <Brain className="h-5 w-5 text-white" />
-              </div>
-              <div className="absolute -top-1 -right-1 h-3 w-3 animate-pulse rounded-full bg-green-500" />
-            </div>
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-xl font-bold text-transparent">
-              Humantryx
-            </span>
-          </motion.div>
+          <Logo size="md" showText={true} />
 
           {/* Desktop Navigation */}
           <div className="hidden items-center space-x-8 md:flex">

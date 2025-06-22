@@ -37,6 +37,7 @@ import Link from "next/link";
 import { authClient } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { signUpSchema, type SignUpSchemaType } from "./schemas/auth";
+import { Logo } from "@/components/logo";
 
 const passwordStrength = (password: string) => {
   let strength = 0;
@@ -139,17 +140,8 @@ export function SignUpForm() {
 
   return (
     <div className="w-full max-w-lg">
-      {/* Header */}
-      <div className="mb-8 text-center">
-        <Link href="/" className="mb-8 inline-flex items-center">
-          <div className="relative">
-            <Brain className="text-primary h-8 w-8" />
-            <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400" />
-          </div>
-          <span className="text-foreground ml-2 text-xl font-bold">
-            Humantryx
-          </span>
-        </Link>
+      <div className="mb-8 flex flex-col items-center space-y-2">
+        <Logo size="lg" />
       </div>
 
       {/* Sign Up Card */}
@@ -160,7 +152,7 @@ export function SignUpForm() {
             Get Started
           </CardTitle>
           <CardDescription className="text-muted-foreground text-center">
-            Create your account to continue
+            Please create your account to continue.
           </CardDescription>
         </CardHeader>
 
