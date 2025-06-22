@@ -7,8 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   ArrowRight,
   Check,
-  Star,
-  Users,
   Brain,
   Calendar,
   Mail,
@@ -18,36 +16,6 @@ import {
 import Link from "next/link";
 
 export function CTASection() {
-  const testimonials = [
-    {
-      name: "Sarah Chen",
-      role: "HR Director",
-      company: "TechFlow Inc",
-      avatar: "SC",
-      content:
-        "Humantryx reduced our HR workload by 75%. The AI features are game-changing for modern HR operations.",
-      rating: 5,
-    },
-    {
-      name: "Michael Rodriguez",
-      role: "Operations Manager",
-      company: "GrowthLabs",
-      avatar: "MR",
-      content:
-        "The automated payroll and leave management saved us countless hours. Best HR investment we&apos;ve made.",
-      rating: 5,
-    },
-    {
-      name: "Emily Watson",
-      role: "Founder",
-      company: "StartupXYZ",
-      avatar: "EW",
-      content:
-        "Finally, an HRMS that understands modern businesses. The AI resume screening is incredibly accurate.",
-      rating: 5,
-    },
-  ];
-
   const ctaFeatures = [
     "Complete employee lifecycle management",
     "AI-powered automation and insights",
@@ -81,69 +49,6 @@ export function CTASection() {
       </motion.div>
 
       <div className="relative mx-auto max-w-7xl">
-        {/* Testimonials Section */}
-        <div className="mb-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12 text-center"
-          >
-            <Badge variant="secondary" className="mb-4 px-4 py-2">
-              <Users className="mr-2 h-4 w-4" />
-              Trusted by Growing Companies
-            </Badge>
-            <h2 className="text-foreground mb-4 text-3xl font-bold sm:text-4xl">
-              Join Companies Already Winning with AI
-            </h2>
-            <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-              See how teams are transforming their HR operations and saving
-              valuable time every day.
-            </p>
-          </motion.div>
-
-          <div className="grid gap-8 md:grid-cols-3">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="bg-background/60 h-full border-0 backdrop-blur-sm transition-all duration-300 hover:shadow-lg">
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="h-4 w-4 fill-yellow-400 text-yellow-400"
-                        />
-                      ))}
-                    </div>
-                    <p className="text-muted-foreground mb-6">
-                      &quot;{testimonial.content}&quot;
-                    </p>
-                    <div className="flex items-center">
-                      <div className="bg-primary/10 text-primary mr-3 flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold">
-                        {testimonial.avatar}
-                      </div>
-                      <div>
-                        <div className="text-foreground font-semibold">
-                          {testimonial.name}
-                        </div>
-                        <div className="text-muted-foreground text-sm">
-                          {testimonial.role} • {testimonial.company}
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
         {/* Main CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -222,6 +127,10 @@ export function CTASection() {
                   variant="outline"
                   size="lg"
                   className="h-auto px-8 py-4 text-lg"
+                  onClick={() => {
+                    window.location.href =
+                      "https://cal.com/adarshaacharya/schedule";
+                  }}
                 >
                   <Calendar className="mr-2 h-5 w-5" />
                   Schedule Demo

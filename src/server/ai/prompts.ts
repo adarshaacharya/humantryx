@@ -4,6 +4,21 @@ export default class AIPrompts {
          If the text does not contain a valid leave request, throw an error asking for more information.
          If the text doesn't contains leave time duration or date, throw an error asking for the duration.
          Output start and end dates in ISO format (YYYY-MM-DD).
+
+          Output this JSON:
+  
+          {{
+            leaveType: "casual" | "sick" | "vacation" | "other",
+            startDate: string (YYYY-MM-DD),
+            endDate: string (YYYY-MM-DD),
+            reason: string
+          }}
+  
+          where, 
+          - leaveType: Type of leave requested.
+          - startDate: Start date of the leave in ISO format (YYYY-MM-DD).
+          - endDate: End date of the leave in ISO format (YYYY-MM-DD).
+          - reason: Reason for the leave request.
        `;
 
   static screenResumePrompt = `

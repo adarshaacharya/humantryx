@@ -252,8 +252,125 @@ export function ResumeScreeningDialog({
             </CardContent>
           </Card>
 
+          {/* Loading State - maintains modal height */}
+          {isScreening && (
+            <div className="space-y-6">
+              {/* Loading Overall Score */}
+              <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <div className="flex h-16 w-16 animate-pulse items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600">
+                            <Brain className="h-8 w-8 animate-spin text-white" />
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="text-2xl font-bold">
+                            Analyzing Resume...
+                          </h3>
+                          <p className="text-muted-foreground">
+                            AI processing in progress
+                          </p>
+                        </div>
+                      </div>
+                      <div className="h-2 w-full rounded-full bg-gray-200">
+                        <div className="h-2 w-1/2 animate-pulse rounded-full bg-gradient-to-r from-blue-400 to-blue-600" />
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="mb-2 h-10 w-24 animate-pulse rounded bg-gray-200" />
+                      <p className="text-muted-foreground text-sm">
+                        Processing...
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Loading Skills Analysis */}
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <Card className="border-gray-200 bg-gray-50/50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-gray-600">
+                      <div className="h-5 w-5 animate-pulse rounded bg-gray-300" />
+                      Analyzing Skills...
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {[1, 2, 3, 4].map((i) => (
+                        <div
+                          key={i}
+                          className="h-6 w-16 animate-pulse rounded bg-gray-200"
+                        />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-gray-200 bg-gray-50/50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-gray-600">
+                      <div className="h-5 w-5 animate-pulse rounded bg-gray-300" />
+                      Identifying Gaps...
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {[1, 2, 3].map((i) => (
+                        <div
+                          key={i}
+                          className="h-6 w-20 animate-pulse rounded bg-gray-200"
+                        />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Loading AI Analysis Summary */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2">
+                    <Brain className="h-5 w-5 animate-pulse text-blue-500" />
+                    Generating Analysis...
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-muted/50 space-y-2 rounded-lg p-4">
+                    <div className="h-4 w-full animate-pulse rounded bg-gray-200" />
+                    <div className="h-4 w-4/5 animate-pulse rounded bg-gray-200" />
+                    <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Loading Recommendations */}
+              <Card className="border-blue-200 bg-blue-50/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-blue-700">
+                    <Award className="h-5 w-5 animate-pulse" />
+                    Preparing Recommendations...
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="rounded-lg border border-gray-200 bg-gray-100 p-3">
+                      <div className="space-y-2">
+                        <div className="h-4 w-full animate-pulse rounded bg-gray-200" />
+                        <div className="h-4 w-2/3 animate-pulse rounded bg-gray-200" />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
           {/* Screening Results */}
-          {screeningResults && (
+          {screeningResults && !isScreening && (
             <div className="space-y-6">
               {/* Overall Score and Recommendation */}
               <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
@@ -438,39 +555,138 @@ export function ResumeScreeningDialog({
             </div>
           )}
 
-          {/* Placeholder for unscreened resumes */}
+          {/* Placeholder for unscreened resumes - matches full height */}
           {!screeningResults && !isScreening && (
-            <Card className="border-2 border-dashed">
-              <CardContent className="pt-6">
-                <div className="py-12 text-center">
-                  <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 p-4">
-                    <Brain className="h-10 w-10 text-blue-600" />
+            <div className="space-y-6">
+              {/* Main placeholder card matching overall score height */}
+              <Card className="border-2 border-dashed border-blue-200 bg-gradient-to-br from-blue-50/50 to-indigo-50/50">
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
+                            <Brain className="h-8 w-8 text-blue-600" />
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="text-2xl font-bold">
+                            AI Resume Analysis
+                          </h3>
+                          <p className="text-muted-foreground">
+                            Ready to analyze candidate qualifications
+                          </p>
+                        </div>
+                      </div>
+                      <div className="h-2 w-full rounded-full bg-gray-100">
+                        <div className="h-2 w-0 rounded-full bg-blue-500 transition-all duration-300" />
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="mb-2 flex items-center justify-center rounded-lg border-2 border-dashed border-blue-300 px-4 py-2">
+                        <span className="text-sm font-medium text-blue-600">
+                          Ready to Start
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground text-sm">
+                        Click &quot;Start AI Analysis&quot;
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="mb-3 text-xl font-semibold">
-                    AI Resume Analysis
-                  </h3>
-                  <p className="text-muted-foreground mx-auto mb-4 max-w-md">
-                    Click &quot;Start AI Analysis&quot; to get comprehensive
-                    insights about this candidate&apos;s qualifications, skill
-                    matches, and hiring recommendations.
-                  </p>
-                  <div className="mx-auto grid max-w-lg grid-cols-1 gap-4 text-sm md:grid-cols-3">
-                    <div className="flex items-center gap-2">
-                      <TrendingUp className="h-4 w-4 text-green-500" />
-                      <span>Skill Matching</span>
+                </CardContent>
+              </Card>
+
+              {/* Placeholder skills analysis cards */}
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <Card className="border-2 border-dashed border-gray-200 bg-gray-50/30">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-gray-500">
+                      <TrendingUp className="h-5 w-5" />
+                      Skills Matching
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      <div className="rounded border-2 border-dashed border-gray-300 px-3 py-1">
+                        <span className="text-xs text-gray-500">
+                          Skill analysis pending
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Target className="h-4 w-4 text-blue-500" />
-                      <span>Score Analysis</span>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-2 border-dashed border-gray-200 bg-gray-50/30">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-gray-500">
+                      <Target className="h-5 w-5" />
+                      Gap Analysis
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      <div className="rounded border-2 border-dashed border-gray-300 px-3 py-1">
+                        <span className="text-xs text-gray-500">
+                          Gap identification pending
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Award className="h-4 w-4 text-purple-500" />
-                      <span>Recommendations</span>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Placeholder AI analysis summary */}
+              <Card className="border-2 border-dashed border-gray-200">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-gray-500">
+                    <Brain className="h-5 w-5" />
+                    AI Analysis Summary
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-muted/30 rounded-lg p-4">
+                    <p className="text-center text-sm text-gray-500">
+                      Comprehensive AI-powered analysis will appear here after
+                      processing. Click &quot;Start AI Analysis&quot; to get detailed
+                      insights about this candidate&apos;s qualifications, skill
+                      matches, and hiring recommendations.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Placeholder recommendations */}
+              <Card className="border-2 border-dashed border-blue-200 bg-blue-50/30">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-blue-600">
+                    <Award className="h-5 w-5" />
+                    AI Recommendations
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="rounded-lg border-2 border-dashed border-blue-300 bg-blue-100/50 p-3">
+                      <div className="text-center">
+                        <div className="mx-auto grid max-w-lg grid-cols-1 gap-4 text-sm md:grid-cols-3">
+                          <div className="flex items-center justify-center gap-2">
+                            <TrendingUp className="h-4 w-4 text-green-500" />
+                            <span>Skill Matching</span>
+                          </div>
+                          <div className="flex items-center justify-center gap-2">
+                            <Target className="h-4 w-4 text-blue-500" />
+                            <span>Score Analysis</span>
+                          </div>
+                          <div className="flex items-center justify-center gap-2">
+                            <Award className="h-4 w-4 text-purple-500" />
+                            <span>Recommendations</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           <Separator />
@@ -479,7 +695,7 @@ export function ResumeScreeningDialog({
             <Button variant="outline" onClick={() => setOpen(false)}>
               Close
             </Button>
-            {screeningResults && (
+            {screeningResults && !isScreening && (
               <Button
                 onClick={handleSaveResults}
                 disabled={saveScreeningResultMutation.isPending}
@@ -492,6 +708,12 @@ export function ResumeScreeningDialog({
                 ) : (
                   "Save Analysis Results"
                 )}
+              </Button>
+            )}
+            {isScreening && (
+              <Button disabled className="opacity-50">
+                <Brain className="mr-2 h-4 w-4 animate-spin" />
+                Processing...
               </Button>
             )}
           </div>

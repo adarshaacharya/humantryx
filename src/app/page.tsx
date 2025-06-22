@@ -1,6 +1,6 @@
 import { HeroSection } from "@/modules/landing/hero-section";
 import { FeaturesSection } from "@/modules/landing/features-section";
-import { AISection } from "@/modules/landing/ai-section";
+import { VideoShowcaseSection } from "@/modules/landing/video-showcase-section";
 import { BenefitsSection } from "@/modules/landing/benefits-section";
 import { CTASection } from "@/modules/landing/cta-section";
 import { Navigation } from "@/modules/landing/navigation";
@@ -12,7 +12,7 @@ export default function Home() {
       <main>
         <HeroSection />
         <FeaturesSection />
-        <AISection />
+        <VideoShowcaseSection />
         <BenefitsSection />
         <CTASection />
       </main>

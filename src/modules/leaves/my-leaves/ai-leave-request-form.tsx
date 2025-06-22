@@ -98,7 +98,7 @@ export function AILeaveRequestForm() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+      <DialogContent className="max-h-[90vh] min-w-2xl overflow-y-auto">
         <DialogHeader className="space-y-3">
           <DialogTitle className="flex items-center gap-2 text-xl">
             <div className="rounded-lg bg-gradient-to-r from-purple-100 to-blue-100 p-2">
