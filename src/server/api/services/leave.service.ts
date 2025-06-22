@@ -474,33 +474,36 @@ export class LeaveService {
     const activeEmployees = await db.query.employees.findMany({
       where: and(
         eq(employees.organizationId, activeOrgId),
-        eq(employees.status, "active"),
+        // Include both active and invited employees
+        inArray(employees.status, ["active", "invited"]),
       ),
     });
 
-    // Create leave balance records for employees who don't already have this leave type
-    const balancesToCreate = [];
-    for (const employee of activeEmployees) {
-      // Check if employee already has a balance for this leave type and year
-      const existingBalance = await db.query.leaveBalances.findFirst({
-        where: and(
-          eq(leaveBalances.employeeId, employee.id),
-          eq(leaveBalances.leaveType, input.leaveType),
-          eq(leaveBalances.year, currentYear),
+    // Get existing balances for all employees at once (more efficient)
+    const existingBalances = await db.query.leaveBalances.findMany({
+      where: and(
+        eq(leaveBalances.leaveType, input.leaveType),
+        eq(leaveBalances.year, currentYear),
+        inArray(
+          leaveBalances.employeeId,
+          activeEmployees.map((emp) => emp.id),
         ),
-      });
+      ),
+    });
 
-      if (!existingBalance) {
-        balancesToCreate.push({
-          employeeId: employee.id,
-          leaveType: input.leaveType,
-          totalAllowed: input.defaultAllowance,
-          used: 0,
-          remaining: input.defaultAllowance,
-          year: currentYear,
-        });
-      }
-    }
+    const existingEmployeeIds = existingBalances.map((b) => b.employeeId);
+
+    // Create leave balance records for employees who don't already have this leave type
+    const balancesToCreate = activeEmployees
+      .filter((employee) => !existingEmployeeIds.includes(employee.id))
+      .map((employee) => ({
+        employeeId: employee.id,
+        leaveType: input.leaveType,
+        totalAllowed: input.defaultAllowance,
+        used: 0,
+        remaining: input.defaultAllowance,
+        year: currentYear,
+      }));
 
     if (balancesToCreate.length > 0) {
       await db.insert(leaveBalances).values(balancesToCreate);
@@ -640,7 +643,8 @@ export class LeaveService {
     const activeEmployees = await db.query.employees.findMany({
       where: and(
         eq(employees.organizationId, organizationId),
-        eq(employees.status, "active"),
+        // Include both active and invited employees
+        inArray(employees.status, ["active", "invited"]),
       ),
     });
 
@@ -679,7 +683,8 @@ export class LeaveService {
     const activeEmployees = await db.query.employees.findMany({
       where: and(
         eq(employees.organizationId, organizationId),
-        eq(employees.status, "active"),
+        // Include both active and invited employees
+        inArray(employees.status, ["active", "invited"]),
       ),
     });
 
