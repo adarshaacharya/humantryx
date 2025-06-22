@@ -1,15 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import {
-  and,
-  eq,
-  gte,
-  lte,
-  desc,
-  sql,
-  isNull,
-  isNotNull,
-  getTableColumns,
-} from "drizzle-orm";
+import { and, eq, gte, lte, desc, sql, isNull, isNotNull } from "drizzle-orm";
 import { db } from "@/server/db";
 import { employees } from "@/server/db/schema";
 import { attendanceRecords } from "@/server/db/attendance";
@@ -252,17 +242,21 @@ export class AttendanceService {
       whereConditions.push(eq(attendanceRecords.employeeId, employeeId));
     }
 
-    // Date filters
+    // Date filters - dates are already normalized on frontend
     if (startDate) {
-      whereConditions.push(gte(attendanceRecords.clockInTime, startDate));
+      whereConditions.push(
+        gte(attendanceRecords.clockInTime, startDate),
+      );
     }
 
     if (endDate) {
-      whereConditions.push(lte(attendanceRecords.clockInTime, endDate));
+      whereConditions.push(
+        lte(attendanceRecords.clockInTime, endDate),
+      );
     }
 
-    // Build query options
-    const queryOptions: any = {
+    // Build base query options
+    const baseOptions = {
       where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
       with: {
         employee: {
@@ -274,12 +268,14 @@ export class AttendanceService {
       orderBy: [desc(attendanceRecords.clockInTime)],
     };
 
-    // Add pagination only if specified
-    if (page !== undefined && limit !== undefined) {
-      const offset = (page - 1) * limit;
-      queryOptions.limit = limit;
-      queryOptions.offset = offset;
-    }
+    // Add pagination if specified
+    const queryOptions = page !== undefined && limit !== undefined 
+      ? {
+          ...baseOptions,
+          limit,
+          offset: (page - 1) * limit,
+        }
+      : baseOptions;
 
     const records = await db.query.attendanceRecords.findMany(queryOptions);
 

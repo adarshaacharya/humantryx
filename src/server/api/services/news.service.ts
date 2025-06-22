@@ -32,9 +32,9 @@ export class NewsService {
   } as const;
 
   private static readonly CACHE_TTL = {
-    NEWS_LIST: 900, // 15 minutes - news changes frequently
-    NEWS_DETAIL: 1800, // 30 minutes - individual articles change less
-    NEWS_COUNT: 1800, // 30 minutes - counts change less frequently
+    NEWS_LIST: 60, // 1 minute - news changes frequently
+    NEWS_DETAIL: 60, // 1 minute - individual articles change less
+    NEWS_COUNT: 60, // 1 minute - counts change less frequently
     AUTHOR_NEWS: 900, // 15 minutes - author's articles
   } as const;
   private static async validateEmployee(userId: string) {
@@ -135,8 +135,32 @@ export class NewsService {
       });
 
       // Invalidate related caches after creating news
+      await invalidateCache(this.CACHE_KEYS.ORG_NEWS(activeOrgId));
+      await invalidateCache(this.CACHE_KEYS.NEWS_COUNT(activeOrgId));
       await invalidatePattern(this.CACHE_KEYS.ORG_NEWS_PATTERN(activeOrgId));
       await invalidatePattern(this.CACHE_KEYS.AUTHOR_NEWS_PATTERN(employee.id));
+
+      // Immediately refresh the organization news cache with latest data
+      const cacheKey = this.CACHE_KEYS.ORG_NEWS(activeOrgId);
+      const freshNews = await db.query.news.findMany({
+        where: and(
+          eq(news.organizationId, activeOrgId),
+          eq(news.isActive, true),
+        ),
+        with: {
+          author: {
+            with: {
+              user: true,
+            },
+          },
+        },
+        orderBy: [desc(news.createdAt)],
+      });
+      
+      // Update cache with fresh data
+      await cache(cacheKey, async () => freshNews, { 
+        ttl: this.CACHE_TTL.NEWS_LIST 
+      });
 
       return completeNews;
     } catch (error) {
@@ -213,9 +237,33 @@ export class NewsService {
       });
 
       // Invalidate related caches after updating news
+      await invalidateCache(this.CACHE_KEYS.ORG_NEWS(activeOrgId));
       await invalidateCache(this.CACHE_KEYS.NEWS_BY_ID(activeOrgId, input.id));
+      await invalidateCache(this.CACHE_KEYS.NEWS_COUNT(activeOrgId));
       await invalidatePattern(this.CACHE_KEYS.ORG_NEWS_PATTERN(activeOrgId));
       await invalidatePattern(this.CACHE_KEYS.AUTHOR_NEWS_PATTERN(employee.id));
+
+      // Immediately refresh the organization news cache with latest data
+      const cacheKey = this.CACHE_KEYS.ORG_NEWS(activeOrgId);
+      const freshNews = await db.query.news.findMany({
+        where: and(
+          eq(news.organizationId, activeOrgId),
+          eq(news.isActive, true),
+        ),
+        with: {
+          author: {
+            with: {
+              user: true,
+            },
+          },
+        },
+        orderBy: [desc(news.createdAt)],
+      });
+      
+      // Update cache with fresh data
+      await cache(cacheKey, async () => freshNews, { 
+        ttl: this.CACHE_TTL.NEWS_LIST 
+      });
 
       return completeNews;
     } catch (error) {
@@ -279,11 +327,35 @@ export class NewsService {
         .where(eq(news.id, input.id));
 
       // Invalidate related caches after deleting news
+      await invalidateCache(this.CACHE_KEYS.ORG_NEWS(activeOrgId));
       await invalidateCache(this.CACHE_KEYS.NEWS_BY_ID(activeOrgId, input.id));
+      await invalidateCache(this.CACHE_KEYS.NEWS_COUNT(activeOrgId));
       await invalidatePattern(this.CACHE_KEYS.ORG_NEWS_PATTERN(activeOrgId));
       await invalidatePattern(
         this.CACHE_KEYS.AUTHOR_NEWS_PATTERN(existingNews.authorId),
       );
+
+      // Immediately refresh the organization news cache with latest data
+      const cacheKey = this.CACHE_KEYS.ORG_NEWS(activeOrgId);
+      const freshNews = await db.query.news.findMany({
+        where: and(
+          eq(news.organizationId, activeOrgId),
+          eq(news.isActive, true),
+        ),
+        with: {
+          author: {
+            with: {
+              user: true,
+            },
+          },
+        },
+        orderBy: [desc(news.createdAt)],
+      });
+      
+      // Update cache with fresh data
+      await cache(cacheKey, async () => freshNews, { 
+        ttl: this.CACHE_TTL.NEWS_LIST 
+      });
 
       return { success: true };
     } catch (error) {

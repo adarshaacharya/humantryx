@@ -75,11 +75,38 @@ export function AttendanceDataTable({
 
   const debouncedSearch = useDebounce(searchTerm, 300);
 
+  // Helper function to normalize dates before sending to backend
+  const normalizeDateRange = (from?: Date, to?: Date) => {
+    if (!from && !to) return { startDate: undefined, endDate: undefined };
+
+    return {
+      startDate: from
+        ? (() => {
+            const normalized = new Date(from);
+            normalized.setHours(0, 0, 0, 0);
+            return normalized;
+          })()
+        : undefined,
+      endDate: to
+        ? (() => {
+            const normalized = new Date(to);
+            normalized.setHours(23, 59, 59, 999);
+            return normalized;
+          })()
+        : undefined,
+    };
+  };
+
+  const { startDate, endDate } = normalizeDateRange(
+    dateRange?.from,
+    dateRange?.to,
+  );
+
   const historyQuery = api.attendance.getHistory.useQuery({
     employeeId:
       employeeId || (employeeFilter === "all" ? undefined : employeeFilter),
-    startDate: dateRange?.from,
-    endDate: dateRange?.to,
+    startDate,
+    endDate,
   });
 
   const filteredRecords: AttendanceRecord[] =

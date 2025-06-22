@@ -21,6 +21,7 @@ import { getEmployeeStatusBadge } from "../../constants/employee.constants";
 import { IdCell } from "@/components/id-cell";
 import type { EmployeeWithUser } from "@/server/api/types/employee.types";
 import { Can } from "@/components/can";
+import { startCase } from "lodash-es";
 
 interface EmployeeTableMeta {
   onViewEmployee: (employee: EmployeeWithUser) => void;
@@ -111,6 +112,12 @@ export const employeeColumns: ColumnDef<EmployeeWithUser>[] = [
           Designation
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const designation = row.original.designation;
+      return (
+        <span className="text-center text-sm">{startCase(designation)}</span>
       );
     },
   },

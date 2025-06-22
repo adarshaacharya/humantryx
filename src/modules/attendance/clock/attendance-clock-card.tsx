@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { api } from "@/trpc/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -56,6 +56,8 @@ export function AttendanceClockCard() {
   const [clockAction, setClockAction] = useState<"in" | "out">("in");
   const [notes, setNotes] = useState("");
 
+  const utils = api.useUtils();
+
   const statusQuery = api.attendance.getCurrentStatus.useQuery(undefined, {
     refetchInterval: 30000, // Refetch every 30 seconds
   });
@@ -66,6 +68,10 @@ export function AttendanceClockCard() {
       setShowClockDialog(false);
       setNotes("");
       void statusQuery.refetch();
+
+      // Invalidate all attendance queries to refresh lists
+      void utils.attendance.getHistory.invalidate();
+      void utils.attendance.getSummary.invalidate();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -78,6 +84,10 @@ export function AttendanceClockCard() {
       setShowClockDialog(false);
       setNotes("");
       void statusQuery.refetch();
+
+      // Invalidate all attendance queries to refresh lists
+      void utils.attendance.getHistory.invalidate();
+      void utils.attendance.getSummary.invalidate();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -88,6 +98,10 @@ export function AttendanceClockCard() {
     onSuccess: () => {
       toast.success("Break started!");
       void statusQuery.refetch();
+
+      // Invalidate attendance queries
+      void utils.attendance.getHistory.invalidate();
+      void utils.attendance.getSummary.invalidate();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -98,6 +112,10 @@ export function AttendanceClockCard() {
     onSuccess: () => {
       toast.success("Break ended!");
       void statusQuery.refetch();
+
+      // Invalidate attendance queries
+      void utils.attendance.getHistory.invalidate();
+      void utils.attendance.getSummary.invalidate();
     },
     onError: (error) => {
       toast.error(error.message);

@@ -30,6 +30,7 @@ import { useRouter } from "next/navigation";
 import { JOB_STATUSES, JOB_LOCATION_TYPES } from "../../consts";
 import type { JobStatus } from "../../consts";
 import { startCase } from "lodash-es";
+import { JobDescriptionRenderer } from "../../components/job-description-renderer";
 
 interface Job {
   id: string;
@@ -240,9 +241,9 @@ export function JobsList() {
                     </div>
 
                     {/* Job Description */}
-                    <p className="text-muted-foreground line-clamp-2 text-sm">
-                      {job.description}
-                    </p>
+                    <div className="text-muted-foreground line-clamp-2 text-sm">
+                      <JobDescriptionRenderer content={job.description} />
+                    </div>
 
                     {/* Job Details Row */}
                     <div className="flex flex-wrap items-center gap-4">
