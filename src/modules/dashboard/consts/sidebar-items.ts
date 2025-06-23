@@ -133,7 +133,12 @@ export const getMenuItems = (ability: AppAbility) => {
           enabled: ability.can("create", "Payroll"),
         },
         {
-          title: "Payslips",
+          title: "Salaries Information",
+          href: "/dashboard/payroll/settings",
+          enabled: ability.can("manage", "Payroll"),
+        },
+        {
+          title: "My Payslips",
           href: "/dashboard/payroll/payslips",
           enabled: ability.can("read", "Payroll"),
         },

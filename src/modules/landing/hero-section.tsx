@@ -12,6 +12,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 const features = [
   "AI Resume Screening",
@@ -27,9 +28,9 @@ export function HeroSection() {
       className="relative overflow-hidden px-4 pt-32 pb-20 sm:px-6 lg:px-8"
     >
       {/* Background Elements */}
-      <div className="from-background via-background to-muted/20 absolute inset-0 bg-gradient-to-br" />
-      <div className="bg-primary/5 absolute top-1/4 left-1/4 h-72 w-72 rounded-full blur-3xl" />
-      <div className="bg-primary/10 absolute right-1/4 bottom-1/4 h-72 w-72 rounded-full blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/20" />
+      <div className="absolute top-1/4 left-1/4 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
+      <div className="absolute right-1/4 bottom-1/4 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl">
         <div className="text-center">
@@ -51,12 +52,37 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-foreground mb-6 text-4xl font-bold sm:text-5xl lg:text-7xl"
+            className="mb-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-7xl"
           >
             The Future of HR is{" "}
-            <span className="from-primary to-primary/70 bg-gradient-to-r bg-clip-text text-transparent">
+            <motion.span 
+              className="relative bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent"
+              animate={{ 
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+              }}
+              transition={{ 
+                duration: 3,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              style={{
+                backgroundSize: "200% 200%"
+              }}
+            >
               AI-Powered
-            </span>
+              <motion.div
+                className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-blue-600/20 to-purple-600/20 blur-lg"
+                animate={{ 
+                  opacity: [0.3, 0.6, 0.3],
+                  scale: [1, 1.05, 1]
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            </motion.span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -76,15 +102,15 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mb-10 flex flex-wrap justify-center gap-4"
+            className="mb-12 flex flex-wrap justify-center gap-4"
           >
             {features.map((feature) => (
               <div
                 key={feature}
-                className="bg-muted/50 flex items-center space-x-2 rounded-full border px-4 py-2 backdrop-blur-sm"
+                className="flex items-center space-x-2 rounded-full border border-primary/20 bg-muted/50 px-4 py-2 backdrop-blur-sm"
               >
-                <CheckCircle className="text-primary h-4 w-4" />
-                <span className="text-foreground text-sm font-medium">
+                <CheckCircle className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-foreground">
                   {feature}
                 </span>
               </div>
@@ -96,27 +122,52 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="mb-16 flex flex-col items-center justify-center gap-4 sm:flex-row"
+            className="mb-16 flex flex-col items-center justify-center gap-6 sm:flex-row"
           >
-            <Link href="/sign-up">
-              <Button size="lg" className="h-auto px-8 py-6 text-lg">
-                Get Started Today
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Button
-              variant="outline"
-              size="lg"
-              className="h-auto px-8 py-6 text-lg"
-              onClick={() =>
-                window.open(
-                  "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                  "_blank",
-                )
-              }
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              Watch Demo
-            </Button>
+              <Link href="/sign-up">
+                <Button 
+                  size="lg" 
+                  className="group relative h-auto overflow-hidden bg-gradient-to-r from-primary via-primary to-primary/80 px-8 py-6 text-lg font-semibold shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30"
+                >
+                  <span className="relative z-10 flex items-center">
+                    Get Started Today
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                </Button>
+              </Link>
+            </motion.div>
+            
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              <Button
+                variant="outline"
+                size="lg"
+                className="group relative h-auto overflow-hidden border-2 border-primary/20 bg-background/80 px-8 py-6 text-lg font-semibold backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-primary/5 hover:shadow-lg"
+                onClick={() =>
+                  toast("Demo video coming soon!", {
+                    description: "Stay tuned for our demo video!",
+                    duration: 3000,
+                  })
+                }
+              >
+                <span className="relative z-10 flex items-center">
+                  <div className="mr-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 transition-colors duration-300 group-hover:bg-primary/20">
+                    <div className="h-0 w-0 border-l-[6px] border-r-0 border-t-[4px] border-b-[4px] border-l-primary border-t-transparent border-b-transparent" />
+                  </div>
+                  Watch Demo
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              </Button>
+            </motion.div>
           </motion.div>
 
           {/* Stats */}
@@ -133,13 +184,13 @@ export function HeroSection() {
               { icon: Shield, stat: "99.9%", label: "Uptime Guarantee" },
             ].map((item, index) => (
               <div key={index} className="text-center">
-                <div className="bg-muted mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl">
-                  <item.icon className="text-primary h-6 w-6" />
+                <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-muted">
+                  <item.icon className="h-6 w-6 text-primary" />
                 </div>
-                <div className="text-foreground mb-1 text-2xl font-bold">
+                <div className="mb-1 text-2xl font-bold text-foreground">
                   {item.stat}
                 </div>
-                <div className="text-muted-foreground text-sm">
+                <div className="text-sm text-muted-foreground">
                   {item.label}
                 </div>
               </div>
@@ -161,7 +212,7 @@ export function HeroSection() {
         }}
         className="absolute top-32 left-8 hidden lg:block"
       >
-        <div className="bg-primary/10 h-16 w-16 rounded-2xl" />
+        <div className="h-16 w-16 rounded-2xl bg-primary/10" />
       </motion.div>
 
       <motion.div
@@ -177,7 +228,39 @@ export function HeroSection() {
         }}
         className="absolute top-48 right-12 hidden lg:block"
       >
-        <div className="bg-primary/20 h-12 w-12 rounded-xl" />
+        <div className="h-12 w-12 rounded-xl bg-primary/20" />
+      </motion.div>
+
+      <motion.div
+        animate={{
+          y: [0, -15, 0],
+          rotate: [0, 10, 0],
+        }}
+        transition={{
+          duration: 7,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2,
+        }}
+        className="absolute bottom-32 left-16 hidden lg:block"
+      >
+        <div className="h-10 w-10 rounded-lg bg-primary/15" />
+      </motion.div>
+
+      <motion.div
+        animate={{
+          y: [0, 25, 0],
+          rotate: [0, -8, 0],
+        }}
+        transition={{
+          duration: 9,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.5,
+        }}
+        className="absolute bottom-48 right-20 hidden lg:block"
+      >
+        <div className="h-14 w-14 rounded-xl bg-primary/12" />
       </motion.div>
     </section>
   );
