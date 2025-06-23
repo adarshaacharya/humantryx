@@ -344,6 +344,13 @@ export class PayrollService {
   static async getEmployeesWithSalarySettings(session: Session) {
     await this.validateHRAccess(session);
 
+    if (!session.session.activeOrganizationId) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Organization not found",
+      });
+    }
+
     const employeesWithSettings = await db
       .select({
         id: employees.id,
@@ -381,7 +388,12 @@ export class PayrollService {
         employeeSalarySettings,
         eq(employees.id, employeeSalarySettings.employeeId),
       )
-      .where(eq(employees.status, "active"));
+      .where(
+        and(
+          eq(employees.status, "active"),
+          eq(employees.organizationId, session.session.activeOrganizationId),
+        ),
+      );
 
     return employeesWithSettings;
   }
