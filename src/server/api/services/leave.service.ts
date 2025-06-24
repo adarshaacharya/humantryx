@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { and, eq, gte, lte, desc, asc, sql, inArray } from "drizzle-orm";
 import { db } from "@/server/db";
-import { employees, members, users } from "@/server/db/schema";
+import { employees, members } from "@/server/db/schema";
 import {
   leaveRequests,
   leaveBalances,
@@ -365,13 +365,69 @@ export class LeaveService {
       });
     }
 
-    return db.query.leaveBalances.findMany({
+    // Check if employee has leave balances for the current year
+    const existingBalances = await db.query.leaveBalances.findMany({
       where: and(
         eq(leaveBalances.employeeId, targetEmployeeId),
         eq(leaveBalances.year, year),
       ),
       orderBy: [asc(leaveBalances.leaveType)],
     });
+
+    // If no balances exist, initialize them based on organization's leave policies
+    if (existingBalances.length === 0) {
+      await this.initializeLeaveBalancesForEmployee(targetEmployeeId, year);
+
+      // Fetch the newly created balances
+      return db.query.leaveBalances.findMany({
+        where: and(
+          eq(leaveBalances.employeeId, targetEmployeeId),
+          eq(leaveBalances.year, year),
+        ),
+        orderBy: [asc(leaveBalances.leaveType)],
+      });
+    }
+
+    return existingBalances;
+  }
+
+  static async initializeLeaveBalancesForEmployee(
+    employeeId: string,
+    year: number,
+  ) {
+    // Get the employee's organization
+    const employee = await db.query.employees.findFirst({
+      where: eq(employees.id, employeeId),
+    });
+
+    if (!employee) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Employee not found",
+      });
+    }
+
+    // Get organization's leave policies
+    const policies = await db.query.leavePolicies.findMany({
+      where: and(
+        eq(leavePolicies.organizationId, employee.organizationId),
+        eq(leavePolicies.isActive, true),
+      ),
+    });
+
+    // Create leave balance records for each policy
+    const balanceRecords = policies.map((policy) => ({
+      employeeId: employeeId,
+      leaveType: policy.leaveType,
+      totalAllowed: policy.defaultAllowance,
+      used: 0,
+      remaining: policy.defaultAllowance,
+      year: year,
+    }));
+
+    if (balanceRecords.length > 0) {
+      await db.insert(leaveBalances).values(balanceRecords);
+    }
   }
 
   static async adjustLeaveBalance(

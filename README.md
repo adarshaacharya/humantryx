@@ -2,9 +2,13 @@
 
 # 🏢 Humantryx • AI-Powered HRMS
 
-[demo](https://humantryx.vercel.app) — [github](https://github.com/adarshacharya/humantryx)
+[live url](https://humantryx.vercel.app) — [github](https://github.com/adarshacharya/humantryx)
 
 > **Humantryx** is an AI-powered Human Resource Management System built with Next.js and modern technologies. It streamlines HR processes including employee management, attendance tracking, leave management, and payroll processing, all enhanced with intelligent automation.
+
+## Demo
+
+[![YOUTUBE DEMO](https://img.youtube.com/vi/xuPdJo9f9Xw/0.jpg)](https://youtu.be/xuPdJo9f9Xw?si=FLN8Hj-rkEzWGPt8)
 
 ## Stack
 
@@ -19,7 +23,8 @@
 9. 📝 **Forms**: [React Hook Form](https://react-hook-form.com) + [Zod](https://zod.dev)
 10. 📅 **Tables**: [TanStack Table](https://tanstack.com/table)
 11. 🎯 **Authorization**: [CASL](https://casl.js.org) for permissions
-12. 📦 **Package Manager**: [pnpm](https://pnpm.io)
+12. 📧 **Email**: [resend](https://resend.com) + [react-email](https://react.email)
+13. 📦 **Package Manager**: [pnpm](https://pnpm.io)
 
 ## Features
 
@@ -116,39 +121,7 @@
 | `pnpm db:studio`  | Open Drizzle Studio           |
 | `pnpm db:seed`    | Seed database with test data  |
 
-## Architecture
-
-### Frontend Architecture
-
-- **Server Components**: React Server Components by default
-- **Client Components**: Only when interactivity is needed
-- **Modular Structure**: Feature-based module organization
-- **Responsive Design**: Mobile-first approach with Tailwind
-- **Type Safety**: Full TypeScript integration
-
-### Backend Architecture
-
-- **tRPC API**: Type-safe API with React Query integration
-- **Service Layer**: Reusable business logic in services
-- **Redis Caching**: Comprehensive caching strategy
-- **Role-Based Security**: CASL-powered permission system
-- **Database Optimization**: Efficient queries with Drizzle ORM
-
-### AI Integration
-
-- **LangChain Pipeline**: Structured AI workflows
-- **Vector Storage**: Pinecone for semantic search
-- **Multi-Model Support**: OpenAI for embeddings, Groq for LLM
-- **Caching Strategy**: AI response caching for performance
-
 ## Deployment
-
-### Environment Setup
-
-1. **Database**: Set up PostgreSQL (recommended: Neon, Supabase)
-2. **Redis**: Configure Upstash Redis
-3. **AI Services**: Get API keys for OpenAI, Groq, Pinecone
-4. **Authentication**: Configure Better-Auth settings
 
 ### Vercel Deployment
 
@@ -174,18 +147,10 @@ docker-compose up -d
 
 We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
-### Development Guidelines
-
-- Follow the established architectural patterns
-- Use TypeScript for type safety
-- Write tests for new features
-- Follow the existing code style
-- Update documentation as needed
-
 ## License
 
 MIT © 2025 Humantryx Team
 
 ---
 
-> Built with ❤️ by  [Adarsha Acharya](https://adarsha.dev) using modern web technologies for the future of HR management.
+> Built with ❤️ by [Adarsha Acharya](https://adarsha.dev) using modern web technologies for the future of HR management.

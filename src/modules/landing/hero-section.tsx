@@ -153,10 +153,7 @@ export function HeroSection() {
                 size="lg"
                 className="group relative h-auto overflow-hidden border-2 border-primary/20 bg-background/80 px-8 py-6 text-lg font-semibold backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:bg-primary/5 hover:shadow-lg"
                 onClick={() =>
-                  toast("Demo video coming soon!", {
-                    description: "Stay tuned for our demo video!",
-                    duration: 3000,
-                  })
+                  window.open("https://youtu.be/xuPdJo9f9Xw", "_blank")
                 }
               >
                 <span className="relative z-10 flex items-center">

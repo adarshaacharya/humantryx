@@ -75,8 +75,18 @@ export function LeaveBalanceCard({ employeeId, year }: LeaveBalanceCardProps) {
       </CardHeader>
       <CardContent className="space-y-6">
         {balances.length === 0 ? (
-          <div className="text-muted-foreground py-6 text-center">
-            No leave balances found
+          <div className="py-8 text-center">
+            <div className="bg-muted mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+              <Calendar className="text-muted-foreground h-6 w-6" />
+            </div>
+            <p className="text-muted-foreground mb-2">
+              No leave balances found for {currentYear}
+            </p>
+            <p className="text-muted-foreground text-sm">
+              Your leave balances will be automatically initialized based on
+              your organization&apos;s leave policies when you first access this
+              page.
+            </p>
           </div>
         ) : (
           balances.map((balance) => {
