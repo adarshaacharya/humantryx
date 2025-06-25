@@ -37,9 +37,8 @@ export const VerificationEmailTemplate = ({
             </Section>
 
             <Text className="text-base text-[#374151]">
-              Thank you for creating your account with {companyName}! We&apos;re
-              excited to have you join us. Please verify your email address to
-              complete your registration.
+              Thank you for creating your account with {companyName}! Please
+              verify your email address to complete your registration.
             </Text>
 
             <Section className="text-center">
@@ -47,7 +46,7 @@ export const VerificationEmailTemplate = ({
                 href={inviteLink}
                 className="rounded-lg bg-[#4f46e5] px-6 py-3 text-base font-semibold text-white no-underline"
               >
-                Verify Email Address
+                Verify Email 
               </Button>
             </Section>
 

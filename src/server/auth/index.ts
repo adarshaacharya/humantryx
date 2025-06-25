@@ -11,6 +11,7 @@ import {
   sendChangeEmailVerification,
   sendOrganizationInvitationEmail,
   sendVerificationEmail,
+  sendResetPasswordEmail,
 } from "@/server/auth/email";
 import { env } from "@/env";
 import { organization } from "better-auth/plugins";
@@ -24,8 +25,15 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    async sendResetPassword({ url }) {
-      console.log("Reset password URL:", url);
+    async sendResetPassword({ url, user, token }) {
+      const resetPasswordUrl = `${env.BETTER_AUTH_URL}/reset-password?token=${token}&callbackURL=${encodeURIComponent(url)}`;
+
+      const { error } = await sendResetPasswordEmail({
+        email: user.email,
+        verificationUrl: resetPasswordUrl,
+      });
+
+      if (error) return console.log("sendResetPassword Error: ", error);
     },
   },
   plugins: [

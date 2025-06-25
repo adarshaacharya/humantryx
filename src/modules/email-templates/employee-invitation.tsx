@@ -30,7 +30,7 @@ export const EmployeeInvitationEmail = ({
 
   return (
     <Html>
-      <Head />
+      <Head>Invitation to Join {organizationName}</Head>
       <Preview>{previewText}</Preview>
       <Tailwind>
         <Body className="mx-auto my-auto bg-white px-2 font-sans">
@@ -52,14 +52,14 @@ export const EmployeeInvitationEmail = ({
                 href={invitationLink}
                 className="rounded-lg bg-[#4f46e5] px-6 py-3 text-base font-semibold text-white no-underline"
               >
-                Complete Registration
+                Accept Invitation
               </Button>
             </Section>
 
             <Section className="my-[32px] text-center">
               <Text className="text-sm text-[#6b7280]">
-                Please click the button above to complete your registration and
-                become a part of our team.
+                Please click the button above to accept your invitation and be
+                part of our team.
               </Text>
             </Section>
 
