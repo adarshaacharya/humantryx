@@ -11,6 +11,7 @@ import {
   ConsentManagerProvider,
   CookieBanner,
 } from "@c15t/nextjs";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "Humantryx | AI Powered Human Resource Management System",
@@ -39,6 +40,7 @@ export default function RootLayout({
               }}
             >
               {children}
+              <Analytics />
               <ConsentManagerDialog />
               <CookieBanner />
             </ConsentManagerProvider>
