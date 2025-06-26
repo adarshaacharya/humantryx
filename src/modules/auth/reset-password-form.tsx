@@ -29,6 +29,7 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { Input } from "@/components/ui/input";
 import { Lock, Brain, ArrowRight, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 
 function ResetPasswordFormNoSuspense() {
   const router = useRouter();
@@ -85,13 +86,7 @@ function ResetPasswordFormNoSuspense() {
         {/* Header */}
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center">
-            <div className="relative">
-              <Brain className="text-primary h-8 w-8" />
-              <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400" />
-            </div>
-            <span className="text-foreground ml-2 text-xl font-bold">
-              Humantryx
-            </span>
+            <Logo className="h-8 w-8" />
           </Link>
         </div>
 

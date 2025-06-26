@@ -2,8 +2,11 @@ import { useCallback } from "react";
 import { toast } from "sonner";
 import { PayslipPDF } from "../utils/payslip-pdf";
 import type { PayrollRecordWithEmployee } from "../types";
+import { authClient } from "@/server/auth/auth-client";
 
 export function usePayslipGenerator() {
+  const { data: currentOrg } = authClient.useActiveOrganization();
+
   const generatePayslip = useCallback(
     (payrollRecord: PayrollRecordWithEmployee) => {
       try {
@@ -16,8 +19,9 @@ export function usePayslipGenerator() {
         }
 
         const pdf = new PayslipPDF();
+        const organizationName = currentOrg?.name || "Organization";
 
-        pdf.generatePayslip(payrollRecord);
+        pdf.generatePayslip(payrollRecord, organizationName);
 
         const employeeName = payrollRecord.employee.user.name.replace(
           /\s+/g,
@@ -39,7 +43,7 @@ export function usePayslipGenerator() {
         toast.error("Failed to generate payslip. Please try again.");
       }
     },
-    [],
+    [currentOrg?.name],
   );
 
   const generatePayslipBlob = useCallback(
@@ -53,7 +57,8 @@ export function usePayslipGenerator() {
         }
 
         const pdf = new PayslipPDF();
-        pdf.generatePayslip(payrollRecord);
+        const organizationName = currentOrg?.name || "Organization";
+        pdf.generatePayslip(payrollRecord, organizationName);
         return pdf.getBlob();
       } catch (error) {
         console.error("Error generating payslip blob:", error);
@@ -61,7 +66,7 @@ export function usePayslipGenerator() {
         return null;
       }
     },
-    [],
+    [currentOrg?.name],
   );
 
   const generatePayslipDataUrl = useCallback(
@@ -75,7 +80,8 @@ export function usePayslipGenerator() {
         }
 
         const pdf = new PayslipPDF();
-        pdf.generatePayslip(payrollRecord);
+        const organizationName = currentOrg?.name || "Organization";
+        pdf.generatePayslip(payrollRecord, organizationName);
         return pdf.getDataUrl();
       } catch (error) {
         console.error("Error generating payslip data URL:", error);
@@ -83,7 +89,7 @@ export function usePayslipGenerator() {
         return null;
       }
     },
-    [],
+    [currentOrg?.name],
   );
 
   return {

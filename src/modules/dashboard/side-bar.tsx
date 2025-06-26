@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/collapsible";
 import { useAbility } from "@/providers/ability-context";
 import { getMenuItems } from "./consts/sidebar-items";
+import { Logo } from "@/components/logo";
 
 export function DashboardSideBar() {
   const pathname = usePathname();
@@ -65,16 +66,8 @@ export function DashboardSideBar() {
 
   return (
     <Sidebar>
-      <SidebarHeader>
-        <div className="flex h-16 items-center justify-center border-b px-6">
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="relative">
-              <Brain className="text-primary h-8 w-8" />
-              <div className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-400" />
-            </div>
-            <span className="text-foreground text-xl font-bold">Humantryx</span>
-          </Link>
-        </div>
+      <SidebarHeader className="flex justify-between p-4 border-b">
+        <Logo className="h-8 w-8" />
       </SidebarHeader>
 
       <SidebarContent>
