@@ -63,7 +63,7 @@ export function VideoShowcaseSection() {
   return (
     <section
       id="showcase"
-      className="from-background to-muted/20 bg-gradient-to-b py-24"
+      className="from-background to-muted/20 bg-gradient-to-b py-12 sm:py-16 lg:py-24"
     >
       <div className="container mx-auto px-4">
         {/* Section Header */}
@@ -72,7 +72,7 @@ export function VideoShowcaseSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
+          className="mb-12 text-center sm:mb-16"
         >
           <Badge className="mb-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white">
             <Sparkles className="mr-1 h-3 w-3" />

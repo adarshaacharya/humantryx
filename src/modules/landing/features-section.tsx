@@ -76,10 +76,13 @@ export function FeaturesSection() {
   ];
 
   return (
-    <section id="features" className="bg-muted/30 px-4 py-24 sm:px-6 lg:px-8">
+    <section
+      id="features"
+      className="bg-muted/30 px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-24"
+    >
       <div className="mx-auto max-w-7xl">
         {/* Section Header */}
-        <div className="mb-16 text-center">
+        <div className="mb-12 text-center sm:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

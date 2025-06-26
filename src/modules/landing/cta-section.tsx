@@ -26,25 +26,25 @@ export function CTASection() {
   ];
 
   return (
-    <section className="relative overflow-hidden px-4 py-24 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden px-6 py-12 sm:px-8 sm:py-16 lg:px-12 lg:py-20">
       {/* Background */}
-      <div className="from-primary/5 via-background to-muted/20 absolute inset-0 bg-gradient-to-br" />
+      <div className="from-primary/3 via-background to-muted/10 absolute inset-0 bg-gradient-to-br" />
 
-      {/* Floating Elements */}
+      {/* Floating Elements - Simplified */}
       <motion.div
         animate={{
-          y: [0, -15, 0],
-          rotate: [0, 5, 0],
+          y: [0, -10, 0],
+          rotate: [0, 3, 0],
         }}
         transition={{
-          duration: 6,
+          duration: 8,
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute top-20 left-8 hidden lg:block"
+        className="absolute top-20 left-8 hidden opacity-40 xl:block"
       >
-        <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-xl backdrop-blur-sm">
-          <Sparkles className="text-primary h-6 w-6" />
+        <div className="bg-primary/15 flex h-8 w-8 items-center justify-center rounded-lg backdrop-blur-sm">
+          <Sparkles className="text-primary h-4 w-4" />
         </div>
       </motion.div>
 
@@ -56,15 +56,18 @@ export function CTASection() {
           viewport={{ once: true }}
           className="mx-auto max-w-4xl"
         >
-          <Card className="from-background to-muted/30 relative overflow-hidden border-0 bg-gradient-to-br backdrop-blur-sm">
-            <CardContent className="p-12 text-center">
+          <Card className="from-background to-muted/20 border-primary/10 relative overflow-hidden border bg-gradient-to-br shadow-xl backdrop-blur-sm">
+            <CardContent className="p-6 text-center sm:p-8 lg:p-10">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="mb-6"
+                className="mb-4 sm:mb-6"
               >
-                <Badge variant="secondary" className="px-4 py-2">
+                <Badge
+                  variant="secondary"
+                  className="border-primary/20 bg-primary/5 border px-4 py-2"
+                >
                   <Brain className="mr-2 h-4 w-4" />
                   Ready to Get Started?
                 </Badge>
@@ -75,7 +78,7 @@ export function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
-                className="text-foreground mb-4 text-3xl font-bold sm:text-4xl"
+                className="text-foreground mb-3 text-xl leading-tight font-bold sm:mb-4 sm:text-2xl lg:text-3xl"
               >
                 Transform Your HR Operations{" "}
                 <span className="from-primary to-primary/70 bg-gradient-to-r bg-clip-text text-transparent">
@@ -88,11 +91,10 @@ export function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
-                className="text-muted-foreground mb-8 text-lg"
+                className="text-muted-foreground mx-auto mb-6 max-w-xl text-sm leading-relaxed sm:mb-8 sm:text-base lg:text-lg"
               >
                 Join the revolution in HR management. Experience the power of
-                AI-driven automation, intelligent decision making, and seamless
-                employee experiences.
+                AI-driven automation and seamless employee experiences.
               </motion.p>
 
               <motion.div
@@ -100,12 +102,14 @@ export function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
-                className="mb-8 grid gap-4 text-left sm:grid-cols-2"
+                className="mx-auto mb-6 hidden max-w-xl gap-3 text-left sm:mb-8 sm:grid sm:grid-cols-2 lg:gap-4"
               >
                 {ctaFeatures.map((feature) => (
-                  <div key={feature} className="flex items-center">
-                    <Check className="text-primary mr-3 h-5 w-5" />
-                    <span className="text-muted-foreground">{feature}</span>
+                  <div key={feature} className="flex items-start">
+                    <Check className="text-primary mt-1 mr-3 h-4 w-4 flex-shrink-0" />
+                    <span className="text-muted-foreground text-sm">
+                      {feature}
+                    </span>
                   </div>
                 ))}
               </motion.div>
@@ -115,26 +119,41 @@ export function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 }}
-                className="flex flex-col items-center justify-center gap-4 sm:flex-row"
+                className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
               >
-                <Link href="/sign-up">
-                  <Button size="lg" className="h-auto px-8 py-4 text-lg">
-                    Start For Free
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="h-auto px-8 py-4 text-lg"
-                  onClick={() => {
-                    window.location.href =
-                      "https://cal.com/adarshaacharya/schedule";
-                  }}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Schedule Demo
-                </Button>
+                  <Link href="/sign-up">
+                    <Button
+                      size="lg"
+                      className="h-11 w-full px-6 text-sm font-semibold shadow-lg sm:h-12 sm:w-auto sm:px-8 sm:text-base"
+                    >
+                      Start For Free
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="border-primary/20 hover:border-primary/50 h-11 w-full border-2 px-6 text-sm font-semibold sm:h-12 sm:w-auto sm:px-8 sm:text-base"
+                    onClick={() => {
+                      window.location.href =
+                        "https://cal.com/adarshaacharya/schedule";
+                    }}
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Schedule Demo
+                  </Button>
+                </motion.div>
               </motion.div>
 
               <motion.p
@@ -142,15 +161,15 @@ export function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5 }}
-                className="text-muted-foreground mt-6 text-sm"
+                className="text-muted-foreground mt-4 text-xs sm:mt-6 sm:text-sm"
               >
                 No credit card required • Setup in minutes • Cancel anytime
               </motion.p>
             </CardContent>
 
-            {/* Decorative Elements */}
-            <div className="bg-primary/10 absolute -top-12 -right-12 h-24 w-24 rounded-full blur-2xl" />
-            <div className="bg-primary/5 absolute -bottom-12 -left-12 h-32 w-32 rounded-full blur-3xl" />
+            {/* Decorative Elements - Simplified */}
+            <div className="bg-primary/8 absolute -top-8 -right-8 h-16 w-16 rounded-full blur-2xl" />
+            <div className="bg-primary/5 absolute -bottom-8 -left-8 h-20 w-20 rounded-full blur-2xl" />
           </Card>
         </motion.div>
 
@@ -160,29 +179,29 @@ export function CTASection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.6 }}
-          className="mt-16 text-center"
+          className="mt-8 text-center sm:mt-12"
         >
-          <p className="text-muted-foreground mb-4 text-sm">
+          <p className="text-muted-foreground mb-3 text-sm sm:mb-4">
             For further inquiries or project collaborations, feel free to reach
             out.
           </p>
-          <div className="flex items-center justify-center gap-6">
+          <div className="flex flex-row items-center justify-center gap-3 sm:gap-6">
             <div className="text-muted-foreground flex items-center text-sm">
-              <Mail className="mr-2 h-4 w-4" />
+              <Mail className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               <a
                 href="mailto:hi@adarsha.dev"
-                className="text-muted-foreground hover:text-primary hover:underline"
+                className="text-muted-foreground hover:text-primary transition-colors hover:underline"
               >
                 hi@adarsha.dev
               </a>
             </div>
             <div className="text-muted-foreground flex items-center text-sm">
-              <LinkedinIcon className="mr-2 h-4 w-4" />
+              <LinkedinIcon className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               <a
                 href="https://www.linkedin.com/in/adarshaacharya/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary hover:underline"
+                className="text-muted-foreground hover:text-primary transition-colors hover:underline"
               >
                 /adarshaacharya
               </a>
@@ -191,7 +210,7 @@ export function CTASection() {
         </motion.div>
       </div>
 
-      <p className="text-muted-foreground absolute bottom-4 left-1/2 -translate-x-1/2 transform text-xs">
+      <p className="text-muted-foreground absolute bottom-2 left-1/2 w-full -translate-x-1/2 transform text-center text-xs sm:bottom-4 sm:text-sm">
         © {new Date().getFullYear()} Built by{" "}
         <a href="https://adarsha.dev" className="text-primary">
           Adarsha Acharya

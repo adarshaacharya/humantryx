@@ -80,14 +80,14 @@ export function BenefitsSection() {
   return (
     <section
       id="benefits"
-      className="relative overflow-hidden px-4 py-24 sm:px-6 lg:px-8"
+      className="relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-24"
     >
       {/* Background */}
       <div className="from-background to-muted/30 absolute inset-0 bg-gradient-to-br" />
 
       <div className="relative mx-auto max-w-7xl">
         {/* Section Header */}
-        <div className="mb-16 text-center">
+        <div className="mb-12 text-center sm:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
