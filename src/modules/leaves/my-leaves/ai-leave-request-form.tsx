@@ -92,7 +92,7 @@ export function AILeaveRequestForm() {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+        <Button className="from-primary to-accent hover:from-primary/90 hover:to-accent/90 bg-gradient-to-r">
           <Sparkles className="mr-2 h-4 w-4" />
           AI Leave Request
         </Button>
@@ -101,8 +101,8 @@ export function AILeaveRequestForm() {
       <DialogContent className="max-h-[90vh] min-w-2xl overflow-y-auto">
         <DialogHeader className="space-y-3">
           <DialogTitle className="flex items-center gap-2 text-xl">
-            <div className="rounded-lg bg-gradient-to-r from-purple-100 to-blue-100 p-2">
-              <Sparkles className="h-5 w-5 text-purple-600" />
+            <div className="from-primary/10 to-accent/10 rounded-lg bg-gradient-to-r p-2">
+              <Sparkles className="text-primary h-5 w-5" />
             </div>
             AI-Powered Leave Request
           </DialogTitle>
@@ -179,7 +179,7 @@ export function AILeaveRequestForm() {
                       generateLeaveRequest.isPending ||
                       !form.watch("text")?.trim()
                     }
-                    className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                    className="from-primary to-accent hover:from-primary/90 hover:to-accent/90 flex-1 bg-gradient-to-r"
                   >
                     {generateLeaveRequest.isPending ? (
                       <>
@@ -204,15 +204,15 @@ export function AILeaveRequestForm() {
               </h4>
               <div className="grid grid-cols-1 gap-3 text-xs md:grid-cols-3">
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-3 w-3 text-purple-600" />
+                  <Calendar className="text-primary h-3 w-3" />
                   <span>Date ranges & specific dates</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="h-3 w-3 text-blue-600" />
+                  <Clock className="text-accent h-3 w-3" />
                   <span>Duration & time periods</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <FileText className="h-3 w-3 text-green-600" />
+                  <FileText className="text-chart-1 h-3 w-3" />
                   <span>Leave types & reasons</span>
                 </div>
               </div>
@@ -220,14 +220,14 @@ export function AILeaveRequestForm() {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="rounded-lg border-2 border-green-200 bg-green-50 p-6 text-center">
-              <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                <Sparkles className="h-6 w-6 text-green-600" />
+            <div className="border-accent/20 bg-accent/5 rounded-lg border-2 p-6 text-center">
+              <div className="bg-accent/10 mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full">
+                <Sparkles className="text-accent h-6 w-6" />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-green-800">
+              <h3 className="text-accent mb-2 text-lg font-semibold">
                 Leave Request Created Successfully!
               </h3>
-              <p className="text-sm text-green-700">
+              <p className="text-muted-foreground text-sm">
                 Your AI-generated leave request has been submitted and is now
                 pending approval.
               </p>
