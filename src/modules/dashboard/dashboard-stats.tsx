@@ -127,20 +127,22 @@ function AdminDashboardStats() {
     <div className="space-y-6">
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="border-primary/10 bg-card/50 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Employees
             </CardTitle>
-            <Users className="text-muted-foreground h-4 w-4" />
+            <Users className="text-primary h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.totalEmployees}</div>
+            <div className="text-primary text-2xl font-bold">
+              {stats?.totalEmployees}
+            </div>
             <p className="text-muted-foreground flex items-center text-xs">
               {(stats?.employeeGrowthPercent || 0) > 0 ? (
-                <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
+                <TrendingUp className="text-accent mr-1 h-3 w-3" />
               ) : (stats?.employeeGrowthPercent || 0) < 0 ? (
-                <TrendingDown className="mr-1 h-3 w-3 text-red-500" />
+                <TrendingDown className="text-destructive mr-1 h-3 w-3" />
               ) : null}
               {(stats?.employeeGrowthPercent || 0) > 0 ? "+" : ""}
               {stats?.employeeGrowthPercent.toFixed(1)}% from last month
@@ -148,48 +150,52 @@ function AdminDashboardStats() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-accent/10 bg-card/50 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Present Today</CardTitle>
-            <UserCheck className="text-muted-foreground h-4 w-4" />
+            <UserCheck className="text-accent h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.presentToday}</div>
+            <div className="text-accent text-2xl font-bold">
+              {stats?.presentToday}
+            </div>
             <p className="text-muted-foreground text-xs">
               {stats?.attendanceRate.toFixed(1)}% attendance rate
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-chart-4/10 bg-card/50 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">On Leave</CardTitle>
-            <UserX className="text-muted-foreground h-4 w-4" />
+            <UserX className="text-chart-4 h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.onLeaveToday}</div>
+            <div className="text-chart-4 text-2xl font-bold">
+              {stats?.onLeaveToday}
+            </div>
             <p className="text-muted-foreground text-xs">
               {stats?.leaveRate.toFixed(1)}% of workforce
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-chart-3/10 bg-card/50 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Monthly Payroll
             </CardTitle>
-            <DollarSign className="text-muted-foreground h-4 w-4" />
+            <DollarSign className="text-chart-3 h-4 w-4" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-chart-3 text-2xl font-bold">
               {formatter.format(stats?.monthlyPayroll || 0)}
             </div>
             <p className="text-muted-foreground flex items-center text-xs">
               {(stats?.payrollChangePercent || 0) > 0 ? (
-                <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
+                <TrendingUp className="text-accent mr-1 h-3 w-3" />
               ) : (stats?.payrollChangePercent || 0) < 0 ? (
-                <TrendingDown className="mr-1 h-3 w-3 text-red-500" />
+                <TrendingDown className="text-destructive mr-1 h-3 w-3" />
               ) : null}
               {(stats?.payrollChangePercent || 0) > 0 ? "+" : ""}
               {(stats?.payrollChangePercent || 0).toFixed(1)}% from last month
@@ -201,9 +207,9 @@ function AdminDashboardStats() {
       {/* Charts Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         {/* Attendance Trend Chart */}
-        <Card className="col-span-4">
+        <Card className="border-primary/10 bg-card/50 col-span-4 shadow-lg backdrop-blur-sm">
           <CardHeader>
-            <CardTitle>Attendance Trend</CardTitle>
+            <CardTitle className="text-primary">Attendance Trend</CardTitle>
             <CardDescription>
               Daily attendance rate over the last 30 days
             </CardDescription>
@@ -213,7 +219,7 @@ function AdminDashboardStats() {
               data={stats?.attendanceTrend}
               categories={["percentage"]}
               index="date"
-              colors={["#4ade80"]}
+              colors={["hsl(var(--accent))"]}
               valueFormatter={(value) => `${value}%`}
               height={250}
               startEndOnly={(stats?.attendanceTrend?.length || 0) > 15}
@@ -222,9 +228,9 @@ function AdminDashboardStats() {
         </Card>
 
         {/* Employee Growth Chart */}
-        <Card className="col-span-3">
+        <Card className="border-accent/10 bg-card/50 col-span-3 shadow-lg backdrop-blur-sm">
           <CardHeader>
-            <CardTitle>Employee Growth</CardTitle>
+            <CardTitle className="text-accent">Employee Growth</CardTitle>
             <CardDescription>Monthly employee count trend</CardDescription>
           </CardHeader>
           <CardContent>
@@ -232,7 +238,7 @@ function AdminDashboardStats() {
               data={stats?.employeeTrend}
               categories={["count"]}
               index="month"
-              colors={["#3b82f6"]}
+              colors={["hsl(var(--primary))"]}
               height={250}
             />
           </CardContent>

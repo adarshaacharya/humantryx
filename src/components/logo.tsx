@@ -76,7 +76,7 @@ export function Logo({
     <div className="relative">
       <div
         className={cn(
-          "flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg",
+          "from-primary to-accent flex items-center justify-center rounded-lg bg-gradient-to-br shadow-lg",
           config.container,
         )}
       >
@@ -84,7 +84,7 @@ export function Logo({
           <span className={cn("font-bold text-white", config.icon)}>H</span>
           <div
             className={cn(
-              "absolute -top-1 -right-1 animate-pulse rounded-full bg-emerald-400",
+              "bg-accent absolute -top-1 -right-1 animate-pulse rounded-full",
               config.dot,
             )}
           />
@@ -96,7 +96,7 @@ export function Logo({
   const logoText = showText && (
     <span
       className={cn(
-        "bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text font-bold text-transparent",
+        "from-primary to-accent bg-gradient-to-r bg-clip-text font-bold text-transparent",
         config.text,
       )}
     >

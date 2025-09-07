@@ -27,9 +27,9 @@ export function HeroSection() {
       className="relative overflow-hidden px-6 pt-24 pb-16 sm:px-8 sm:pt-32 sm:pb-20 lg:px-12 lg:pt-40 lg:pb-24"
     >
       {/* Background Elements */}
-      <div className="from-background via-background to-muted/10 absolute inset-0 bg-gradient-to-br" />
-      <div className="bg-primary/5 absolute top-20 -left-20 h-40 w-40 rounded-full blur-3xl sm:h-60 sm:w-60 lg:h-80 lg:w-80" />
-      <div className="bg-primary/8 absolute -right-20 -bottom-20 h-40 w-40 rounded-full blur-3xl sm:h-60 sm:w-60 lg:h-80 lg:w-80" />
+      <div className="from-background via-background/95 to-muted/5 absolute inset-0 bg-gradient-to-br" />
+      <div className="bg-primary/10 absolute top-20 -left-20 h-40 w-40 rounded-full blur-3xl sm:h-60 sm:w-60 lg:h-80 lg:w-80" />
+      <div className="bg-accent/10 absolute -right-20 -bottom-20 h-40 w-40 rounded-full blur-3xl sm:h-60 sm:w-60 lg:h-80 lg:w-80" />
 
       <div className="relative mx-auto max-w-7xl">
         <div className="text-center">
@@ -41,9 +41,9 @@ export function HeroSection() {
           >
             <Badge
               variant="secondary"
-              className="border-primary/20 bg-primary/5 border px-4 py-2 text-sm"
+              className="border-primary/20 bg-primary/5 px-4 py-2 text-sm shadow-lg backdrop-blur-sm"
             >
-              <Brain className="mr-2 h-4 w-4" />
+              <Brain className="text-primary mr-2 h-4 w-4" />
               AI-First HRMS Platform
             </Badge>
           </motion.div>
@@ -56,7 +56,7 @@ export function HeroSection() {
             className="text-foreground mb-6 text-4xl leading-[1.1] font-bold tracking-tight sm:mb-8 sm:text-5xl lg:text-6xl xl:text-7xl"
           >
             The Future of HR is{" "}
-            <span className="from-primary bg-gradient-to-r via-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="from-primary via-accent to-primary bg-gradient-to-r bg-clip-text text-transparent">
               AI-Powered
             </span>
           </motion.h1>

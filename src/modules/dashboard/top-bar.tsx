@@ -32,7 +32,7 @@ export function DashboardTopNav({ children }: DashboardTopNavProps) {
             <Link href="/" className="flex items-center space-x-2">
               <div className="relative">
                 <Brain className="text-primary h-6 w-6" />
-                <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-400" />
+                <div className="bg-accent absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full" />
               </div>
               <span className="text-foreground text-lg font-bold">
                 Humantryx

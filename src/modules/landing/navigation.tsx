@@ -26,7 +26,7 @@ export function Navigation() {
   ];
 
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80">
+    <nav className="border-border/50 bg-background/80 fixed top-0 z-50 w-full border-b backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -43,7 +43,7 @@ export function Navigation() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-center space-x-1 text-slate-600 transition-colors duration-200 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+                className="text-muted-foreground hover:text-primary flex items-center space-x-1 transition-colors duration-200"
               >
                 <item.icon className="h-4 w-4" />
                 <span>{item.name}</span>
@@ -69,7 +69,7 @@ export function Navigation() {
                 <Link href="/sign-up">
                   <Button
                     size="sm"
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    className="from-primary via-accent to-primary hover:from-primary/90 hover:via-accent/90 hover:to-primary/90 bg-gradient-to-r"
                   >
                     Get Started
                   </Button>
@@ -100,7 +100,7 @@ export function Navigation() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="border-t border-slate-200 py-4 md:hidden dark:border-slate-800"
+            className="border-border/50 border-t py-4 md:hidden"
           >
             <div className="flex flex-col space-y-4">
               {navItems.map((item) => (
@@ -109,7 +109,7 @@ export function Navigation() {
                   href={item.href}
                   target={item.external ? "_blank" : undefined}
                   rel={item.external ? "noopener noreferrer" : undefined}
-                  className="flex items-center space-x-2 text-slate-600 transition-colors duration-200 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+                  className="text-muted-foreground hover:text-primary flex items-center space-x-2 transition-colors duration-200"
                   onClick={() => setIsOpen(false)}
                 >
                   <item.icon className="h-4 w-4" />
@@ -117,7 +117,7 @@ export function Navigation() {
                 </a>
               ))}
 
-              <div className="flex flex-col space-y-2 border-t border-slate-200 pt-4 dark:border-slate-800">
+              <div className="border-border/50 flex flex-col space-y-2 border-t pt-4">
                 <Link href="/sign-in">
                   <Button
                     variant="ghost"
@@ -130,7 +130,7 @@ export function Navigation() {
                 <Link href="/sign-up">
                   <Button
                     size="sm"
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    className="from-primary via-accent to-primary hover:from-primary/90 hover:via-accent/90 hover:to-primary/90 w-full bg-gradient-to-r"
                   >
                     Get Started
                   </Button>

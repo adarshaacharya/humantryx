@@ -28,7 +28,7 @@ export function AISection() {
         "Bias-free evaluation",
         "Smart matching",
       ],
-      color: "from-blue-500/10 to-cyan-500/10",
+      color: "from-primary/10 to-accent/10",
     },
     {
       icon: MessageSquare,
@@ -36,7 +36,7 @@ export function AISection() {
       description:
         "Chat with your HR documents using AI. Get instant answers from policies, handbooks, and company documents.",
       benefits: ["Instant answers", "Policy clarity", "24/7 availability"],
-      color: "from-purple-500/10 to-pink-500/10",
+      color: "from-chart-3/10 to-chart-4/10",
     },
     {
       icon: Calendar,
@@ -44,7 +44,7 @@ export function AISection() {
       description:
         "Smart leave approvals based on team capacity, project deadlines, and historical patterns for optimal workforce planning.",
       benefits: ["Smart approvals", "Team optimization", "Conflict prevention"],
-      color: "from-green-500/10 to-emerald-500/10",
+      color: "from-accent/10 to-chart-1/10",
     },
     {
       icon: DollarSign,
@@ -52,7 +52,7 @@ export function AISection() {
       description:
         "AI-powered payroll processing with automatic calculations, tax compliance, and error detection for accuracy.",
       benefits: ["Error-free processing", "Tax compliance", "Time savings"],
-      color: "from-orange-500/10 to-yellow-500/10",
+      color: "from-chart-4/10 to-chart-5/10",
     },
   ];
 
@@ -123,7 +123,7 @@ export function AISection() {
             className="text-foreground mb-4 text-3xl font-bold sm:text-4xl lg:text-5xl"
           >
             Let AI Handle the{" "}
-            <span className="from-primary to-primary/70 bg-gradient-to-r bg-clip-text text-transparent">
+            <span className="from-primary via-accent to-primary bg-gradient-to-r bg-clip-text text-transparent">
               Heavy Lifting
             </span>
           </motion.h2>
@@ -135,9 +135,9 @@ export function AISection() {
             transition={{ delay: 0.2 }}
             className="text-muted-foreground mx-auto max-w-3xl text-lg"
           >
-            Our AI doesn&apos;t just automate tasks—it makes intelligent decisions,
-            learns from patterns, and continuously improves your HR processes.
-            Experience the future of workforce management.
+            Our AI doesn&apos;t just automate tasks—it makes intelligent
+            decisions, learns from patterns, and continuously improves your HR
+            processes. Experience the future of workforce management.
           </motion.p>
         </div>
 

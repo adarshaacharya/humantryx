@@ -20,8 +20,8 @@ const videoFeatures = [
       "Smart skill matching",
       "Automated ranking system",
     ],
-    color: "from-blue-500/10 to-cyan-500/10",
-    gradient: "from-blue-500 to-cyan-500",
+    color: "from-primary/10 to-accent/10",
+    gradient: "from-primary to-accent",
   },
   {
     id: "leave-request",
@@ -37,8 +37,8 @@ const videoFeatures = [
       "Team capacity planning",
       "Conflict prevention",
     ],
-    color: "from-green-500/10 to-emerald-500/10",
-    gradient: "from-green-500 to-emerald-500",
+    color: "from-accent/10 to-chart-1/10",
+    gradient: "from-accent to-chart-1",
   },
   {
     id: "chat-bot",
@@ -54,8 +54,8 @@ const videoFeatures = [
       "24/7 availability",
       "Natural conversations",
     ],
-    color: "from-purple-500/10 to-pink-500/10",
-    gradient: "from-purple-500 to-pink-500",
+    color: "from-chart-3/10 to-chart-4/10",
+    gradient: "from-chart-3 to-chart-4",
   },
 ];
 
@@ -74,13 +74,13 @@ export function VideoShowcaseSection() {
           transition={{ duration: 0.5 }}
           className="mb-12 text-center sm:mb-16"
         >
-          <Badge className="mb-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+          <Badge className="from-primary to-accent mb-4 bg-gradient-to-r text-white">
             <Sparkles className="mr-1 h-3 w-3" />
             AI-Powered Features
           </Badge>
           <h2 className="mb-6 text-4xl font-bold md:text-5xl">
             See Our AI in{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="from-primary via-accent to-primary bg-gradient-to-r bg-clip-text text-transparent">
               Action
             </span>
           </h2>
