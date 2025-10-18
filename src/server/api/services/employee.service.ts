@@ -323,14 +323,16 @@ export class EmployeeService {
             filters.push(
               or(
                 // ilike(employees.name, `%${searchQuery}%`),
-                ilike(employees.designation, `%${searchQuery}%`),
+                sql`${employees.designation}::text ILIKE ${`%${searchQuery}%`}`,
                 ilike(users.email, `%${searchQuery}%`),
               )!,
             );
           }
 
           if (designation) {
-            filters.push(ilike(employees.designation, `%${designation}%`));
+            filters.push(
+              sql`${employees.designation}::text ILIKE ${`%${designation}%`}`,
+            );
           }
 
           if (status === "active") {

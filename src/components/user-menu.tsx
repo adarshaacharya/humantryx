@@ -55,7 +55,7 @@ export function UserMenu() {
               <User className="h-4 w-4" />
             )}
           </div>
-          <span className="border-background absolute right-0 bottom-0 h-2 w-2 rounded-full border bg-green-500" />
+          <span className="border-background bg-accent absolute right-0 bottom-0 h-2 w-2 rounded-full border" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
