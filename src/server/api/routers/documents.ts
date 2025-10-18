@@ -21,9 +21,18 @@ export const documentsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      const organizationId = ctx.session.session.activeOrganizationId;
+      if (!organizationId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No active organization found",
+        });
+      }
+
       const { document, attachment } = await DocumentsService.create({
         ...input,
         uploadedBy: ctx.session.user.id,
+        organizationId,
       });
 
       // saving to pinecone db + attachmentId acts bridge between our db and pinecone
@@ -31,6 +40,7 @@ export const documentsRouter = createTRPCRouter({
         fileUrl: attachment?.fullPath,
         attachmentId: attachment.id,
         fileName: attachment.fileName,
+        organizationId,
       });
 
       return document;
@@ -45,12 +55,31 @@ export const documentsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      // Get existing document to check ownership
-      const existingDocument = await DocumentsService.findById(input.id);
+      const organizationId = ctx.session.session.activeOrganizationId;
+      if (!organizationId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No active organization found",
+        });
+      }
+
+      // Get existing document to check ownership and organization
+      const existingDocument = await DocumentsService.findById(
+        input.id,
+        organizationId,
+      );
       if (!existingDocument) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Document not found",
+        });
+      }
+
+      // Verify document belongs to the active organization
+      if (existingDocument.organizationId !== organizationId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Document does not belong to your organization",
         });
       }
 
@@ -77,6 +106,14 @@ export const documentsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input, ctx }) => {
+      const organizationId = ctx.session.session.activeOrganizationId;
+      if (!organizationId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No active organization found",
+        });
+      }
+
       // If user is not HR, they can't see HR-only documents
       if (!ctx.ability.can("manage", "Documents")) {
         // Regular employees can see "all" and "employees" visibility
@@ -88,7 +125,11 @@ export const documentsRouter = createTRPCRouter({
         }
       }
 
-      return await DocumentsService.findMany(input);
+      // Always filter by organization ID for multi-tenant security
+      return await DocumentsService.findMany({
+        ...input,
+        organizationId,
+      });
     }),
 
   // Get a specific document by ID
@@ -100,11 +141,30 @@ export const documentsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input, ctx }) => {
-      const document = await DocumentsService.findById(input.id);
+      const organizationId = ctx.session.session.activeOrganizationId;
+      if (!organizationId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No active organization found",
+        });
+      }
+
+      const document = await DocumentsService.findById(
+        input.id,
+        organizationId,
+      );
       if (!document) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Document not found",
+        });
+      }
+
+      // Verify document belongs to the active organization
+      if (document.organizationId !== organizationId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Document does not belong to your organization",
         });
       }
 
@@ -131,12 +191,31 @@ export const documentsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      // Get existing document to check ownership
-      const existingDocument = await DocumentsService.findById(input.id);
+      const organizationId = ctx.session.session.activeOrganizationId;
+      if (!organizationId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No active organization found",
+        });
+      }
+
+      // Get existing document to check ownership and organization
+      const existingDocument = await DocumentsService.findById(
+        input.id,
+        organizationId,
+      );
       if (!existingDocument) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Document not found",
+        });
+      }
+
+      // Verify document belongs to the active organization
+      if (existingDocument.organizationId !== organizationId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Document does not belong to your organization",
         });
       }
 
@@ -165,7 +244,15 @@ export const documentsRouter = createTRPCRouter({
         return ability.can("read", "Documents");
       }),
     )
-    .query(async () => {
-      return await DocumentsService.getStats();
+    .query(async ({ ctx }) => {
+      const organizationId = ctx.session.session.activeOrganizationId;
+      if (!organizationId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No active organization found",
+        });
+      }
+
+      return await DocumentsService.getStats(organizationId);
     }),
 });

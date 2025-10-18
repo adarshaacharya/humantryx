@@ -45,7 +45,7 @@ export class PineconeService {
     return vectorStore;
   }
 
-  static async retrieveDocumentChunks(topK = 5) {
+  static async retrieveDocumentChunks(topK = 5, organizationId: string) {
     const pinecone = initPinecone();
 
     const openAIEmbeddings = getOpenAIEmbeddings();
@@ -56,6 +56,10 @@ export class PineconeService {
       openAIEmbeddings,
       {
         pineconeIndex,
+        // Always filter by organizationId for multi-tenant security
+        filter: {
+          organizationId: { $eq: organizationId },
+        },
       },
     );
 

@@ -64,10 +64,12 @@ export class LangchainService {
     fileUrl,
     attachmentId,
     fileName,
+    organizationId,
   }: {
     fileUrl: string;
     attachmentId: string;
     fileName?: string;
+    organizationId: string;
   }) {
     const response = await fetch(fileUrl);
 
@@ -131,6 +133,7 @@ export class LangchainService {
           ...doc.metadata,
           docId: cuid2.createId(),
           attachmentId: attachmentId, // attachmentId acts bridge between our db and pinecone for crud operations
+          organizationId: organizationId, // CRITICAL: filter by organization for multi-tenant security
           fileName: fileName || fileUrl.split("/").pop(),
           source: fileUrl,
           fileType: fileExtension,
@@ -146,11 +149,16 @@ export class LangchainService {
   static async chatDocs({
     question,
     chatHistory = [],
+    organizationId,
   }: {
     question: string;
     chatHistory: VercelChatMessage[];
+    organizationId: string;
   }) {
-    const retriever = await PineconeService.retrieveDocumentChunks();
+    const retriever = await PineconeService.retrieveDocumentChunks(
+      5,
+      organizationId,
+    );
 
     // make aware of chat history in case of follow-up questions
     const contextualizeQPrompt = ChatPromptTemplate.fromMessages([

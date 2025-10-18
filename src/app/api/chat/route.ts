@@ -12,6 +12,15 @@ export async function POST(req: Request) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // CRITICAL: Get organizationId for multi-tenant security
+    const organizationId = session.session.activeOrganizationId;
+    if (!organizationId) {
+      return Response.json(
+        { error: "No active organization found" },
+        { status: 400 },
+      );
+    }
+
     const { messages } = (await req.json()) as {
       messages: VercelChatMessage[];
     };
@@ -31,6 +40,7 @@ export async function POST(req: Request) {
     return LangchainService.chatDocs({
       question: currentMessageContent,
       chatHistory: history,
+      organizationId, // Pass organizationId to filter documents by organization
     });
   } catch (error) {
     console.error("Error in chat router:", error);

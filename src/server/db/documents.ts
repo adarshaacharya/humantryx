@@ -10,6 +10,7 @@ import {
 import { users } from "./users";
 import { employees } from "./employees";
 import { attachments } from "./attachments";
+import { organizations } from "./organizations";
 
 // Document type enum
 export const documentTypeEnum = pgEnum("document_type", [
@@ -35,6 +36,9 @@ export const documentVisibilityEnum = pgEnum("document_visibility", [
 // Documents table
 export const documents = pgTable("documents", {
   id: uuid("id").primaryKey().defaultRandom(),
+  organizationId: text("organization_id")
+    .notNull()
+    .references(() => organizations.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
   description: text("description").notNull(),
   type: documentTypeEnum("type").notNull(),
@@ -56,6 +60,10 @@ export const documents = pgTable("documents", {
 
 // Relations
 export const documentsRelations = relations(documents, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [documents.organizationId],
+    references: [organizations.id],
+  }),
   uploader: one(users, {
     fields: [documents.uploadedBy],
     references: [users.id],

@@ -19,6 +19,7 @@ export class DocumentsService {
     type: DocumentType;
     visibility: DocumentVisibility;
     uploadedBy: string;
+    organizationId: string;
     employeeId?: string;
     attachmentId: string;
   }) {
@@ -29,6 +30,7 @@ export class DocumentsService {
         description: input.description,
         type: input.type,
         visibility: input.visibility,
+        organizationId: input.organizationId,
         employeeId: input.employeeId || null,
         uploadedBy: input.uploadedBy,
         attachmentId: input.attachmentId,
@@ -81,10 +83,16 @@ export class DocumentsService {
     return document;
   }
 
-  static async findById(id: string) {
+  static async findById(id: string, organizationId: string) {
+    const whereConditions = [
+      eq(documents.id, id),
+      eq(documents.organizationId, organizationId), // Always filter by organization
+    ];
+
     const result = await db
       .select({
         id: documents.id,
+        organizationId: documents.organizationId,
         title: documents.title,
         description: documents.description,
         type: documents.type,
@@ -113,7 +121,7 @@ export class DocumentsService {
       .leftJoin(employees, eq(documents.employeeId, employees.id))
       .leftJoin(users, eq(documents.uploadedBy, users.id))
       .leftJoin(attachments, eq(documents.attachmentId, attachments.id))
-      .where(eq(documents.id, id))
+      .where(and(...whereConditions))
       .limit(1);
 
     if (!result[0]) return null;
@@ -123,19 +131,16 @@ export class DocumentsService {
 
   static async findMany(
     filters: DocumentFilters & {
+      organizationId: string; // Required for multi-tenant security
       limit?: number;
       offset?: number;
       sortBy?: string;
       sortOrder?: "asc" | "desc";
       createdAfter?: Date;
-    } = {
-      limit: 20,
-      offset: 0,
-      sortBy: "createdAt",
-      sortOrder: "desc",
     },
   ) {
     const {
+      organizationId,
       type,
       visibility,
       search,
@@ -150,7 +155,10 @@ export class DocumentsService {
     } = filters;
 
     // Build where conditions
-    const whereConditions = [eq(documents.isActive, isActive)];
+    const whereConditions = [
+      eq(documents.isActive, isActive),
+      eq(documents.organizationId, organizationId), // Always filter by organization
+    ];
 
     if (type) {
       whereConditions.push(eq(documents.type, type));
@@ -220,6 +228,7 @@ export class DocumentsService {
     const result = await db
       .select({
         id: documents.id,
+        organizationId: documents.organizationId,
         title: documents.title,
         description: documents.description,
         type: documents.type,
@@ -288,12 +297,18 @@ export class DocumentsService {
     return document;
   }
 
-  static async getStats() {
+  static async getStats(organizationId: string) {
+    // Build base where condition - always filter by organization
+    const baseWhere = and(
+      eq(documents.isActive, true),
+      eq(documents.organizationId, organizationId),
+    );
+
     // Get total count using raw SQL to avoid enum validation issues
     const totalCount = await db
       .select({ count: count() })
       .from(documents)
-      .where(eq(documents.isActive, true))
+      .where(baseWhere)
       .then((result) => result[0]?.count ?? 0);
 
     // Get counts by type using GROUP BY for efficiency
@@ -303,7 +318,7 @@ export class DocumentsService {
         count: count(),
       })
       .from(documents)
-      .where(eq(documents.isActive, true))
+      .where(baseWhere)
       .groupBy(documents.type);
 
     // Get counts by visibility using GROUP BY for efficiency
@@ -313,21 +328,23 @@ export class DocumentsService {
         count: count(),
       })
       .from(documents)
-      .where(eq(documents.isActive, true))
+      .where(baseWhere)
       .groupBy(documents.visibility);
 
     // Get recent uploads (last 7 days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const recentWhere = and(
+      eq(documents.isActive, true),
+      eq(documents.organizationId, organizationId),
+      gt(documents.createdAt, sevenDaysAgo),
+    );
+
     const recentUploads = await db
       .select({ count: count() })
       .from(documents)
-      .where(
-        and(
-          eq(documents.isActive, true),
-          gt(documents.createdAt, sevenDaysAgo),
-        ),
-      )
+      .where(recentWhere)
       .then((result) => result[0]?.count ?? 0);
 
     // Helper function to get count for a specific type
