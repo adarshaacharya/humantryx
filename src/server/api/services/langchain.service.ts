@@ -160,18 +160,7 @@ export class LangchainService {
       organizationId,
     );
 
-    // make aware of chat history in case of follow-up questions
-    const contextualizeQPrompt = ChatPromptTemplate.fromMessages([
-      ["system", AIPrompts.contextualizeQSystemPrompt],
-      new MessagesPlaceholder("chat_history"),
-      ["user", "{input}"],
-    ]);
-
-    const historyAwareRetriever = await createHistoryAwareRetriever({
-      llm: groqModel,
-      retriever,
-      rephrasePrompt: contextualizeQPrompt,
-    });
+    const relevantDocs = await retriever.invoke(question);
 
     const qaPrompt = ChatPromptTemplate.fromMessages([
       ["system", AIPrompts.getDocumentInfoPrompt],
@@ -179,26 +168,16 @@ export class LangchainService {
       ["user", "{input}"],
     ]);
 
-    const questionAnswerChain = await createStuffDocumentsChain({
-      llm: groqModel,
-      prompt: qaPrompt,
-    });
-
-    const ragChain = await createRetrievalChain({
-      retriever: historyAwareRetriever,
-      combineDocsChain: questionAnswerChain,
-    });
-
-    const invokedChain = await ragChain.invoke({
+    // Format the prompt with context and question
+    const formattedPrompt = await qaPrompt.formatMessages({
+      context: relevantDocs.map((doc) => doc.pageContent).join("\n\n"),
       input: question,
       chat_history: this.convertToLangChainMessage(chatHistory),
     });
 
-    const response = await questionAnswerChain.stream({
-      input: invokedChain,
-      chat_history: this.convertToLangChainMessage(chatHistory),
-    });
+    // Stream the response directly from the LLM
+    const stream = await groqModel.stream(formattedPrompt);
 
-    return LangChainAdapter.toDataStreamResponse(response);
+    return LangChainAdapter.toDataStreamResponse(stream);
   }
 }
