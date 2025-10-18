@@ -12,6 +12,7 @@ import {
   CookieBanner,
 } from "@c15t/nextjs";
 import { Analytics } from "@vercel/analytics/next";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export const metadata: Metadata = {
   title: "Humantryx | AI Powered Human Resource Management System",
@@ -31,22 +32,24 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable}`}>
       <body>
-        <TRPCReactProvider>
-          <AbilityProvider>
-            <ConsentManagerProvider
-              options={{
-                mode: "c15t",
-                backendURL: "/api/c15t",
-              }}
-            >
-              {children}
-              <Analytics />
-              <ConsentManagerDialog />
-              <CookieBanner />
-            </ConsentManagerProvider>
-          </AbilityProvider>
-          <Toaster position="top-right" />
-        </TRPCReactProvider>
+        <NuqsAdapter>
+          <TRPCReactProvider>
+            <AbilityProvider>
+              <ConsentManagerProvider
+                options={{
+                  mode: "c15t",
+                  backendURL: "/api/c15t",
+                }}
+              >
+                {children}
+                <Analytics />
+                <ConsentManagerDialog />
+                <CookieBanner />
+              </ConsentManagerProvider>
+            </AbilityProvider>
+            <Toaster position="top-right" />
+          </TRPCReactProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );
