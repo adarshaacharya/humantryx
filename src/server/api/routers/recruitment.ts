@@ -244,4 +244,36 @@ export const recruitmentRouter = createTRPCRouter({
     .query(async ({ input }) => {
       return RecruitmentService.getAIScreeningResult(input.jobApplicationId);
     }),
+
+  // Get all applications across all jobs
+  getAllApplications: protectedProcedure
+    .input(
+      z.object({
+        status: z
+          .enum([
+            "all",
+            "applied",
+            "shortlisted",
+            "interviewed",
+            "hired",
+            "rejected",
+          ])
+          .optional()
+          .default("all"),
+        search: z.string().optional(),
+        jobId: z.string().uuid().optional(),
+        limit: z.number().min(1).max(100).default(50),
+        offset: z.number().min(0).default(0),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      if (!ctx.session.session.activeOrganizationId) {
+        throw new Error("No active organization");
+      }
+
+      return RecruitmentService.getAllApplications({
+        ...input,
+        organizationId: ctx.session.session.activeOrganizationId,
+      });
+    }),
 });

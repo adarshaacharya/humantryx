@@ -594,4 +594,105 @@ export class RecruitmentService {
 
     return result[0]!;
   }
+
+  static async getAllApplications(params: {
+    organizationId: string;
+    status?: ApplicationStatus | "all";
+    search?: string;
+    jobId?: string;
+    limit?: number;
+    offset?: number;
+  }) {
+    const {
+      organizationId,
+      status,
+      search,
+      jobId,
+      limit = 50,
+      offset = 0,
+    } = params;
+
+    // Build base conditions
+    const conditions = [eq(jobApplications.organizationId, organizationId)];
+
+    if (status && status !== "all") {
+      conditions.push(eq(jobApplications.status, status));
+    }
+
+    if (jobId) {
+      conditions.push(eq(jobApplications.jobPostingId, jobId));
+    }
+
+    if (search) {
+      conditions.push(
+        or(
+          ilike(jobApplications.candidateName, `%${search}%`),
+          ilike(jobApplications.candidateEmail, `%${search}%`),
+        )!,
+      );
+    }
+
+    const applications = await db
+      .select({
+        id: jobApplications.id,
+        candidateName: jobApplications.candidateName,
+        candidateEmail: jobApplications.candidateEmail,
+        candidatePhone: jobApplications.candidatePhone,
+        resumeUrl: jobApplications.resumeUrl,
+        coverLetter: jobApplications.coverLetter,
+        status: jobApplications.status,
+        appliedAt: jobApplications.appliedAt,
+        reviewedAt: jobApplications.reviewedAt,
+        interviewDate: jobApplications.interviewDate,
+        jobPosting: {
+          id: jobPostings.id,
+          title: jobPostings.title,
+          department: jobPostings.department,
+          status: jobPostings.status,
+        },
+        reviewedByEmployee: {
+          id: employees.id,
+          name: users.name,
+        },
+        aiScreeningResult: {
+          id: aiScreeningResults.id,
+          matchScore: aiScreeningResults.matchScore,
+          confidence: aiScreeningResults.confidence,
+          recommendation: aiScreeningResults.recommendation,
+          matchedSkills: aiScreeningResults.matchedSkills,
+          missingSkills: aiScreeningResults.missingSkills,
+          summary: aiScreeningResults.summary,
+          screenedAt: aiScreeningResults.screenedAt,
+        },
+      })
+      .from(jobApplications)
+      .leftJoin(jobPostings, eq(jobApplications.jobPostingId, jobPostings.id))
+      .leftJoin(
+        employees,
+        eq(jobApplications.reviewedByEmployeeId, employees.id),
+      )
+      .leftJoin(users, eq(employees.userId, users.id))
+      .leftJoin(
+        aiScreeningResults,
+        eq(aiScreeningResults.jobApplicationId, jobApplications.id),
+      )
+      .where(and(...conditions))
+      .orderBy(desc(jobApplications.appliedAt))
+      .limit(limit)
+      .offset(offset);
+
+    // Get total count
+    const totalResult = await db
+      .select({ count: count() })
+      .from(jobApplications)
+      .where(and(...conditions));
+
+    const total = totalResult[0]?.count ?? 0;
+
+    return {
+      applications,
+      total,
+      hasMore: offset + limit < total,
+    };
+  }
 }
