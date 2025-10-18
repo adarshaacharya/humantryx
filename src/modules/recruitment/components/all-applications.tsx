@@ -229,19 +229,29 @@ export function AllApplications() {
                       <TableCell>
                         {application.aiScreeningResult ? (
                           <AIResultsViewer
-                            results={{
-                              matchScore:
-                                application.aiScreeningResult.matchScore,
-                              confidence:
-                                application.aiScreeningResult.confidence,
-                              recommendation:
-                                application.aiScreeningResult.recommendation,
-                              matchedSkills:
-                                application.aiScreeningResult.matchedSkills,
-                              missingSkills:
-                                application.aiScreeningResult.missingSkills,
-                              reasoning: application.aiScreeningResult.summary,
-                            }}
+                            application={application}
+                            trigger={
+                              <Button variant="ghost" size="sm">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-medium">
+                                    {application.aiScreeningResult.matchScore}%
+                                  </span>
+                                  <Badge
+                                    variant={
+                                      application.aiScreeningResult
+                                        .recommendation === "shortlist"
+                                        ? "default"
+                                        : "destructive"
+                                    }
+                                  >
+                                    {
+                                      application.aiScreeningResult
+                                        .recommendation
+                                    }
+                                  </Badge>
+                                </div>
+                              </Button>
+                            }
                           />
                         ) : (
                           <span className="text-muted-foreground text-sm">
