@@ -82,15 +82,18 @@ export function FeaturesSection() {
     >
       <div className="mx-auto max-w-7xl">
         {/* Section Header */}
-        <div className="mb-12 text-center sm:mb-16">
+        <div className="mb-20 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-4"
+            className="mb-6"
           >
-            <Badge variant="secondary" className="px-4 py-2">
-              Core Features
+            <Badge
+              variant="secondary"
+              className="border-primary/10 bg-primary/5 px-4 py-2 text-sm font-medium tracking-wide"
+            >
+              Core Capabilities
             </Badge>
           </motion.div>
           <motion.h2
@@ -98,7 +101,7 @@ export function FeaturesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-foreground mb-4 text-3xl font-bold sm:text-4xl lg:text-5xl"
+            className="text-foreground mb-6 font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
           >
             Everything Your HR Team Needs
           </motion.h2>
@@ -107,7 +110,7 @@ export function FeaturesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground mx-auto max-w-3xl text-lg"
+            className="text-muted-foreground mx-auto max-w-3xl text-lg font-medium leading-relaxed sm:text-xl"
           >
             Comprehensive HR management tools designed for modern workplaces.
             Streamline processes, reduce manual work, and empower your team.
@@ -115,7 +118,7 @@ export function FeaturesSection() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -124,24 +127,26 @@ export function FeaturesSection() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card className="group bg-background/60 hover:bg-background h-full border-0 backdrop-blur-sm transition-all duration-300 hover:shadow-lg">
-                <CardContent className="p-6">
-                  <div className="bg-primary/10 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg">
-                    <feature.icon className="text-primary h-6 w-6" />
+              <Card className="group bg-background/40 hover:bg-background/80 h-full border-0 shadow-sm backdrop-blur-md transition-all duration-500 hover:shadow-xl">
+                <CardContent className="p-8">
+                  <div className="bg-primary/5 group-hover:bg-primary/10 mb-8 inline-flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-500 group-hover:scale-110">
+                    <feature.icon className="text-primary h-8 w-8" />
                   </div>
-                  <h3 className="text-foreground mb-3 text-xl font-semibold">
+                  <h3 className="text-foreground mb-4 font-display text-2xl font-bold">
                     {feature.title}
                   </h3>
-                  <p className="text-muted-foreground mb-4">
+                  <p className="text-muted-foreground mb-8 text-base font-medium leading-relaxed">
                     {feature.description}
                   </p>
-                  <ul className="space-y-2">
+                  <ul className="space-y-4">
                     {feature.benefits.map((benefit) => (
                       <li
                         key={benefit}
-                        className="text-muted-foreground flex items-center text-sm"
+                        className="text-muted-foreground flex items-center text-sm font-semibold"
                       >
-                        <ArrowRight className="text-primary mr-2 h-3 w-3" />
+                        <div className="bg-primary/10 mr-3 flex h-5 w-5 items-center justify-center rounded-full">
+                          <ArrowRight className="text-primary h-3 w-3" />
+                        </div>
                         {benefit}
                       </li>
                     ))}

@@ -7,10 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import {
   ArrowRight,
   Check,
-  Brain,
+  Zap,
   Calendar,
   Mail,
-  Sparkles,
   LinkedinIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -18,9 +17,9 @@ import Link from "next/link";
 export function CTASection() {
   const ctaFeatures = [
     "Complete employee lifecycle management",
-    "AI-powered automation and insights",
+    "Intelligent automation and insights",
     "Advanced payroll and attendance tracking",
-    "Document management with AI chat",
+    "Document management with instant search",
     "Role-based access and permissions",
     "Real-time analytics and reporting",
   ];
@@ -44,7 +43,7 @@ export function CTASection() {
         className="absolute top-20 left-8 hidden opacity-40 xl:block"
       >
         <div className="bg-primary/15 flex h-8 w-8 items-center justify-center rounded-lg backdrop-blur-sm">
-          <Sparkles className="text-primary h-4 w-4" />
+          <Zap className="text-primary h-4 w-4" />
         </div>
       </motion.div>
 
@@ -54,21 +53,21 @@ export function CTASection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mx-auto max-w-4xl"
+          className="mx-auto max-w-5xl"
         >
-          <Card className="from-background to-muted/20 border-primary/10 relative overflow-hidden border bg-gradient-to-br shadow-xl backdrop-blur-sm">
-            <CardContent className="p-6 text-center sm:p-8 lg:p-10">
+          <Card className="from-background to-muted/10 border-primary/5 relative overflow-hidden border bg-gradient-to-br shadow-2xl backdrop-blur-xl">
+            <CardContent className="p-10 text-center sm:p-16 lg:p-20">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="mb-4 sm:mb-6"
+                className="mb-8"
               >
                 <Badge
                   variant="secondary"
-                  className="border-primary/20 bg-primary/5 border px-4 py-2"
+                  className="border-primary/10 bg-primary/5 border px-4 py-2 text-sm font-bold tracking-wide"
                 >
-                  <Brain className="mr-2 h-4 w-4" />
+                  <Zap className="mr-2 h-4 w-4" />
                   Ready to Get Started?
                 </Badge>
               </motion.div>
@@ -78,7 +77,7 @@ export function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
-                className="text-foreground mb-3 text-xl leading-tight font-bold sm:mb-4 sm:text-2xl lg:text-3xl"
+                className="text-foreground mb-6 font-display text-4xl leading-tight font-bold sm:text-5xl lg:text-6xl"
               >
                 Transform Your HR Operations{" "}
                 <span className="from-primary to-primary/70 bg-gradient-to-r bg-clip-text text-transparent">
@@ -91,7 +90,7 @@ export function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
-                className="text-muted-foreground mx-auto mb-6 max-w-xl text-sm leading-relaxed sm:mb-8 sm:text-base lg:text-lg"
+                className="text-muted-foreground mx-auto mb-12 max-w-2xl text-lg font-medium leading-relaxed sm:text-xl"
               >
                 Join the revolution in HR management. Experience the power of
                 AI-driven automation and seamless employee experiences.
@@ -102,12 +101,14 @@ export function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
-                className="mx-auto mb-6 hidden max-w-xl gap-3 text-left sm:mb-8 sm:grid sm:grid-cols-2 lg:gap-4"
+                className="mx-auto mb-12 grid max-w-3xl gap-6 text-left sm:grid-cols-2 lg:gap-8"
               >
                 {ctaFeatures.map((feature) => (
                   <div key={feature} className="flex items-start">
-                    <Check className="text-primary mt-1 mr-3 h-4 w-4 flex-shrink-0" />
-                    <span className="text-muted-foreground text-sm">
+                    <div className="bg-primary/10 mt-1 mr-4 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full">
+                      <Check className="text-primary h-4 w-4" />
+                    </div>
+                    <span className="text-muted-foreground text-base font-bold">
                       {feature}
                     </span>
                   </div>
@@ -119,7 +120,7 @@ export function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 }}
-                className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
+                className="flex flex-col items-center justify-center gap-6 sm:flex-row"
               >
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -129,10 +130,10 @@ export function CTASection() {
                   <Link href="/sign-up">
                     <Button
                       size="lg"
-                      className="h-11 w-full px-6 text-sm font-semibold shadow-lg sm:h-12 sm:w-auto sm:px-8 sm:text-base"
+                      className="h-14 w-full rounded-full px-10 text-base font-bold shadow-xl shadow-primary/20 sm:h-16 sm:w-auto sm:px-12 sm:text-lg"
                     >
                       Start For Free
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                      <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </Link>
                 </motion.div>
@@ -144,13 +145,13 @@ export function CTASection() {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="border-primary/20 hover:border-primary/50 h-11 w-full border-2 px-6 text-sm font-semibold sm:h-12 sm:w-auto sm:px-8 sm:text-base"
+                    className="border-primary/10 hover:border-primary/30 h-14 w-full rounded-full border-2 px-10 text-base font-bold backdrop-blur-sm sm:h-16 sm:w-auto sm:px-12 sm:text-lg"
                     onClick={() => {
                       window.location.href =
                         "https://cal.com/adarshaacharya/schedule";
                     }}
                   >
-                    <Calendar className="mr-2 h-4 w-4" />
+                    <Calendar className="mr-2 h-5 w-5" />
                     Schedule Demo
                   </Button>
                 </motion.div>
@@ -161,7 +162,7 @@ export function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5 }}
-                className="text-muted-foreground mt-4 text-xs sm:mt-6 sm:text-sm"
+                className="text-muted-foreground mt-10 text-sm font-bold tracking-wide uppercase"
               >
                 No credit card required • Setup in minutes • Cancel anytime
               </motion.p>

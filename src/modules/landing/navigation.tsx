@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Users, BarChart3, Brain, Github } from "lucide-react";
+import { Menu, X, Users, BarChart3, Zap, Github } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "@/server/auth/auth-client";
 import { UserMenu } from "../../components/user-menu";
@@ -15,7 +15,7 @@ export function Navigation() {
 
   const navItems = [
     { name: "Features", href: "#features", icon: Users },
-    { name: "Demo", href: "#showcase", icon: Brain },
+    { name: "Demo", href: "#showcase", icon: Zap },
     { name: "Benefits", href: "#benefits", icon: BarChart3 },
     {
       name: "GitHub",
@@ -26,14 +26,14 @@ export function Navigation() {
   ];
 
   return (
-    <nav className="border-border/50 bg-background/80 fixed top-0 z-50 w-full border-b backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+    <nav className="border-border/5 bg-background/60 fixed top-0 z-50 w-full border-b backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+        <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Logo size="md" showText={true} />
 
           {/* Desktop Navigation */}
-          <div className="hidden items-center space-x-8 md:flex">
+          <div className="hidden items-center space-x-10 md:flex">
             {navItems.map((item, index) => (
               <motion.a
                 key={item.name}
@@ -43,9 +43,8 @@ export function Navigation() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-muted-foreground hover:text-primary flex items-center space-x-1 transition-colors duration-200"
+                className="text-muted-foreground hover:text-primary flex items-center space-x-2 text-sm font-bold tracking-wide transition-colors duration-200"
               >
-                <item.icon className="h-4 w-4" />
                 <span>{item.name}</span>
               </motion.a>
             ))}
@@ -55,27 +54,21 @@ export function Navigation() {
           {session ? (
             <UserMenu />
           ) : (
-            <>
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="hidden items-center space-x-4 md:flex"
-              >
-                <Link href="/sign-in">
-                  <Button variant="ghost" size="sm">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link href="/sign-up">
-                  <Button
-                    size="sm"
-                    className="from-primary via-accent to-primary hover:from-primary/90 hover:via-accent/90 hover:to-primary/90 bg-gradient-to-r"
-                  >
-                    Get Started
-                  </Button>
-                </Link>
-              </motion.div>
-            </>
+            <div className="hidden items-center space-x-6 md:flex">
+              <Link href="/sign-in">
+                <Button variant="ghost" size="sm" className="font-bold">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/sign-up">
+                <Button
+                  size="sm"
+                  className="from-primary to-primary/90 rounded-full bg-gradient-to-r px-6 font-bold shadow-lg shadow-primary/20 transition-all hover:scale-105"
+                >
+                  Get Started
+                </Button>
+              </Link>
+            </div>
           )}
 
           {/* Mobile menu button */}

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowRight,
-  Brain,
+  Zap,
   Users,
   TrendingUp,
   Shield,
@@ -28,8 +28,8 @@ export function HeroSection() {
     >
       {/* Background Elements */}
       <div className="from-background via-background/95 to-muted/5 absolute inset-0 bg-gradient-to-br" />
-      <div className="bg-primary/10 absolute top-20 -left-20 h-40 w-40 rounded-full blur-3xl sm:h-60 sm:w-60 lg:h-80 lg:w-80" />
-      <div className="bg-accent/10 absolute -right-20 -bottom-20 h-40 w-40 rounded-full blur-3xl sm:h-60 sm:w-60 lg:h-80 lg:w-80" />
+      <div className="bg-primary/5 absolute top-20 -left-20 h-60 w-60 rounded-full blur-3xl lg:h-96 lg:w-96" />
+      <div className="bg-accent/5 absolute -right-20 -bottom-20 h-60 w-60 rounded-full blur-3xl lg:h-96 lg:w-96" />
 
       <div className="relative mx-auto max-w-7xl">
         <div className="text-center">
@@ -37,14 +37,14 @@ export function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 inline-flex items-center sm:mb-10"
+            className="mb-10 inline-flex items-center"
           >
             <Badge
               variant="secondary"
-              className="border-primary/20 bg-primary/5 px-4 py-2 text-sm shadow-lg backdrop-blur-sm"
+              className="border-primary/10 bg-primary/5 px-4 py-2 text-sm font-medium tracking-wide shadow-sm backdrop-blur-sm"
             >
-              <Brain className="text-primary mr-2 h-4 w-4" />
-              AI-First HRMS Platform
+              <Zap className="text-primary mr-2 h-4 w-4" />
+              Next-Gen HRMS Platform
             </Badge>
           </motion.div>
 
@@ -53,7 +53,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-foreground mb-6 text-4xl leading-[1.1] font-bold tracking-tight sm:mb-8 sm:text-5xl lg:text-6xl xl:text-7xl"
+            className="text-foreground mb-8 font-display text-5xl leading-[1.05] font-bold tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl"
           >
             The Future of HR is{" "}
             <span className="from-primary via-accent to-primary bg-gradient-to-r bg-clip-text text-transparent">
@@ -66,68 +66,47 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground mx-auto mb-10 max-w-2xl text-lg leading-relaxed sm:mb-12 sm:text-xl"
+            className="text-muted-foreground mx-auto mb-12 max-w-2xl text-lg leading-relaxed font-medium sm:text-xl"
           >
             Replace traditional HR systems with intelligent automation. Cut
             administrative workload by 80% while delivering exceptional employee
             experiences.
           </motion.p>
 
-          {/* Feature List */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mx-auto mb-10 hidden max-w-3xl flex-wrap justify-center gap-4 sm:mb-16 sm:flex"
-          >
-            {features.map((feature) => (
-              <div
-                key={feature}
-                className="border-primary/20 bg-background/50 flex items-center space-x-3 rounded-full border px-5 py-3 shadow-sm backdrop-blur-sm"
-              >
-                <CheckCircle className="text-primary h-4 w-4" />
-                <span className="text-foreground text-sm font-medium">
-                  {feature}
-                </span>
-              </div>
-            ))}
-          </motion.div>
-
           {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mb-12 flex flex-col items-center justify-center gap-4 sm:mb-20 sm:flex-row sm:gap-6"
+            transition={{ delay: 0.3 }}
+            className="mb-20 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6"
           >
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
               <Link href="/sign-up">
                 <Button
                   size="lg"
-                  className="group from-primary via-primary to-primary/80 shadow-primary/25 hover:shadow-primary/30 relative h-14 overflow-hidden bg-gradient-to-r px-8 text-base font-semibold shadow-lg transition-all duration-300 hover:shadow-xl sm:h-16 sm:px-10 sm:text-lg"
+                  className="group from-primary to-primary/90 shadow-primary/20 relative h-14 overflow-hidden rounded-full bg-gradient-to-r px-10 text-base font-bold shadow-xl transition-all duration-300 hover:shadow-2xl sm:h-16 sm:px-12 sm:text-lg"
                 >
                   <span className="relative z-10 flex items-center">
                     Get Started Today
                     <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
-                  <div className="from-primary/10 absolute inset-0 bg-gradient-to-r to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 </Button>
               </Link>
             </motion.div>
 
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
               <Button
                 variant="outline"
                 size="lg"
-                className="group border-primary/20 bg-background/80 hover:border-primary/50 hover:bg-primary/5 relative h-14 overflow-hidden border-2 px-8 text-base font-semibold backdrop-blur-sm transition-all duration-300 hover:shadow-lg sm:h-16 sm:px-10 sm:text-lg"
+                className="group border-primary/10 bg-background/50 hover:border-primary/30 hover:bg-primary/5 relative h-14 overflow-hidden rounded-full border-2 px-10 text-base font-bold backdrop-blur-sm transition-all duration-300 hover:shadow-lg sm:h-16 sm:px-12 sm:text-lg"
                 onClick={() =>
                   window.open("https://youtu.be/xuPdJo9f9Xw", "_blank")
                 }
@@ -138,32 +117,31 @@ export function HeroSection() {
                   </div>
                   Watch Demo
                 </span>
-                <div className="from-primary/5 absolute inset-0 bg-gradient-to-r to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </Button>
             </motion.div>
           </motion.div>
 
-          {/* Stats */}
+          {/* Stats - More subtle and modern */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mx-auto grid max-w-4xl grid-cols-2 gap-8 lg:grid-cols-4"
+            transition={{ delay: 0.4 }}
+            className="mx-auto grid max-w-5xl grid-cols-2 gap-12 lg:grid-cols-4"
           >
             {[
               { icon: Users, stat: "3x", label: "Faster Onboarding" },
               { icon: TrendingUp, stat: "80%", label: "Workload Reduction" },
-              { icon: Brain, stat: "24/7", label: "AI-Powered Support" },
+              { icon: Zap, stat: "24/7", label: "Automated Support" },
               { icon: Shield, stat: "99.9%", label: "Uptime Guarantee" },
             ].map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="bg-muted mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl">
-                  <item.icon className="text-primary h-6 w-6" />
+              <div key={index} className="group flex flex-col items-center">
+                <div className="bg-primary/5 group-hover:bg-primary/10 mb-4 flex h-14 w-14 items-center justify-center rounded-2xl transition-colors duration-300">
+                  <item.icon className="text-primary h-7 w-7" />
                 </div>
-                <div className="text-foreground mb-1 text-2xl font-bold">
+                <div className="text-foreground mb-1 font-display text-3xl font-bold">
                   {item.stat}
                 </div>
-                <div className="text-muted-foreground text-sm">
+                <div className="text-muted-foreground text-sm font-medium tracking-wide uppercase">
                   {item.label}
                 </div>
               </div>

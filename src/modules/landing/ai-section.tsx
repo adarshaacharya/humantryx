@@ -5,13 +5,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Brain,
+  Cpu,
   MessageSquare,
   Calendar,
   UserCheck,
   DollarSign,
   ArrowRight,
-  Sparkles,
+  Zap,
   Bot,
   Clock,
 } from "lucide-react";
@@ -20,9 +20,9 @@ export function AISection() {
   const aiFeatures = [
     {
       icon: UserCheck,
-      title: "AI Resume Screening",
+      title: "Intelligent Screening",
       description:
-        "Intelligent candidate evaluation that analyzes resumes against job requirements, saving hours of manual screening.",
+        "Advanced candidate evaluation that analyzes resumes against job requirements, saving hours of manual screening.",
       benefits: [
         "90% faster screening",
         "Bias-free evaluation",
@@ -32,15 +32,15 @@ export function AISection() {
     },
     {
       icon: MessageSquare,
-      title: "Document Knowledge Chat",
+      title: "Knowledge Assistant",
       description:
-        "Chat with your HR documents using AI. Get instant answers from policies, handbooks, and company documents.",
+        "Interact with your HR documents. Get instant answers from policies, handbooks, and company documents.",
       benefits: ["Instant answers", "Policy clarity", "24/7 availability"],
       color: "from-chart-3/10 to-chart-4/10",
     },
     {
       icon: Calendar,
-      title: "AI Leave Management",
+      title: "Capacity Planning",
       description:
         "Smart leave approvals based on team capacity, project deadlines, and historical patterns for optimal workforce planning.",
       benefits: ["Smart approvals", "Team optimization", "Conflict prevention"],
@@ -50,7 +50,7 @@ export function AISection() {
       icon: DollarSign,
       title: "Automated Payroll",
       description:
-        "AI-powered payroll processing with automatic calculations, tax compliance, and error detection for accuracy.",
+        "Intelligent payroll processing with automatic calculations, tax compliance, and error detection for accuracy.",
       benefits: ["Error-free processing", "Tax compliance", "Time savings"],
       color: "from-chart-4/10 to-chart-5/10",
     },
@@ -78,7 +78,7 @@ export function AISection() {
         className="absolute top-20 left-10 hidden lg:block"
       >
         <div className="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-2xl backdrop-blur-sm">
-          <Brain className="text-primary h-8 w-8" />
+          <Cpu className="text-primary h-8 w-8" />
         </div>
       </motion.div>
 
@@ -96,22 +96,25 @@ export function AISection() {
         className="absolute top-32 right-16 hidden lg:block"
       >
         <div className="bg-primary/20 flex h-12 w-12 items-center justify-center rounded-xl backdrop-blur-sm">
-          <Sparkles className="text-primary h-6 w-6" />
+          <Zap className="text-primary h-6 w-6" />
         </div>
       </motion.div>
 
       <div className="relative mx-auto max-w-7xl">
         {/* Section Header */}
-        <div className="mb-16 text-center">
+        <div className="mb-20 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-4"
+            className="mb-6"
           >
-            <Badge variant="secondary" className="px-4 py-2">
-              <Bot className="mr-2 h-4 w-4" />
-              AI-Powered Intelligence
+            <Badge
+              variant="secondary"
+              className="border-primary/10 bg-primary/5 px-4 py-2 text-sm font-medium tracking-wide"
+            >
+              <Cpu className="mr-2 h-4 w-4" />
+              Intelligent Automation
             </Badge>
           </motion.div>
 
@@ -120,9 +123,9 @@ export function AISection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-foreground mb-4 text-3xl font-bold sm:text-4xl lg:text-5xl"
+            className="text-foreground mb-6 font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
           >
-            Let AI Handle the{" "}
+            Let Automation Handle the{" "}
             <span className="from-primary via-accent to-primary bg-gradient-to-r bg-clip-text text-transparent">
               Heavy Lifting
             </span>
@@ -133,16 +136,16 @@ export function AISection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground mx-auto max-w-3xl text-lg"
+            className="text-muted-foreground mx-auto max-w-3xl text-lg font-medium leading-relaxed sm:text-xl"
           >
-            Our AI doesn&apos;t just automate tasks—it makes intelligent
+            Our platform doesn&apos;t just automate tasks—it makes intelligent
             decisions, learns from patterns, and continuously improves your HR
             processes. Experience the future of workforce management.
           </motion.p>
         </div>
 
         {/* AI Features Grid */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+        <div className="grid gap-10 md:grid-cols-2">
           {aiFeatures.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -151,28 +154,28 @@ export function AISection() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.15 }}
             >
-              <Card className="group bg-background/60 hover:shadow-primary/5 relative h-full overflow-hidden border-0 backdrop-blur-sm transition-all duration-300 hover:shadow-lg">
+              <Card className="group bg-background/40 hover:bg-background/80 relative h-full overflow-hidden border-0 shadow-sm backdrop-blur-md transition-all duration-500 hover:shadow-xl">
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
+                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
                 />
 
-                <CardContent className="relative p-8">
-                  <div className="bg-primary/10 group-hover:bg-primary/20 mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300">
-                    <feature.icon className="text-primary h-7 w-7" />
+                <CardContent className="relative p-10">
+                  <div className="bg-primary/5 group-hover:bg-primary/10 mb-8 inline-flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-500 group-hover:scale-110">
+                    <feature.icon className="text-primary h-8 w-8" />
                   </div>
 
-                  <h3 className="text-foreground mb-3 text-xl font-semibold">
+                  <h3 className="text-foreground mb-4 font-display text-2xl font-bold">
                     {feature.title}
                   </h3>
 
-                  <p className="text-muted-foreground mb-6">
+                  <p className="text-muted-foreground mb-8 text-base font-medium leading-relaxed">
                     {feature.description}
                   </p>
 
-                  <div className="space-y-2">
+                  <div className="space-y-4">
                     {feature.benefits.map((benefit) => (
-                      <div key={benefit} className="flex items-center text-sm">
-                        <div className="bg-primary/20 mr-3 flex h-5 w-5 items-center justify-center rounded-full">
+                      <div key={benefit} className="flex items-center text-sm font-bold">
+                        <div className="bg-primary/10 mr-3 flex h-6 w-6 items-center justify-center rounded-full">
                           <Clock className="text-primary h-3 w-3" />
                         </div>
                         <span className="text-muted-foreground">{benefit}</span>

@@ -3,17 +3,17 @@
 import { motion } from "motion/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, UserCheck, MessageSquare, Sparkles } from "lucide-react";
+import { Calendar, UserCheck, MessageSquare, Zap } from "lucide-react";
 
 const videoFeatures = [
   {
     id: "resume-screening",
     video: "/videos/resume-screening.mov",
     icon: UserCheck,
-    title: "AI-Powered Resume Screening",
-    subtitle: "Intelligent Hiring Made Simple",
+    title: "Intelligent Resume Screening",
+    subtitle: "Smart Hiring Made Simple",
     description:
-      "Watch our AI analyze resumes in seconds, ranking candidates based on job requirements and eliminating bias from your hiring process.",
+      "Watch our platform analyze resumes in seconds, ranking candidates based on job requirements and eliminating bias from your hiring process.",
     features: [
       "90% faster screening time",
       "Bias-free candidate evaluation",
@@ -44,7 +44,7 @@ const videoFeatures = [
     id: "chat-bot",
     video: "/videos/chat-bot.mov",
     icon: MessageSquare,
-    title: "AI HR Assistant",
+    title: "HR Assistant",
     subtitle: "Instant Answers, Always Available",
     description:
       "Meet your 24/7 HR companion that instantly answers questions about policies, benefits, and procedures using your company documents.",
@@ -72,19 +72,19 @@ export function VideoShowcaseSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mb-12 text-center sm:mb-16"
+          className="mb-20 text-center"
         >
-          <Badge className="from-primary to-accent mb-4 bg-gradient-to-r text-white">
-            <Sparkles className="mr-1 h-3 w-3" />
-            AI-Powered Features
+          <Badge className="from-primary to-accent mb-6 bg-gradient-to-r px-4 py-2 text-sm font-bold tracking-wide text-white">
+            <Zap className="mr-2 h-4 w-4" />
+            Intelligent Features
           </Badge>
-          <h2 className="mb-6 text-4xl font-bold md:text-5xl">
+          <h2 className="mb-8 font-display text-5xl font-bold tracking-tight sm:text-6xl">
             See Our AI in{" "}
             <span className="from-primary via-accent to-primary bg-gradient-to-r bg-clip-text text-transparent">
               Action
             </span>
           </h2>
-          <p className="text-muted-foreground mx-auto max-w-3xl text-lg md:text-xl">
+          <p className="text-muted-foreground mx-auto max-w-3xl text-lg font-medium leading-relaxed sm:text-xl">
             Watch how Humantryx transforms traditional HR processes with
             cutting-edge AI technology. Every feature is designed to save time,
             reduce bias, and enhance decision-making.
@@ -92,7 +92,7 @@ export function VideoShowcaseSection() {
         </motion.div>
 
         {/* Video Features */}
-        <div className="space-y-24">
+        <div className="space-y-32">
           {videoFeatures.map((feature, index) => (
             <motion.div
               key={feature.id}
@@ -100,7 +100,7 @@ export function VideoShowcaseSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: index * 0.2 }}
-              className={`grid items-center gap-12 lg:grid-cols-2 ${
+              className={`grid items-center gap-16 lg:grid-cols-2 ${
                 index % 2 === 1 ? "lg:grid-flow-col-dense" : ""
               }`}
             >
@@ -110,7 +110,7 @@ export function VideoShowcaseSection() {
                   index % 2 === 1 ? "lg:col-start-2" : ""
                 }`}
               >
-                <div className="relative overflow-hidden rounded-2xl bg-white shadow-2xl">
+                <div className="relative overflow-hidden rounded-3xl bg-white shadow-2xl transition-transform duration-500 hover:scale-[1.02]">
                   {/* Video with seamless loop */}
                   <video
                     autoPlay
@@ -128,11 +128,11 @@ export function VideoShowcaseSection() {
                   </video>
 
                   {/* Feature badge - positioned to not interfere with video */}
-                  <div className="absolute top-4 left-4">
+                  <div className="absolute top-6 left-6">
                     <Badge
-                      className={`bg-gradient-to-r ${feature.gradient} text-white shadow-lg backdrop-blur-sm`}
+                      className={`bg-gradient-to-r ${feature.gradient} px-4 py-2 font-bold text-white shadow-lg backdrop-blur-sm`}
                     >
-                      <feature.icon className="mr-1 h-3 w-3" />
+                      <feature.icon className="mr-2 h-4 w-4" />
                       Live Demo
                     </Badge>
                   </div>
@@ -140,39 +140,39 @@ export function VideoShowcaseSection() {
 
                 {/* Decorative glow effect around video */}
                 <div
-                  className={`absolute -inset-4 bg-gradient-to-r ${feature.gradient} -z-10 rounded-3xl opacity-10 blur-2xl`}
+                  className={`absolute -inset-6 bg-gradient-to-r ${feature.gradient} -z-10 rounded-[3rem] opacity-10 blur-3xl`}
                 />
               </div>
 
               {/* Content */}
               <div className={index % 2 === 1 ? "lg:col-start-1" : ""}>
                 <Card
-                  className={`bg-gradient-to-br ${feature.color} border-0 shadow-lg`}
+                  className={`bg-gradient-to-br ${feature.color} border-0 shadow-sm transition-all duration-500 hover:shadow-md`}
                 >
-                  <CardContent className="p-8">
-                    <div className="mb-4 flex items-center gap-3">
+                  <CardContent className="p-10">
+                    <div className="mb-8 flex items-center gap-6">
                       <div
-                        className={`rounded-xl bg-gradient-to-r p-3 ${feature.gradient} text-white shadow-lg`}
+                        className={`rounded-2xl bg-gradient-to-r p-4 ${feature.gradient} text-white shadow-lg`}
                       >
-                        <feature.icon className="h-6 w-6" />
+                        <feature.icon className="h-8 w-8" />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold">{feature.title}</h3>
-                        <p className="text-muted-foreground font-medium">
+                        <h3 className="font-display text-3xl font-bold">{feature.title}</h3>
+                        <p className="text-muted-foreground text-lg font-semibold">
                           {feature.subtitle}
                         </p>
                       </div>
                     </div>
 
-                    <p className="text-muted-foreground mb-6 text-lg leading-relaxed">
+                    <p className="text-muted-foreground mb-10 text-lg font-medium leading-relaxed">
                       {feature.description}
                     </p>
 
-                    <div className="space-y-3">
-                      <h4 className="text-muted-foreground text-sm font-semibold tracking-wide uppercase">
+                    <div className="space-y-6">
+                      <h4 className="text-muted-foreground text-xs font-bold tracking-widest uppercase">
                         Key Benefits
                       </h4>
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         {feature.features.map((feat, featIndex) => (
                           <motion.div
                             key={featIndex}
@@ -183,12 +183,12 @@ export function VideoShowcaseSection() {
                               duration: 0.3,
                               delay: index * 0.2 + featIndex * 0.1,
                             }}
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-3"
                           >
                             <div
-                              className={`h-2 w-2 rounded-full bg-gradient-to-r ${feature.gradient}`}
+                              className={`h-2.5 w-2.5 rounded-full bg-gradient-to-r ${feature.gradient}`}
                             />
-                            <span className="text-sm font-medium">{feat}</span>
+                            <span className="text-sm font-bold">{feat}</span>
                           </motion.div>
                         ))}
                       </div>
